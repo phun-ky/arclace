@@ -35,6 +35,14 @@ jobs:
       - name: Install dependencies
         run: | # Install and link dependencies
           npm i
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Test
+        run: npm test
+      - name: Build
+        run: npm run build
   notify:
     name: Notify failed check
     needs: check
