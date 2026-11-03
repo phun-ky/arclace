@@ -68,6 +68,8 @@
     "preview": "vite preview",
     "release": "release-it",
     "test": "node --import tsx --import global-jsdom/register --test --no-warnings 'src/**/__tests__/**/*.spec.ts'",
+    "pretest:ci": "rm -rf coverage && mkdir -p coverage",
+    "test:ci": "node --import tsx --import global-jsdom/register --test --no-warnings --experimental-test-coverage --test-coverage-include='src/**/*.ts' --test-coverage-exclude='src/**/__tests__/**' --test-coverage-exclude='src/types.ts' --test-coverage-lines=99 --test-coverage-functions=100 --test-coverage-branches=95 --test-reporter=cobertura --test-reporter-destination=coverage/cobertura-coverage.xml --test-reporter=spec --test-reporter-destination=stdout 'src/**/__tests__/**/*.spec.ts'",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
@@ -75,6 +77,7 @@
     "@release-it/conventional-changelog": "^10.0.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@types/node": "^26.6.6",
+    "cobertura": "^1.0.3",
     "eslint": "^10.14.0",
     "eslint-config-phun-ky": "^2.0.10",
     "git-cz": "^4.9.0",

@@ -231,6 +231,21 @@ describe('ConnectTheThings', () => {
     ctt.disconnect('#nothing-here');
     ctt.disconnect(c);
     assert.deepEqual(ctt.connections, []);
+
+    // A connection that is already gone is ignored
+    ctt.disconnect(ab);
+    assert.deepEqual(ctt.connections, []);
+  });
+
+  it('rejects targets that are not elements', () => {
+    const { a } = setup();
+    const ctt = new ConnectTheThings({ autoUpdate: false });
+
+    assert.throws(
+      () => ctt.connect(a, {} as Element),
+      /stopElement must be an Element or a selector string/
+    );
+    assert.throws(() => ctt.connect('#nothing-here', a), /no startElement/);
   });
 
   it('clears and destroys', () => {
@@ -247,21 +262,137 @@ describe('ConnectTheThings', () => {
 
     assert.equal(ctt.svg.isConnected, false);
     assert.throws(() => ctt.connect(a, b), /destroyed/);
+
+    // Destroying again does nothing
+    ctt.destroy();
+    ctt.update();
   });
 
-  it('redraws after DOM changes when autoUpdate is on', async () => {
+  it('refuses to run without a DOM', () => {
+    const descriptor = Object.getOwnPropertyDescriptor(globalThis, 'document');
+
+    Object.defineProperty(globalThis, 'document', {
+      configurable: true,
+      value: undefined
+    });
+
+    try {
+      assert.throws(() => new ConnectTheThings(), /a DOM is required/);
+    } finally {
+      // Restore it before afterEach empties the body
+      Object.defineProperty(globalThis, 'document', descriptor!);
+    }
+  });
+
+  it('redraws every connection from a connection', () => {
+    const { a, b } = setup();
+    const ctt = new ConnectTheThings({ autoUpdate: false });
+    const connection = ctt.connect(a, b, { type: 'straight' });
+
+    place(b, { left: 500, top: 0, width: 100, height: 50 });
+    connection.update();
+
+    assert.equal(connection.path.getAttribute('d'), 'M 100 25 L 500 25');
+  });
+});
+
+describe('autoUpdate', () => {
+  const nextFrame = () =>
+    new Promise((resolve) => requestAnimationFrame(() => resolve(undefined)));
+
+  it('redraws after DOM changes', async (t) => {
     const { a, b } = setup();
     const ctt = new ConnectTheThings();
     const connection = ctt.connect(a, b, { type: 'straight' });
 
+    t.after(() => ctt.destroy());
     place(b, { left: 500, top: 0, width: 100, height: 50 });
     b.style.left = '500px';
 
     await new Promise((resolve) => setTimeout(resolve, 50));
 
     assert.equal(connection.path.getAttribute('d'), 'M 100 25 L 500 25');
+  });
+
+  it('drops a scheduled redraw when update() runs first', (t) => {
+    const { a, b } = setup();
+    const ctt = new ConnectTheThings();
+    const connection = ctt.connect(a, b, { type: 'straight' });
+    const cancelled: number[] = [];
+    const cancel = globalThis.cancelAnimationFrame;
+
+    t.after(() => {
+      globalThis.cancelAnimationFrame = cancel;
+      ctt.destroy();
+    });
+    globalThis.cancelAnimationFrame = (handle) => {
+      cancelled.push(handle);
+      cancel(handle);
+    };
+    window.dispatchEvent(new window.Event('resize'));
+    place(b, { left: 500, top: 0, width: 100, height: 50 });
+    ctt.update();
+
+    assert.equal(cancelled.length, 1);
+    assert.equal(connection.path.getAttribute('d'), 'M 100 25 L 500 25');
+  });
+
+  it("redraws on every frame with 'frame' and stops on destroy", async (t) => {
+    const { a, b } = setup();
+    const ctt = new ConnectTheThings({ autoUpdate: 'frame' });
+    const connection = ctt.connect(a, b, { type: 'straight' });
+
+    t.after(() => ctt.destroy());
+    place(b, { left: 500, top: 0, width: 100, height: 50 });
+    await nextFrame();
+    await nextFrame();
+
+    assert.equal(connection.path.getAttribute('d'), 'M 100 25 L 500 25');
 
     ctt.destroy();
+    place(b, { left: 700, top: 0, width: 100, height: 50 });
+    await nextFrame();
+    await nextFrame();
+
+    assert.equal(connection.path.getAttribute('d'), 'M 100 25 L 500 25');
+  });
+
+  it('observes connected elements while they are in use', (t) => {
+    const observed = new Set<Element>();
+    let disconnected = false;
+
+    class FakeResizeObserver {
+      observe(el: Element) {
+        observed.add(el);
+      }
+      unobserve(el: Element) {
+        observed.delete(el);
+      }
+      disconnect() {
+        disconnected = true;
+      }
+    }
+
+    globalThis.ResizeObserver =
+      FakeResizeObserver as unknown as typeof ResizeObserver;
+    t.after(() => {
+      delete (globalThis as { ResizeObserver?: unknown }).ResizeObserver;
+    });
+
+    const { a, b, c } = setup();
+    const ctt = new ConnectTheThings();
+
+    t.after(() => ctt.destroy());
+    ctt.connect(a, b, { id: 'ab' });
+    ctt.connect(a, c, { id: 'ac' });
+
+    assert.deepEqual(observed, new Set([document.body, a, b, c]));
+
+    ctt.disconnect('ab');
+    assert.deepEqual(observed, new Set([document.body, a, c]));
+
+    ctt.destroy();
+    assert.equal(disconnected, true);
   });
 });
 
