@@ -5,6 +5,10 @@
 // import, require, the dist path, the UMD build and a browser bundle. It also
 // checks that the ES module build bundles no dependencies.
 // Run after `npm run build`.
+//
+// With CHECK_PACK_NODE set to another Node binary, the smoke tests also run on
+// it, and its version must be the engines minimum, so the oldest Node the
+// package allows is tested.
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { rollup } from 'rollup';
 
@@ -25,6 +29,7 @@ import { runInNewContext } from 'node:vm';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const BIN = join(ROOT, 'node_modules', '.bin');
+const FLOOR_NODE = process.env.CHECK_PACK_NODE;
 /** Run a linter; return its output if it fails. */
 const lint = (command, args) => {
   try {
@@ -287,11 +292,37 @@ try {
       delete smokes['UMD under CommonJS'];
     }
 
-    for (const [how, args] of Object.entries(smokes)) {
-      try {
-        execFileSync(process.execPath, args, { cwd: app, stdio: 'inherit' });
-      } catch {
-        problems.push(`${how} of the installed tarball failed`);
+    const runtimes = [process.execPath];
+
+    if (FLOOR_NODE) {
+      // The floor run is only meaningful on exactly the engines minimum
+      const floor = pkg.engines?.node?.match(/^>=\s*(\d+\.\d+\.\d+)$/)?.[1];
+      const version = execFileSync(FLOOR_NODE, ['--version'], {
+        encoding: 'utf8'
+      }).trim();
+
+      if (version === `v${floor}`) runtimes.push(FLOOR_NODE);
+      else
+        problems.push(
+          `CHECK_PACK_NODE is Node ${version}, but engines.node is ${pkg.engines?.node}`
+        );
+    }
+
+    for (const runtime of runtimes) {
+      const version = execFileSync(runtime, ['--version'], {
+        encoding: 'utf8'
+      }).trim();
+
+      console.log(`Node ${version}:`);
+
+      for (const [how, args] of Object.entries(smokes)) {
+        try {
+          execFileSync(runtime, args, { cwd: app, stdio: 'inherit' });
+        } catch {
+          problems.push(
+            `${how} of the installed tarball failed on Node ${version}`
+          );
+        }
       }
     }
 
