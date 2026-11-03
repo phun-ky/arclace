@@ -26,7 +26,8 @@
     "strictNullChecks": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["node"]
   },
   "include": ["src"],
   "exclude": [
@@ -35,7 +36,6 @@
     "dist",
     "tests/**",
     "scripts",
-    "dts",
-    "**/__tests__/**"
+    "dts"
   ]
 }
