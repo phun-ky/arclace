@@ -6,7 +6,7 @@
     "declaration": true,
     "declarationMap": false,
     "sourceMap": false,
-    "declarationDir": "./dist/types",
+    "declarationDir": "./dts",
     "stripInternal": true
   },
   "include": ["src"],
