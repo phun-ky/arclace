@@ -10,7 +10,7 @@ on:
     paths:
       - '.github/**'
       - 'src/**'
-      - 'api/**'
+      - 'docs/api/**'
       - 'package.json'
       - 'package-lock.json'
       - 'tsconfig.json'

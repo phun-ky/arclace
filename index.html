@@ -3,78 +3,238 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + TS</title>
-
-    <style type="text/css">
-      .box {
-        border: 2px solid black;
-        height: 8rem;
-        width: 8rem;
-        position: absolute;
-        border-radius: 6px;
+    <title>connect-the-things</title>
+    <link rel="stylesheet" href="./src/style.css" />
+    <style>
+      *,
+      *::before,
+      *::after {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
       }
+
+      body {
+        font-family:
+          ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          Roboto, sans-serif;
+        color: #2b2523;
+        background: #faf9f7;
+      }
+
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem 1.5rem;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e4ddd8;
+      }
+
+      header h1 {
+        font-size: 1.125rem;
+        margin-right: auto;
+      }
+
+      label {
+        display: inline-flex;
+        gap: 0.4rem;
+        align-items: center;
+        font-size: 0.875rem;
+      }
+
+      #canvas {
+        position: relative;
+        height: calc(100vh - 4.5rem);
+        overflow: hidden;
+        background-color: #f1ece8;
+        background-image: radial-gradient(rgba(110, 98, 94, 0.3) 1px, #f1ece8 0);
+        background-size: 20px 20px;
+      }
+
+      #world {
+        position: absolute;
+        inset: 0;
+        transform-origin: 0 0;
+        --ctt-color: #6e625e;
+        --ctt-label-halo: #f1ece8;
+      }
+
+      .node {
+        position: absolute;
+        min-width: 9rem;
+        padding: 0.75rem 1rem;
+        border-radius: 0.75rem;
+        background: #faf9f7;
+        box-shadow: 0 2px 10px rgba(110, 98, 94, 0.18);
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: grab;
+        user-select: none;
+        touch-action: none;
+      }
+
+      .node small {
+        display: block;
+        font-weight: 400;
+        color: #6e625e;
+      }
+
+      .node.dragging {
+        cursor: grabbing;
+        box-shadow: 0 6px 24px rgba(110, 98, 94, 0.3);
+      }
+
+      .node.accent {
+        background: #0054f0;
+        color: #faf9f7;
+      }
+
+      .node.accent small {
+        color: #dbe6ff;
+      }
+
+      .ctt-connection.highlight {
+        --ctt-color: #0054f0;
+      }
     </style>
   </head>
   <body>
-    <section>
-      <div class="box" id="_ykwa49opu" style="left: 49vw; top: 45vh"></div>
-      <div class="box" id="_zhwr5ok33" style="left: 72vw; top: 73vh"></div>
-      <div class="box" id="_rt5otr3mt" style="left: 17vw; top: 79vh"></div>
-      <div class="box" id="_e86x7wtmv" style="left: 27vw; top: 58vh"></div>
-      <div class="box" id="_9c6x5wn2v" style="left: 57vw; top: 18vh"></div>
-      <div class="box" id="_0vmoonp08" style="left: 13vw; top: 29vh"></div>
-    </section>
-    <div id="app">
-      <section></section>
-    </div>
+    <header>
+      <h1>connect-the-things</h1>
+      <label>
+        Type
+        <select id="type">
+          <option value="bezier">bezier</option>
+          <option value="orthogonal">orthogonal</option>
+          <option value="straight">straight</option>
+        </select>
+      </label>
+      <label>
+        Arrow
+        <select id="arrow">
+          <option value="end">end</option>
+          <option value="none">none</option>
+          <option value="start">start</option>
+          <option value="both">both</option>
+        </select>
+      </label>
+      <label><input type="checkbox" id="labels" checked /> Labels</label>
+      <label><input type="checkbox" id="anchors" /> Anchors</label>
+      <label><input type="checkbox" id="animated" /> Animated</label>
+      <label>
+        Zoom
+        <input type="range" id="zoom" min="0.5" max="1.5" step="0.05" value="1" />
+      </label>
+    </header>
 
-    <svg
-      class="ctt"
-      viewBox="0 0"
-      id="ctt-svg"
-      xmlns="http://www.w3.org/2000/svg"
-    ></svg>
-    <script>
-      // const random = (max, min) =>
-      //   Math.floor(Math.random() * (max - min + 1)) + min;
+    <main id="canvas">
+      <div id="world">
+        <div class="node" id="tokens" style="left: 60px; top: 120px">
+          Base tokens<small>$color-base-blue-100</small>
+        </div>
+        <div class="node" id="fonts" style="left: 60px; top: 320px">
+          Font tokens<small>$font-family-sans</small>
+        </div>
+        <div class="node" id="theme" style="left: 380px; top: 200px">
+          Theme<small>$color-cta</small>
+        </div>
+        <div class="node accent" id="button" style="left: 720px; top: 100px">
+          Button<small>primary</small>
+        </div>
+        <div class="node" id="card" style="left: 720px; top: 300px">
+          Card<small>elevated</small>
+        </div>
+        <div class="node" id="docs" style="left: 560px; top: 520px">
+          Docs<small>not rendered in prod</small>
+        </div>
+      </div>
+    </main>
 
-      // const container = document.querySelector('#app section');
-      // const boxes = random(10, 5);
-
-      // for (let i = 0; i < boxes; i++) {
-      //   const box = document.createElement('div');
-      //   box.classList.add('box');
-      //   box.setAttribute(
-      //     'id',
-      //     '_' + Math.random().toString(36).substring(2, 11)
-      //   );
-      //   box.style.left = `${random(80, 10)}vw`;
-      //   box.style.top = `${random(80, 10)}vh`;
-      //   container.appendChild(box);
-      // }
-    </script>
     <script type="module">
-      import { createConnections } from './src/main.ts';
-      const boxes = document.querySelectorAll('.box');
-      const total = boxes.length;
-      const connectionDefinitions = [...boxes].map((box) => {
-        // Create a list of stop candidates, excluding the current box
-        const stopCandidates = [...boxes].filter((b) => b !== box);
+      import { ConnectTheThings } from './src/index.ts';
 
-        // Pick a random stopElement from the filtered list
-        const stopElement =
-          stopCandidates[Math.floor(Math.random() * stopCandidates.length)];
-
-        return {
-          startElement: box, // Always the current box
-          stopElement: stopElement
-        };
+      const world = document.getElementById('world');
+      const controls = {
+        type: document.getElementById('type'),
+        arrow: document.getElementById('arrow'),
+        labels: document.getElementById('labels'),
+        anchors: document.getElementById('anchors'),
+        animated: document.getElementById('animated'),
+        zoom: document.getElementById('zoom')
+      };
+      const shared = () => ({
+        type: controls.type.value,
+        arrow: controls.arrow.value,
+        anchors: controls.anchors.checked,
+        animated: controls.animated.checked
       });
 
-      createConnections(connectionDefinitions);
+      const ctt = new ConnectTheThings({ container: world, defaults: shared() });
+      const edges = [
+        ['#tokens', '#theme', 'accent'],
+        ['#fonts', '#theme', 'font'],
+        ['#theme', '#button', 'background', { className: 'highlight' }],
+        ['#theme', '#card', 'surface'],
+        ['#fonts', '#card', 'font', { dashed: true }],
+        ['#theme', '#docs', 'examples', { startSide: 'bottom', stopSide: 'top' }]
+      ];
+      const connections = edges.map(([start, stop, label, options]) =>
+        ctt.connect(start, stop, { ...options, label })
+      );
+
+      const apply = () => {
+        connections.forEach((connection, i) =>
+          connection.setOptions({
+            ...shared(),
+            label: controls.labels.checked ? edges[i][2] : undefined,
+            dashed: edges[i][3]?.dashed
+          })
+        );
+      };
+
+      for (const control of Object.values(controls)) {
+        control.addEventListener('input', apply);
+      }
+
+      // Zooming scales the container; lines are measured in its local space
+      controls.zoom.addEventListener('input', () => {
+        world.style.transform = `scale(${controls.zoom.value})`;
+      });
+
+      // Dragging only moves the nodes. autoUpdate sees the style changes and
+      // redraws the lines on the next frame.
+      world.addEventListener('pointerdown', (event) => {
+        const node = event.target.closest('.node');
+
+        if (!node) return;
+
+        const scale = Number(controls.zoom.value);
+        const startX = event.clientX;
+        const startY = event.clientY;
+        const left = node.offsetLeft;
+        const top = node.offsetTop;
+
+        node.setPointerCapture(event.pointerId);
+        node.classList.add('dragging');
+
+        const move = (moveEvent) => {
+          node.style.left = `${left + (moveEvent.clientX - startX) / scale}px`;
+          node.style.top = `${top + (moveEvent.clientY - startY) / scale}px`;
+        };
+        const stop = () => {
+          node.classList.remove('dragging');
+          node.removeEventListener('pointermove', move);
+          node.removeEventListener('pointerup', stop);
+          node.removeEventListener('pointercancel', stop);
+        };
+
+        node.addEventListener('pointermove', move);
+        node.addEventListener('pointerup', stop);
+        node.addEventListener('pointercancel', stop);
+      });
+
+      window.ctt = ctt;
     </script>
   </body>
 </html>
