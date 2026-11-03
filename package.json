@@ -30,22 +30,23 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/connect-the-things.js",
-      "require": "./dist/connect-the-things.umd.cjs"
+      "types": "./dist/connect-the-things.d.ts",
+      "default": "./dist/connect-the-things.js"
     },
     "./style.css": "./dist/style.css",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*"
   },
-  "main": "./dist/connect-the-things.umd.cjs",
+  "main": "./dist/connect-the-things.js",
   "module": "./dist/connect-the-things.js",
-  "types": "./dist/types/index.d.ts",
+  "types": "./dist/connect-the-things.d.ts",
   "unpkg": "./dist/connect-the-things.umd.cjs",
   "jsdelivr": "./dist/connect-the-things.umd.cjs",
   "files": [
     "dist",
-    "README.md",
-    "LICENSE"
+    "src",
+    "!src/**/__tests__",
+    "CHANGELOG.md"
   ],
   "sideEffects": [
     "*.css"
@@ -54,10 +55,10 @@
     "access": "public"
   },
   "engines": {
-    "node": ">=22.8.0"
+    "node": ">=22.12.0"
   },
   "scripts": {
-    "build": "vite build && tsc -p tsconfig.build.json",
+    "build": "rm -rf dts && vite build && tsc -p tsconfig.build.json && rollup -c",
     "commit": "npx git-cz",
     "dev": "vite --force",
     "docs:gen": "typedoc",
@@ -79,6 +80,8 @@
     "jsdom": "^30.1.3",
     "prettier": "3.5.1",
     "release-it": "^18.1.2",
+    "rollup": "^4.67.4",
+    "rollup-plugin-dts": "^6.5.1",
     "tsx": "^4.23.15",
     "typedoc": "^0.28.20",
     "typedoc-plugin-markdown": "^4.14.1",
