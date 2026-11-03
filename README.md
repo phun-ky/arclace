@@ -29,8 +29,8 @@ the boxes; connect-the-things only draws the lines.
 npm i @phun-ky/connect-the-things
 ```
 
-ES modules; `require()` needs Node 22.12 or later. A UMD build is available
-for script tags (see [Without a bundler](#without-a-bundler)).
+ES modules; `require()` needs Node 22.12 or later. A UMD build is available for
+script tags (see [Without a bundler](#without-a-bundler)).
 
 ## Usage
 
