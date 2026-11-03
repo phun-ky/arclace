@@ -1,8 +1,5 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Publish
 
-# Controls when the workflow will run
 on:
   pull_request:
     types: [closed]
@@ -21,41 +18,54 @@ on:
       - 'CODE_OF_CONDUCT.md'
       - 'SECURITY.md'
   workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One release at a time; never cancel a release halfway
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
 jobs:
   publish:
     if: github.event.pull_request.merged == true
-    runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read # Release commits, tags and GitHub releases use GH_TOKEN
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0 # Checkout all branches and tags
+          fetch-depth: 0 # release-it reads tags and commits
           token: ${{ secrets.GH_TOKEN }}
       - name: Setup Node.js environment
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: '>=22.8.0'
+          node-version: 24
       - name: Install dependencies
-        run: | # Install and link dependencies
-          npm i
-      - name: 'Release' # Interesting step
+        run: npm ci
+      - name: Release
         run: |
-          git config user.name "${{ github.actor }}"
-          git config user.email "${{ github.actor}}@users.noreply.github.com"
+          git config user.name "$ACTOR"
+          git config user.email "$ACTOR@users.noreply.github.com"
           npm run release
         env:
+          ACTOR: ${{ github.actor }} # via env, never interpolated into the script
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
   notify:
     name: Notify failed build
     needs: publish
     if: failure()
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    # GITHUB_TOKEN is enough to open an issue; GH_TOKEN is for the release only
+    permissions:
+      issues: write
     steps:
-      - uses: jayqi/failed-build-issue-action@v1.2
+      - uses: drivendataorg/failed-build-issue-action@940568ce50eeef3f31a920614cefcc6102d2f930 # v1.3.0
         with:
-          github-token: ${{ secrets.GH_TOKEN }}
-          label-name: 'problems: build failed'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          label-name: 'problems: 💔 build failed'
+          create-label: false
