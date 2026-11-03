@@ -26,3 +26,6 @@ dist-ssr
 # Generated
 coverage
 dts
+
+# Claude Code local state
+.claude
