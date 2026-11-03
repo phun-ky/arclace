@@ -94,5 +94,10 @@
     "typedoc-plugin-markdown": "^4.14.1",
     "typescript": "~5.7.2",
     "vite": "^6.2.0"
+  },
+  "overrides": {
+    "micromark-extension-math": {
+      "katex": "^0.18.2"
+    }
   }
 }
