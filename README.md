@@ -265,6 +265,7 @@ useEffect(() => {
 npm i
 npm run dev        # demo at http://localhost:5173
 npm test
+npm run test:ci    # with coverage thresholds
 npm run lint
 npm run build      # dist/
 npm run docs:gen   # API docs in docs/api/

@@ -22,6 +22,14 @@ describe('facingSide', () => {
     assert.equal(facingSide(rect(0, 0), rect(50, 300)), 'bottom');
     assert.equal(facingSide(rect(50, 300), rect(0, 0)), 'top');
   });
+
+  it('breaks equal gaps by the distance between the centres', () => {
+    assert.equal(facingSide(rect(0, 0), rect(200, 150)), 'right');
+    assert.equal(
+      facingSide(rect(0, 0, 50, 100), rect(150, 200, 50, 100)),
+      'bottom'
+    );
+  });
 });
 
 describe('resolveSides', () => {
