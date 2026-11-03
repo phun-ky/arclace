@@ -6,7 +6,7 @@
 
 # Interface: CTTPointInterface
 
-Defined in: types.ts:31
+Defined in: [types.ts:31](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L31)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: types.ts:31
 
 > **x**: `number`
 
-Defined in: types.ts:32
+Defined in: [types.ts:32](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L32)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: types.ts:32
 
 > **y**: `number`
 
-Defined in: types.ts:33
+Defined in: [types.ts:33](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L33)

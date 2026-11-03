@@ -8,7 +8,7 @@
 
 > **CTTConnectionOptionsType** = `object`
 
-Defined in: types.ts:48
+Defined in: [types.ts:48](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L48)
 
 Options for a single connection.
 
@@ -18,7 +18,7 @@ Options for a single connection.
 
 > `optional` **anchors?**: `boolean`
 
-Defined in: types.ts:104
+Defined in: [types.ts:104](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L104)
 
 Draw a dot where the line touches each element. Defaults to `false`.
 
@@ -28,7 +28,7 @@ Draw a dot where the line touches each element. Defaults to `false`.
 
 > `optional` **animated?**: `boolean`
 
-Defined in: types.ts:99
+Defined in: [types.ts:99](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L99)
 
 Animate the dashes from start to stop. Implies `dashed`. Requires the
 stylesheet. Defaults to `false`.
@@ -39,7 +39,7 @@ stylesheet. Defaults to `false`.
 
 > `optional` **arrow?**: [`CTTArrowType`](CTTArrowType.md)
 
-Defined in: types.ts:72
+Defined in: [types.ts:72](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L72)
 
 Where to draw arrow heads. Defaults to `'none'`.
 
@@ -49,7 +49,7 @@ Where to draw arrow heads. Defaults to `'none'`.
 
 > `optional` **className?**: `string`
 
-Defined in: types.ts:109
+Defined in: [types.ts:109](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L109)
 
 Extra class names added to the connection's `<g>` element.
 
@@ -59,7 +59,7 @@ Extra class names added to the connection's `<g>` element.
 
 > `optional` **color?**: `string`
 
-Defined in: types.ts:83
+Defined in: [types.ts:83](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L83)
 
 Line color. Any CSS color. Defaults to `currentColor` of the container,
 or `--ctt-color` when the stylesheet is loaded.
@@ -70,7 +70,7 @@ or `--ctt-color` when the stylesheet is loaded.
 
 > `optional` **curvature?**: `number`
 
-Defined in: types.ts:134
+Defined in: [types.ts:134](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L134)
 
 `bezier` only: multiplies how far the curve bulges out from the
 elements. Defaults to `1`.
@@ -81,7 +81,7 @@ elements. Defaults to `1`.
 
 > `optional` **dashed?**: `boolean`
 
-Defined in: types.ts:93
+Defined in: [types.ts:93](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L93)
 
 Draw a dashed line. Defaults to `false`.
 
@@ -91,7 +91,7 @@ Draw a dashed line. Defaults to `false`.
 
 > `optional` **gap?**: `number`
 
-Defined in: types.ts:115
+Defined in: [types.ts:115](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L115)
 
 Distance in pixels between the element's edge and the line's end.
 Defaults to `0`.
@@ -102,7 +102,7 @@ Defaults to `0`.
 
 > `optional` **id?**: `string`
 
-Defined in: types.ts:52
+Defined in: [types.ts:52](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L52)
 
 A unique id for the connection. Generated when omitted.
 
@@ -112,7 +112,7 @@ A unique id for the connection. Generated when omitted.
 
 > `optional` **label?**: `string`
 
-Defined in: types.ts:77
+Defined in: [types.ts:77](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L77)
 
 Text drawn at the middle of the line.
 
@@ -122,7 +122,7 @@ Text drawn at the middle of the line.
 
 > `optional` **offset?**: `number`
 
-Defined in: types.ts:146
+Defined in: [types.ts:146](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L146)
 
 `orthogonal` only: how far in pixels the line travels straight out of an
 element before it turns. Defaults to `20`.
@@ -133,7 +133,7 @@ element before it turns. Defaults to `20`.
 
 > `optional` **radius?**: `number`
 
-Defined in: types.ts:140
+Defined in: [types.ts:140](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L140)
 
 `orthogonal` only: corner radius in pixels. Use `0` for sharp corners.
 Defaults to `8`.
@@ -144,7 +144,7 @@ Defaults to `8`.
 
 > `optional` **spacing?**: `number`
 
-Defined in: types.ts:128
+Defined in: [types.ts:128](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L128)
 
 Preferred distance in pixels between spread end points. Shrinks to fit
 the side. Defaults to `16`.
@@ -155,7 +155,7 @@ the side. Defaults to `16`.
 
 > `optional` **spread?**: `boolean`
 
-Defined in: types.ts:122
+Defined in: [types.ts:122](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L122)
 
 When several connections share the same side of an element, spread their
 end points along that side instead of stacking them in the middle.
@@ -167,7 +167,7 @@ Defaults to `true`.
 
 > `optional` **startSide?**: [`CTTSideOptionType`](CTTSideOptionType.md)
 
-Defined in: types.ts:62
+Defined in: [types.ts:62](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L62)
 
 The side of the start element the line leaves from. Defaults to `'auto'`.
 
@@ -177,7 +177,7 @@ The side of the start element the line leaves from. Defaults to `'auto'`.
 
 > `optional` **stopSide?**: [`CTTSideOptionType`](CTTSideOptionType.md)
 
-Defined in: types.ts:67
+Defined in: [types.ts:67](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L67)
 
 The side of the stop element the line arrives at. Defaults to `'auto'`.
 
@@ -187,7 +187,7 @@ The side of the stop element the line arrives at. Defaults to `'auto'`.
 
 > `optional` **strokeWidth?**: `number`
 
-Defined in: types.ts:88
+Defined in: [types.ts:88](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L88)
 
 Line width in pixels. Defaults to `2`.
 
@@ -197,6 +197,6 @@ Line width in pixels. Defaults to `2`.
 
 > `optional` **type?**: [`CTTPathType`](CTTPathType.md)
 
-Defined in: types.ts:57
+Defined in: [types.ts:57](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L57)
 
 How the line is drawn. Defaults to `'bezier'`.

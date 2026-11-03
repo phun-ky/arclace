@@ -8,7 +8,7 @@
 
 > **orthogonalPath**(`start`, `startSide`, `stop`, `stopSide`, `__namedParameters?`): [`CTTPathResultType`](../type-aliases/CTTPathResultType.md)
 
-Defined in: utils/paths.ts:295
+Defined in: [utils/paths.ts:295](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/utils/paths.ts#L295)
 
 An orthogonal line with rounded corners.
 

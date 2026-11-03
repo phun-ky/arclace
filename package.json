@@ -1,6 +1,6 @@
 {
   "name": "@phun-ky/connect-the-things",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Draw SVG lines between DOM elements. Framework agnostic, zero dependencies.",
   "keywords": [
     "connect",

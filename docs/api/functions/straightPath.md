@@ -8,7 +8,7 @@
 
 > **straightPath**(`start`, `stop`): [`CTTPathResultType`](../type-aliases/CTTPathResultType.md)
 
-Defined in: utils/paths.ts:72
+Defined in: [utils/paths.ts:72](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/utils/paths.ts#L72)
 
 A straight line between two points.
 

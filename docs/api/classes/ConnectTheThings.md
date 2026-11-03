@@ -6,7 +6,7 @@
 
 # Class: ConnectTheThings
 
-Defined in: ConnectTheThings.ts:57
+Defined in: [ConnectTheThings.ts:57](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/ConnectTheThings.ts#L57)
 
 Draws and maintains SVG lines between DOM elements.
 
@@ -29,7 +29,7 @@ ctt.connect('#a', '#b', { arrow: 'end', label: 'depends on' });
 
 > **new ConnectTheThings**(`options?`): `ConnectTheThings`
 
-Defined in: ConnectTheThings.ts:77
+Defined in: [ConnectTheThings.ts:77](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/ConnectTheThings.ts#L77)
 
 #### Parameters
 
@@ -47,7 +47,7 @@ Defined in: ConnectTheThings.ts:77
 
 > `readonly` **container**: `HTMLElement`
 
-Defined in: ConnectTheThings.ts:61
+Defined in: [ConnectTheThings.ts:61](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/ConnectTheThings.ts#L61)
 
 The element the overlay was added to.
 
@@ -57,7 +57,7 @@ The element the overlay was added to.
 
 > `readonly` **svg**: `SVGSVGElement`
 
-Defined in: ConnectTheThings.ts:66
+Defined in: [ConnectTheThings.ts:66](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/ConnectTheThings.ts#L66)
 
 The SVG overlay all lines are drawn in.
 
@@ -69,7 +69,7 @@ The SVG overlay all lines are drawn in.
 
 > **get** **connections**(): [`Connection`](Connection.md)[]
 
-Defined in: ConnectTheThings.ts:119
+Defined in: [ConnectTheThings.ts:119](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/ConnectTheThings.ts#L119)
 
 All current connections, in the order they were made.
 
@@ -83,7 +83,7 @@ All current connections, in the order they were made.
 
 > **clear**(): `void`
 
-Defined in: ConnectTheThings.ts:231
+Defined in: [ConnectTheThings.ts:231](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/ConnectTheThings.ts#L231)
 
 Removes every connection.
 
@@ -97,7 +97,7 @@ Removes every connection.
 
 > **connect**(`startElement`, `stopElement`, `options?`): [`Connection`](Connection.md)
 
-Defined in: ConnectTheThings.ts:135
+Defined in: [ConnectTheThings.ts:135](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/ConnectTheThings.ts#L135)
 
 Connects two elements and draws the line right away.
 
@@ -141,7 +141,7 @@ const connection = ctt.connect(a, b, { type: 'orthogonal', arrow: 'end' });
 
 > **connectAll**(`definitions`): [`Connection`](Connection.md)[]
 
-Defined in: ConnectTheThings.ts:158
+Defined in: [ConnectTheThings.ts:158](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/ConnectTheThings.ts#L158)
 
 Connects many pairs of elements and draws them in one go.
 
@@ -170,7 +170,7 @@ ctt.connectAll([
 
 > **destroy**(): `void`
 
-Defined in: ConnectTheThings.ts:339
+Defined in: [ConnectTheThings.ts:339](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/ConnectTheThings.ts#L339)
 
 Removes every connection and the overlay, and stops listening for
 changes. The instance can't be used afterwards.
@@ -185,7 +185,7 @@ changes. The instance can't be used afterwards.
 
 > **disconnect**(`target`): `void`
 
-Defined in: ConnectTheThings.ts:201
+Defined in: [ConnectTheThings.ts:201](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/ConnectTheThings.ts#L201)
 
 Removes connections.
 
@@ -217,7 +217,7 @@ ctt.disconnect(document.querySelector('#a'));
 
 > **find**(`target`): [`Connection`](Connection.md)[]
 
-Defined in: ConnectTheThings.ts:179
+Defined in: [ConnectTheThings.ts:179](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/ConnectTheThings.ts#L179)
 
 Returns every connection that starts or stops at an element.
 
@@ -237,7 +237,7 @@ Returns every connection that starts or stops at an element.
 
 > **get**(`id`): [`Connection`](Connection.md) \| `undefined`
 
-Defined in: ConnectTheThings.ts:172
+Defined in: [ConnectTheThings.ts:172](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/ConnectTheThings.ts#L172)
 
 Returns the connection with the given id.
 
@@ -257,7 +257,7 @@ Returns the connection with the given id.
 
 > **update**(): `void`
 
-Defined in: ConnectTheThings.ts:247
+Defined in: [ConnectTheThings.ts:247](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/ConnectTheThings.ts#L247)
 
 Remeasures every element and redraws every connection. Called
 automatically when `autoUpdate` is on; call it yourself after moving

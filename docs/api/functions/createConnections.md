@@ -8,7 +8,7 @@
 
 > **createConnections**(`definitions`, `options?`): [`ConnectTheThings`](../classes/ConnectTheThings.md)
 
-Defined in: ConnectTheThings.ts:479
+Defined in: [ConnectTheThings.ts:479](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/ConnectTheThings.ts#L479)
 
 Creates a [ConnectTheThings](../classes/ConnectTheThings.md) instance and connects the given pairs.
 

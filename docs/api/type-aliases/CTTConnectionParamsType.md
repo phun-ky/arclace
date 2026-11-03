@@ -8,7 +8,7 @@
 
 > **CTTConnectionParamsType** = `object`
 
-Defined in: Connection.ts:56
+Defined in: [Connection.ts:56](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/Connection.ts#L56)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: Connection.ts:56
 
 > `optional` **defaults?**: [`CTTConnectionOptionsType`](CTTConnectionOptionsType.md)
 
-Defined in: Connection.ts:61
+Defined in: [Connection.ts:61](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/Connection.ts#L61)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: Connection.ts:61
 
 > **id**: `string`
 
-Defined in: Connection.ts:57
+Defined in: [Connection.ts:57](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/Connection.ts#L57)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: Connection.ts:57
 
 > **options**: [`CTTConnectionOptionsType`](CTTConnectionOptionsType.md)
 
-Defined in: Connection.ts:60
+Defined in: [Connection.ts:60](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/Connection.ts#L60)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: Connection.ts:60
 
 > **owner**: [`ConnectTheThings`](../classes/ConnectTheThings.md)
 
-Defined in: Connection.ts:62
+Defined in: [Connection.ts:62](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/Connection.ts#L62)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: Connection.ts:62
 
 > **startElement**: `Element`
 
-Defined in: Connection.ts:58
+Defined in: [Connection.ts:58](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/Connection.ts#L58)
 
 ***
 
@@ -56,4 +56,4 @@ Defined in: Connection.ts:58
 
 > **stopElement**: `Element`
 
-Defined in: Connection.ts:59
+Defined in: [Connection.ts:59](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/Connection.ts#L59)
