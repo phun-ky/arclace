@@ -22,7 +22,7 @@ export type CTTPathResultType = {
 };
 
 /**
- * Normalizes a distance to a 0–1 range based on max distance.
+ * Normalizes a distance to a range from 0 to 1, based on max distance.
  *
  * @param distance - The actual distance.
  * @param maxDistance - The distance treated as 100% (1.0).
