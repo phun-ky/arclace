@@ -1,6 +1,6 @@
 {
   "name": "@phun-ky/arclace",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Draw SVG lines between DOM elements. Framework agnostic, zero dependencies.",
   "keywords": [
     "connect",

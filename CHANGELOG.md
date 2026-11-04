@@ -1,5 +1,47 @@
 # Changelog
 
+## [0.3.0](https://github.com/phun-ky/arclace/compare/0.2.0...0.3.0) (2026-11-04)
+
+### ⚠ BREAKING CHANGES
+
+* Update code that uses the following:
+
+  - stop is now end: stopElement is endElement, stopSide is endSide,
+    geometry.stop and geometry.stopSide are geometry.end and
+    geometry.endSide, .arc-anchor-stop is .arc-anchor-end, and
+    data-stop-side is data-end-side
+  - options are checked before anything is added. Wrong types throw a
+    TypeError (strokeWidth: '3', label: 0, dashed: 'no', an empty or
+    non-string id) and values out of range a RangeError (type: 'wavy',
+    arrow: 'yes', an unknown side, a negative strokeWidth, spacing,
+    radius or offset). defaults can't set an id, and autoUpdate must be
+    true, false or 'frame'
+  - failures throw ArclaceError, exported, instead of Error. An invalid
+    selector throws an ArclaceError with the SyntaxError as its cause
+  - find() returns [] for a selector that matches nothing, instead of
+    throwing
+  - disconnect() throws a TypeError for a target that is not a
+    connection, a string, an element, null or undefined
+  - setOptions() throws after the connection was removed or its
+    instance destroyed, and when given an id
+  - DEFAULT_CONNECTION_OPTIONS is frozen, and geometry is a read-only
+    frozen object
+  - the Connection constructor is private in the types; connections
+    come from connect() and connectAll(). ArcConnectionParamsType and
+    ArcOptionalKeysType are no longer exported
+  - the path builders check their points (finite x and y) and sides
+
+### Documentation
+
+* ✏️ assurance case and VEX statements ([73b4fe6](https://github.com/phun-ky/arclace/commit/73b4fe6bd0e1e553de71c8817d9720b1b27cc360)), references [#19](https://github.com/phun-ky/arclace/issues/19)
+* ✏️ governance, roadmap and a contributing guide for Arclace ([5f5b33a](https://github.com/phun-ky/arclace/commit/5f5b33a54fa331e6ebf428f1773a0bd28013a6f2)), references [#20](https://github.com/phun-ky/arclace/issues/20) [#21](https://github.com/phun-ky/arclace/issues/21) [#19](https://github.com/phun-ky/arclace/issues/19) [#60](https://github.com/phun-ky/arclace/issues/60) [#19](https://github.com/phun-ky/arclace/issues/19)
+* ✏️ link the ArclaceError source in the API reference ([d22f104](https://github.com/phun-ky/arclace/commit/d22f104088255aaa66037ee3e162c7ed8e4e575a)), references [#20](https://github.com/phun-ky/arclace/issues/20)
+* ✏️ record the API review in the assurance case and OpenSSF answers ([e4cc02f](https://github.com/phun-ky/arclace/commit/e4cc02f294bc523da5c1f993972adab1e2a1a927)), closes [#20](https://github.com/phun-ky/arclace/issues/20), references [#21](https://github.com/phun-ky/arclace/issues/21)
+
+### Refactoring
+
+* 💡 review the API for 1.0 ([94f3569](https://github.com/phun-ky/arclace/commit/94f3569d6be4ae66bd2ddc81b546a40301f24104)), references [#20](https://github.com/phun-ky/arclace/issues/20) [#20](https://github.com/phun-ky/arclace/issues/20)
+
 ## [0.2.0](https://github.com/phun-ky/arclace/compare/0.1.0...0.2.0) (2026-11-04)
 
 ### ⚠ BREAKING CHANGES
