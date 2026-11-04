@@ -28,3 +28,99 @@
   --vp-button-brand-hover-bg: #2160e6;
   --vp-button-brand-active-bg: #1d58d8;
 }
+
+/* The canvas: a faint dot grid, like a node editor's, that Arclace draws on.
+   The home page, the playground and the not-found page sit on it; reading
+   pages keep the plain background. The dots are decoration, not content. */
+:root {
+  --arc-canvas-bg: var(--vp-c-bg);
+  --arc-canvas-dot: #d2d2d8;
+  --arc-canvas-size: 28px;
+  /* What sits on the canvas: feature cards and the playground's boxes */
+  --arc-node-bg: var(--vp-c-bg);
+
+  /* The hero as in the README banner: the name in the text colour, the
+     mark in the brand blue, and no glow behind it */
+  --vp-home-hero-name-color: var(--vp-c-text-1);
+  --vp-home-hero-image-background-image: none;
+}
+
+.dark {
+  --arc-canvas-dot: #3a3a42;
+  /* Raised a little, so nodes stand off the dark canvas */
+  --arc-node-bg: var(--vp-c-bg-soft);
+}
+
+.arc-canvas,
+.VPContent.is-home,
+.VPContent:has(.NotFound) {
+  background-color: var(--arc-canvas-bg);
+  background-image: radial-gradient(
+    circle,
+    var(--arc-canvas-dot) 1.5px,
+    transparent 1.6px
+  );
+  background-position: center top;
+  background-size: var(--arc-canvas-size) var(--arc-canvas-size);
+}
+
+/* The banner's hierarchy: the name largest, then the headline, both in the
+   text colour, then the tagline in the secondary colour */
+.VPHero .name {
+  font-size: 48px;
+  line-height: 56px;
+}
+
+.VPHero .text {
+  font-size: 28px;
+  line-height: 36px;
+}
+
+@media (min-width: 640px) {
+  .VPHero .name {
+    font-size: 64px;
+    line-height: 72px;
+  }
+
+  .VPHero .text {
+    font-size: 40px;
+    line-height: 48px;
+  }
+}
+
+@media (min-width: 960px) {
+  .VPHero .name {
+    font-size: 76px;
+    line-height: 84px;
+  }
+
+  .VPHero .text {
+    margin-top: 8px;
+    font-size: 44px;
+    line-height: 52px;
+  }
+
+  /* The mark at a size where its strokes stay light */
+  .VPHero .image-src {
+    max-width: 208px;
+    max-height: 208px;
+  }
+}
+
+/* Feature cards sit on the canvas as nodes, like the playground's boxes */
+.VPFeatures .VPFeature {
+  border: 1px solid var(--vp-c-divider);
+  background-color: var(--arc-node-bg);
+  box-shadow: var(--vp-shadow-1);
+}
+
+/* Text never sits on a dot: the dots fade out behind the hero copy and the
+   not-found message, so the text keeps its contrast against the plain
+   background (the tagline would be 3.7:1 against a dot) */
+.VPHero .main,
+.NotFound .code,
+.NotFound .title,
+.NotFound .quote {
+  background-color: var(--arc-canvas-bg);
+  box-shadow: 0 0 24px 20px var(--arc-canvas-bg);
+}

@@ -7,6 +7,11 @@ hero:
   tagline:
     Curves, straight lines or orthogonal lines, with arrows, labels and anchors,
     that follow the elements when they move.
+  # The mark alone: the name sits next to it
+  image:
+    light: /logo/mark.svg
+    dark: /logo/mark-dark.svg
+    alt: ''
   actions:
     - theme: brand
       text: Get started
