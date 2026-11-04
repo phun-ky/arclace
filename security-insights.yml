@@ -70,10 +70,10 @@ repository:
         predicate-uri: https://slsa.dev/provenance/v1
         location: https://registry.npmjs.org/-/npm/v1/attestations/@phun-ky%2farclace@{version}
         comment: |
-          Releases after 0.2.0 are published from GitHub Actions with npm
+          From 0.3.0 on, releases are published from GitHub Actions with npm
           trusted publishing and a Sigstore-signed provenance attestation.
-          0.2.0, the first release under this name, was published by hand and
-          has none. Replace {version}, or run npm audit signatures.
+          0.1.0 and 0.2.0 were published by hand and have none. Replace
+          {version}, or run npm audit signatures.
       - name: SBOM
         predicate-uri: https://cyclonedx.org/bom
         location: https://github.com/phun-ky/arclace/releases/tag/{version}
