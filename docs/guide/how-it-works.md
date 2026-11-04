@@ -2,7 +2,8 @@
 
 Each instance adds one `<svg class="arc-svg">` to its container, absolutely
 positioned over the container's content, and draws every line into it. The
-overlay doesn't block clicks (`pointer-events: none`).
+overlay doesn't block clicks (`pointer-events: none`), and is hidden from
+assistive technology (`aria-hidden`); see [accessibility](/guide/accessibility).
 
 - Put all the elements you connect inside the container. If the container is
   `position: static` it is changed to `position: relative` so the overlay

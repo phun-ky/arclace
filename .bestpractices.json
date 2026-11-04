@@ -160,7 +160,7 @@
   "documentation_achievements_status": "Met",
   "documentation_achievements_justification": "The README shows the OpenSSF Best Practices and Scorecard badges: https://github.com/phun-ky/arclace/blob/main/README.md",
   "accessibility_best_practices_status": "Unmet",
-  "accessibility_best_practices_justification": "The docs site uses the VitePress default theme and hasn't been audited for accessibility. The SVG overlay that Arclace draws is hidden from assistive technology, and the docs don't yet say how to convey the relationships it shows: https://github.com/phun-ky/arclace/issues/60",
+  "accessibility_best_practices_justification": "The docs say how the lines work with assistive technology: the overlay is aria-hidden and decorative, so what the lines show goes in the page's own HTML, and clickable lines need a control in the page for the same action: https://github.com/phun-ky/arclace/blob/main/README.md#accessibility . The docs site passes an audit of language, titles, headings, names and keyboard access, but some text is below AA contrast: https://github.com/phun-ky/arclace/issues/68",
   "internationalization_status": "N/A",
   "internationalization_justification": "The package shows no text of its own: labels are given by the application, in its own language. Its only own text is error messages for developers.",
   "sites_password_security_status": "N/A",

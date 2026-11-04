@@ -13,7 +13,9 @@ milestones.
 Arclace is at `0.x`, so a minor release may still break the API; see the
 [security policy](SECURITY.md#supported-versions). The API was reviewed for 1.0
 in [#20](https://github.com/phun-ky/arclace/issues/20): options are validated,
-failures throw `ArclaceError`, and `stop` became `end`. Before 1.0:
+failures throw `ArclaceError`, and `stop` became `end`. The docs say how the
+lines work with assistive technology
+([#60](https://github.com/phun-ky/arclace/issues/60)). Before 1.0:
 
 - **Release notes and policies for 1.0**: from then on, no breaking changes
   within a major, deprecations that keep working through one full major, and
@@ -34,10 +36,14 @@ Ideas that fit the project but have no date. Each would be discussed in an issue
 first, and any breaking change after 1.0 waits for the next major with an
 upgrading guide.
 
-- **Accessibility guidance**: the overlay is hidden from assistive technology,
-  so the docs should say how to convey the relationships it draws in the page's
-  own HTML, and whether clickable lines need an accessible alternative
-  ([#60](https://github.com/phun-ky/arclace/issues/60)).
+- **An accessible mode.** The lines are decorative, and the
+  [docs](README.md#accessibility) show how to put what they show in the page's
+  own HTML. An opt-in mode could go further
+  ([#60](https://github.com/phun-ky/arclace/issues/60)):
+  - **Described lines:** the overlay without `aria-hidden`, as a labelled group
+    in which each line has an accessible name.
+  - **Focusable lines:** paths that take keyboard focus and respond to Enter and
+    Space.
 
 ## Not planned
 
