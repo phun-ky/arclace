@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-labelledby="title">
+  <title id="title">Arclace</title>
+  <!-- A tied lace: two loops, a knot, and two tails ending in aglets.
+       One colour: the text colour where it is inlined, black elsewhere -->
+  <g fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 14.5 C 11 7, 2.5 7.5, 3.5 13 C 4.5 18.5, 11.5 18, 16 14.5"/>
+    <path d="M16 14.5 C 21 7, 29.5 7.5, 28.5 13 C 27.5 18.5, 20.5 18, 16 14.5"/>
+    <path d="M15 16.5 C 13.5 21, 11 24.5, 8 27"/>
+    <path d="M17 16.5 C 18.5 21, 21 24.5, 24 27"/>
+  </g>
+  <circle cx="16" cy="15" r="3" fill="currentColor"/>
+  <circle cx="7.4" cy="27.4" r="2.3" fill="currentColor"/>
+  <circle cx="24.6" cy="27.4" r="2.3" fill="currentColor"/>
+</svg>

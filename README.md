@@ -1,5 +1,10 @@
 # @phun-ky/arclace
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./docs/public/logo/banner-dark.png">
+  <img alt="Arclace: a tied lace with two loops and two tails, with the tagline: draw SVG lines between DOM elements" src="./docs/public/logo/banner-light.png">
+</picture>
+
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/16333/badge)](https://www.bestpractices.dev/projects/16333)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/phun-ky/arclace/badge)](https://scorecard.dev/viewer/?uri=github.com/phun-ky/arclace)
 
