@@ -80,6 +80,18 @@ const declaredIn = (code) =>
       )
     )
   ]);
+// Characters that could end the inline <script> the code runs in, or that
+// older parsers read as line breaks
+const UNSAFE = {
+  '<': '\\u003C',
+  '>': '\\u003E',
+  '/': '\\u002F',
+  '\u2028': '\\u2028',
+  '\u2029': '\\u2029'
+};
+/** A JavaScript string literal of a value, safe inside an inline <script>. */
+const literal = (value) =>
+  JSON.stringify(value).replace(/[<>/\u2028\u2029]/g, (char) => UNSAFE[char]);
 /** Turn the commented values of a block into assertions. */
 const withAssertions = (code) => {
   let checks = 0;
@@ -92,7 +104,7 @@ const withAssertions = (code) => {
 
       checks += 1;
 
-      return `${indent}__throws(${JSON.stringify(expression)}, () => { ${expression}; }, ${JSON.stringify(name)});`;
+      return `${indent}__throws(${literal(expression)}, () => { ${expression}; }, ${literal(name)});`;
     }
 
     const match = line.match(ASSERTED);
@@ -103,7 +115,7 @@ const withAssertions = (code) => {
 
     checks += 1;
 
-    return `${indent}__check(${JSON.stringify(expression)}, ${expression}, ${expected});`;
+    return `${indent}__check(${literal(expression)}, ${expression}, ${expected});`;
   });
 
   return { code: lines.join('\n'), checks };
