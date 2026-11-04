@@ -71,8 +71,7 @@
             "section": "Adding missing tests",
             "effect": "hidden"
           }
-        ],
-        "preMajor": true
+        ]
       },
       "infile": "CHANGELOG.md"
     }

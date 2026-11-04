@@ -265,7 +265,8 @@ by Dependabot are exempt.
   and the changelog are generated from them (see [Releases](#releases)), so pick
   the type that matches the change. A breaking change needs a `type!:` and a
   `BREAKING CHANGE:` footer that says what to change.
-- Before 1.0, a breaking change is released as a minor version (0.2 to 0.3).
+- A breaking change is released as a new major version, also below 1.0: from 0.3
+  it releases 1.0.0. Up to 0.3, breaking changes bumped the minor version.
 - Deprecating an API isn't a breaking change, so it can land in any release.
   Mark it `@deprecated` with its replacement and the version it will be removed
   in. From 1.0 on, it keeps working through one full major: deprecated during
@@ -290,6 +291,20 @@ GitHub Actions:
    with trusted publishing and signed provenance.
 3. The release commit and tag go to `main`, and a GitHub release is created with
    a software bill of materials attached.
+
+To release an exact version instead, such as 1.0.0, add a `Release-As:` footer
+to any commit since the last release, in the pull request that should release
+it:
+
+```text
+docs: ✏️ 1.0 release notes
+
+Release-As: 1.0.0
+```
+
+The footer releases even when no commit touches the published files. The version
+must be `X.Y.Z` and above the last release, and two commits can't ask for
+different versions; otherwise the publish workflow fails and says why.
 
 Every push to `main` also rebuilds and deploys the docs site.
 `npm run release:dry-run` shows what a merge would release.
