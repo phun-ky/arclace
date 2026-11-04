@@ -1,30 +1,30 @@
-# @phun-ky/connect-the-things
+# @phun-ky/arclace
 
 ## Classes
 
+- [Arclace](classes/Arclace.md)
 - [Connection](classes/Connection.md)
-- [ConnectTheThings](classes/ConnectTheThings.md)
 
 ## Interfaces
 
-- [CTTPointInterface](interfaces/CTTPointInterface.md)
-- [CTTRectInterface](interfaces/CTTRectInterface.md)
+- [ArcPointInterface](interfaces/ArcPointInterface.md)
+- [ArcRectInterface](interfaces/ArcRectInterface.md)
 
 ## Type Aliases
 
-- [CTTArrowType](type-aliases/CTTArrowType.md)
-- [CTTConnectionDefinitionType](type-aliases/CTTConnectionDefinitionType.md)
-- [CTTConnectionOptionsType](type-aliases/CTTConnectionOptionsType.md)
-- [CTTConnectionParamsType](type-aliases/CTTConnectionParamsType.md)
-- [CTTElementTargetType](type-aliases/CTTElementTargetType.md)
-- [CTTGeometryType](type-aliases/CTTGeometryType.md)
-- [CTTOptionalKeysType](type-aliases/CTTOptionalKeysType.md)
-- [CTTOptionsType](type-aliases/CTTOptionsType.md)
-- [CTTPathResultType](type-aliases/CTTPathResultType.md)
-- [CTTPathType](type-aliases/CTTPathType.md)
-- [CTTResolvedConnectionOptionsType](type-aliases/CTTResolvedConnectionOptionsType.md)
-- [CTTSideOptionType](type-aliases/CTTSideOptionType.md)
-- [CTTSideType](type-aliases/CTTSideType.md)
+- [ArcArrowType](type-aliases/ArcArrowType.md)
+- [ArcConnectionDefinitionType](type-aliases/ArcConnectionDefinitionType.md)
+- [ArcConnectionOptionsType](type-aliases/ArcConnectionOptionsType.md)
+- [ArcConnectionParamsType](type-aliases/ArcConnectionParamsType.md)
+- [ArcElementTargetType](type-aliases/ArcElementTargetType.md)
+- [ArcGeometryType](type-aliases/ArcGeometryType.md)
+- [ArcOptionalKeysType](type-aliases/ArcOptionalKeysType.md)
+- [ArcOptionsType](type-aliases/ArcOptionsType.md)
+- [ArcPathResultType](type-aliases/ArcPathResultType.md)
+- [ArcPathType](type-aliases/ArcPathType.md)
+- [ArcResolvedConnectionOptionsType](type-aliases/ArcResolvedConnectionOptionsType.md)
+- [ArcSideOptionType](type-aliases/ArcSideOptionType.md)
+- [ArcSideType](type-aliases/ArcSideType.md)
 
 ## Variables
 

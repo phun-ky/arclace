@@ -1,10 +1,10 @@
-[@phun-ky/connect-the-things](../index.md) / straightPath
+[@phun-ky/arclace](../index.md) / straightPath
 
 # Function: straightPath()
 
-> **straightPath**(`start`, `stop`): [`CTTPathResultType`](../type-aliases/CTTPathResultType.md)
+> **straightPath**(`start`, `stop`): [`ArcPathResultType`](../type-aliases/ArcPathResultType.md)
 
-Defined in: [utils/paths.ts:72](https://github.com/phun-ky/connect-the-things/blob/main/src/utils/paths.ts#L72)
+Defined in: [utils/paths.ts:72](https://github.com/phun-ky/arclace/blob/main/src/utils/paths.ts#L72)
 
 A straight line between two points.
 
@@ -12,15 +12,15 @@ A straight line between two points.
 
 ### start
 
-[`CTTPointInterface`](../interfaces/CTTPointInterface.md)
+[`ArcPointInterface`](../interfaces/ArcPointInterface.md)
 
 ### stop
 
-[`CTTPointInterface`](../interfaces/CTTPointInterface.md)
+[`ArcPointInterface`](../interfaces/ArcPointInterface.md)
 
 ## Returns
 
-[`CTTPathResultType`](../type-aliases/CTTPathResultType.md)
+[`ArcPathResultType`](../type-aliases/ArcPathResultType.md)
 
 ## Example
 

@@ -1,41 +1,41 @@
-[@phun-ky/connect-the-things](../index.md) / ConnectTheThings
+[@phun-ky/arclace](../index.md) / Arclace
 
-# Class: ConnectTheThings
+# Class: Arclace
 
-Defined in: [ConnectTheThings.ts:57](https://github.com/phun-ky/connect-the-things/blob/main/src/ConnectTheThings.ts#L57)
+Defined in: [Arclace.ts:57](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L57)
 
 Draws and maintains SVG lines between DOM elements.
 
-An instance adds one `<svg class="ctt-svg">` overlay to its container and
+An instance adds one `<svg class="arc-svg">` overlay to its container and
 draws every connection into it.
 
 ## Example
 
 ```ts
-import { ConnectTheThings } from '@phun-ky/connect-the-things';
+import { Arclace } from '@phun-ky/arclace';
 
-const ctt = new ConnectTheThings({ container: '#diagram' });
+const arclace = new Arclace({ container: '#diagram' });
 
-ctt.connect('#a', '#b', { arrow: 'end', label: 'depends on' });
+arclace.connect('#a', '#b', { arrow: 'end', label: 'depends on' });
 ```
 
 ## Constructors
 
 ### Constructor
 
-> **new ConnectTheThings**(`options?`): `ConnectTheThings`
+> **new Arclace**(`options?`): `Arclace`
 
-Defined in: [ConnectTheThings.ts:77](https://github.com/phun-ky/connect-the-things/blob/main/src/ConnectTheThings.ts#L77)
+Defined in: [Arclace.ts:77](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L77)
 
 #### Parameters
 
 ##### options?
 
-[`CTTOptionsType`](../type-aliases/CTTOptionsType.md) = `{}`
+[`ArcOptionsType`](../type-aliases/ArcOptionsType.md) = `{}`
 
 #### Returns
 
-`ConnectTheThings`
+`Arclace`
 
 ## Properties
 
@@ -43,7 +43,7 @@ Defined in: [ConnectTheThings.ts:77](https://github.com/phun-ky/connect-the-thin
 
 > `readonly` **container**: `HTMLElement`
 
-Defined in: [ConnectTheThings.ts:61](https://github.com/phun-ky/connect-the-things/blob/main/src/ConnectTheThings.ts#L61)
+Defined in: [Arclace.ts:61](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L61)
 
 The element the overlay was added to.
 
@@ -53,7 +53,7 @@ The element the overlay was added to.
 
 > `readonly` **svg**: `SVGSVGElement`
 
-Defined in: [ConnectTheThings.ts:66](https://github.com/phun-ky/connect-the-things/blob/main/src/ConnectTheThings.ts#L66)
+Defined in: [Arclace.ts:66](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L66)
 
 The SVG overlay all lines are drawn in.
 
@@ -65,7 +65,7 @@ The SVG overlay all lines are drawn in.
 
 > **get** **connections**(): [`Connection`](Connection.md)[]
 
-Defined in: [ConnectTheThings.ts:119](https://github.com/phun-ky/connect-the-things/blob/main/src/ConnectTheThings.ts#L119)
+Defined in: [Arclace.ts:119](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L119)
 
 All current connections, in the order they were made.
 
@@ -79,7 +79,7 @@ All current connections, in the order they were made.
 
 > **clear**(): `void`
 
-Defined in: [ConnectTheThings.ts:231](https://github.com/phun-ky/connect-the-things/blob/main/src/ConnectTheThings.ts#L231)
+Defined in: [Arclace.ts:231](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L231)
 
 Removes every connection.
 
@@ -93,7 +93,7 @@ Removes every connection.
 
 > **connect**(`startElement`, `stopElement`, `options?`): [`Connection`](Connection.md)
 
-Defined in: [ConnectTheThings.ts:135](https://github.com/phun-ky/connect-the-things/blob/main/src/ConnectTheThings.ts#L135)
+Defined in: [Arclace.ts:135](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L135)
 
 Connects two elements and draws the line right away.
 
@@ -101,19 +101,19 @@ Connects two elements and draws the line right away.
 
 ##### startElement
 
-[`CTTElementTargetType`](../type-aliases/CTTElementTargetType.md)
+[`ArcElementTargetType`](../type-aliases/ArcElementTargetType.md)
 
 The element (or selector) the line starts at.
 
 ##### stopElement
 
-[`CTTElementTargetType`](../type-aliases/CTTElementTargetType.md)
+[`ArcElementTargetType`](../type-aliases/ArcElementTargetType.md)
 
 The element (or selector) the line stops at.
 
 ##### options?
 
-[`CTTConnectionOptionsType`](../type-aliases/CTTConnectionOptionsType.md) = `{}`
+[`ArcConnectionOptionsType`](../type-aliases/ArcConnectionOptionsType.md) = `{}`
 
 Options for this connection, merged over the instance defaults.
 
@@ -128,7 +128,7 @@ When an element can't be found or the id is taken.
 #### Example
 
 ```ts
-const connection = ctt.connect(a, b, { type: 'orthogonal', arrow: 'end' });
+const connection = arclace.connect(a, b, { type: 'orthogonal', arrow: 'end' });
 ```
 
 ***
@@ -137,7 +137,7 @@ const connection = ctt.connect(a, b, { type: 'orthogonal', arrow: 'end' });
 
 > **connectAll**(`definitions`): [`Connection`](Connection.md)[]
 
-Defined in: [ConnectTheThings.ts:158](https://github.com/phun-ky/connect-the-things/blob/main/src/ConnectTheThings.ts#L158)
+Defined in: [Arclace.ts:158](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L158)
 
 Connects many pairs of elements and draws them in one go.
 
@@ -145,7 +145,7 @@ Connects many pairs of elements and draws them in one go.
 
 ##### definitions
 
-[`CTTConnectionDefinitionType`](../type-aliases/CTTConnectionDefinitionType.md)[]
+[`ArcConnectionDefinitionType`](../type-aliases/ArcConnectionDefinitionType.md)[]
 
 #### Returns
 
@@ -154,7 +154,7 @@ Connects many pairs of elements and draws them in one go.
 #### Example
 
 ```ts
-ctt.connectAll([
+arclace.connectAll([
   { startElement: '#a', stopElement: '#b' },
   { startElement: '#a', stopElement: '#c', dashed: true }
 ]);
@@ -166,7 +166,7 @@ ctt.connectAll([
 
 > **destroy**(): `void`
 
-Defined in: [ConnectTheThings.ts:339](https://github.com/phun-ky/connect-the-things/blob/main/src/ConnectTheThings.ts#L339)
+Defined in: [Arclace.ts:339](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L339)
 
 Removes every connection and the overlay, and stops listening for
 changes. The instance can't be used afterwards.
@@ -181,7 +181,7 @@ changes. The instance can't be used afterwards.
 
 > **disconnect**(`target`): `void`
 
-Defined in: [ConnectTheThings.ts:201](https://github.com/phun-ky/connect-the-things/blob/main/src/ConnectTheThings.ts#L201)
+Defined in: [Arclace.ts:201](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L201)
 
 Removes connections.
 
@@ -202,9 +202,9 @@ A connection, a connection id, or an element (or
 #### Example
 
 ```ts
-ctt.disconnect(connection);
-ctt.disconnect('my-connection-id');
-ctt.disconnect(document.querySelector('#a'));
+arclace.disconnect(connection);
+arclace.disconnect('my-connection-id');
+arclace.disconnect(document.querySelector('#a'));
 ```
 
 ***
@@ -213,7 +213,7 @@ ctt.disconnect(document.querySelector('#a'));
 
 > **find**(`target`): [`Connection`](Connection.md)[]
 
-Defined in: [ConnectTheThings.ts:179](https://github.com/phun-ky/connect-the-things/blob/main/src/ConnectTheThings.ts#L179)
+Defined in: [Arclace.ts:179](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L179)
 
 Returns every connection that starts or stops at an element.
 
@@ -221,7 +221,7 @@ Returns every connection that starts or stops at an element.
 
 ##### target
 
-[`CTTElementTargetType`](../type-aliases/CTTElementTargetType.md)
+[`ArcElementTargetType`](../type-aliases/ArcElementTargetType.md)
 
 #### Returns
 
@@ -233,7 +233,7 @@ Returns every connection that starts or stops at an element.
 
 > **get**(`id`): [`Connection`](Connection.md) \| `undefined`
 
-Defined in: [ConnectTheThings.ts:172](https://github.com/phun-ky/connect-the-things/blob/main/src/ConnectTheThings.ts#L172)
+Defined in: [Arclace.ts:172](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L172)
 
 Returns the connection with the given id.
 
@@ -253,7 +253,7 @@ Returns the connection with the given id.
 
 > **update**(): `void`
 
-Defined in: [ConnectTheThings.ts:247](https://github.com/phun-ky/connect-the-things/blob/main/src/ConnectTheThings.ts#L247)
+Defined in: [Arclace.ts:247](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L247)
 
 Remeasures every element and redraws every connection. Called
 automatically when `autoUpdate` is on; call it yourself after moving

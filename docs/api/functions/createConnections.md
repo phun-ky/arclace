@@ -1,33 +1,33 @@
-[@phun-ky/connect-the-things](../index.md) / createConnections
+[@phun-ky/arclace](../index.md) / createConnections
 
 # Function: createConnections()
 
-> **createConnections**(`definitions`, `options?`): [`ConnectTheThings`](../classes/ConnectTheThings.md)
+> **createConnections**(`definitions`, `options?`): [`Arclace`](../classes/Arclace.md)
 
-Defined in: [ConnectTheThings.ts:479](https://github.com/phun-ky/connect-the-things/blob/main/src/ConnectTheThings.ts#L479)
+Defined in: [Arclace.ts:479](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L479)
 
-Creates a [ConnectTheThings](../classes/ConnectTheThings.md) instance and connects the given pairs.
+Creates a [Arclace](../classes/Arclace.md) instance and connects the given pairs.
 
 ## Parameters
 
 ### definitions
 
-[`CTTConnectionDefinitionType`](../type-aliases/CTTConnectionDefinitionType.md)[]
+[`ArcConnectionDefinitionType`](../type-aliases/ArcConnectionDefinitionType.md)[]
 
 ### options?
 
-[`CTTOptionsType`](../type-aliases/CTTOptionsType.md)
+[`ArcOptionsType`](../type-aliases/ArcOptionsType.md)
 
 ## Returns
 
-[`ConnectTheThings`](../classes/ConnectTheThings.md)
+[`Arclace`](../classes/Arclace.md)
 
 ## Example
 
 ```ts
-import { createConnections } from '@phun-ky/connect-the-things';
+import { createConnections } from '@phun-ky/arclace';
 
-const ctt = createConnections(
+const arclace = createConnections(
   [
     { startElement: '#a', stopElement: '#b' },
     { startElement: '#b', stopElement: '#c', arrow: 'end' }

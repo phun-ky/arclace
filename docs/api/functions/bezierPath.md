@@ -1,10 +1,10 @@
-[@phun-ky/connect-the-things](../index.md) / bezierPath
+[@phun-ky/arclace](../index.md) / bezierPath
 
 # Function: bezierPath()
 
-> **bezierPath**(`start`, `startSide`, `stop`, `stopSide`, `curvature?`): [`CTTPathResultType`](../type-aliases/CTTPathResultType.md)
+> **bezierPath**(`start`, `startSide`, `stop`, `stopSide`, `curvature?`): [`ArcPathResultType`](../type-aliases/ArcPathResultType.md)
 
-Defined in: [utils/paths.ts:89](https://github.com/phun-ky/connect-the-things/blob/main/src/utils/paths.ts#L89)
+Defined in: [utils/paths.ts:89](https://github.com/phun-ky/arclace/blob/main/src/utils/paths.ts#L89)
 
 A cubic bezier curve that leaves `start` and arrives at `stop`
 perpendicular to their sides.
@@ -13,19 +13,19 @@ perpendicular to their sides.
 
 ### start
 
-[`CTTPointInterface`](../interfaces/CTTPointInterface.md)
+[`ArcPointInterface`](../interfaces/ArcPointInterface.md)
 
 ### startSide
 
-[`CTTSideType`](../type-aliases/CTTSideType.md)
+[`ArcSideType`](../type-aliases/ArcSideType.md)
 
 ### stop
 
-[`CTTPointInterface`](../interfaces/CTTPointInterface.md)
+[`ArcPointInterface`](../interfaces/ArcPointInterface.md)
 
 ### stopSide
 
-[`CTTSideType`](../type-aliases/CTTSideType.md)
+[`ArcSideType`](../type-aliases/ArcSideType.md)
 
 ### curvature?
 
@@ -33,7 +33,7 @@ perpendicular to their sides.
 
 ## Returns
 
-[`CTTPathResultType`](../type-aliases/CTTPathResultType.md)
+[`ArcPathResultType`](../type-aliases/ArcPathResultType.md)
 
 ## Example
 
