@@ -1,0 +1,140 @@
+header:
+  schema-version: 2.2.0
+  last-updated: '2026-11-04'
+  last-reviewed: '2026-11-04'
+  url: https://raw.githubusercontent.com/phun-ky/connect-the-things/main/security-insights.yml
+  comment: |
+    Security information for connect-the-things, in the OpenSSF Security
+    Insights format. Keep it in step with SECURITY.md.
+
+project:
+  name: connect-the-things
+  homepage: https://phun-ky.net/connect-the-things/
+  administrators:
+    - name: Alexander Vassbotn Røyne-Helgesen
+      social: https://github.com/phun-ky
+      primary: true
+  documentation:
+    quickstart-guide: https://phun-ky.net/connect-the-things/guide/
+    detailed-guide: https://phun-ky.net/connect-the-things/
+    design: https://phun-ky.net/connect-the-things/guide/how-it-works
+    code-of-conduct: https://github.com/phun-ky/connect-the-things/blob/main/CODE_OF_CONDUCT.md
+    support-policy: https://github.com/phun-ky/connect-the-things/blob/main/SECURITY.md#supported-versions
+    signature-verification: https://github.com/phun-ky/connect-the-things/blob/main/SECURITY.md#verifying-releases
+  repositories:
+    - name: connect-the-things
+      url: https://github.com/phun-ky/connect-the-things
+      comment: |
+        The source of the @phun-ky/connect-the-things package and its docs
+        site.
+  vulnerability-reporting:
+    reports-accepted: true
+    bug-bounty-available: false
+    policy: https://github.com/phun-ky/connect-the-things/blob/main/SECURITY.md
+    comment: |
+      Report privately with GitHub's private vulnerability reporting
+      (https://github.com/phun-ky/connect-the-things/security/advisories/new)
+      or by email to the contact below.
+    contact:
+      name: connect-the-things security contact
+      email: security@phun-ky.net
+      primary: true
+
+repository:
+  url: https://github.com/phun-ky/connect-the-things
+  status: active
+  accepts-change-request: true
+  accepts-automated-change-request: true
+  no-third-party-packages: false
+  core-team:
+    - name: Alexander Vassbotn Røyne-Helgesen
+      social: https://github.com/phun-ky
+      primary: true
+  documentation:
+    contributing-guide: https://github.com/phun-ky/connect-the-things/blob/main/CONTRIBUTING.md
+    security-policy: https://github.com/phun-ky/connect-the-things/blob/main/SECURITY.md
+    dependency-management-policy: https://github.com/phun-ky/connect-the-things/blob/main/SECURITY.md#dependencies
+  license:
+    url: https://github.com/phun-ky/connect-the-things/blob/main/LICENSE
+    expression: MIT
+  release:
+    automated-pipeline: true
+    changelog: https://github.com/phun-ky/connect-the-things/blob/main/CHANGELOG.md
+    distribution-points:
+      - uri: pkg:npm/%40phun-ky/connect-the-things
+        comment: npm package
+    attestations:
+      - name: npm provenance
+        predicate-uri: https://slsa.dev/provenance/v1
+        location: https://registry.npmjs.org/-/npm/v1/attestations/@phun-ky%2fconnect-the-things@{version}
+        comment: |
+          Releases from 0.1.1 on are published from GitHub Actions with npm
+          trusted publishing and a Sigstore-signed provenance attestation.
+          0.1.0 was published by hand and has none. Replace {version}, or run
+          npm audit signatures.
+      - name: SBOM
+        predicate-uri: https://cyclonedx.org/bom
+        location: https://github.com/phun-ky/connect-the-things/releases/tag/{version}
+        comment: |
+          A CycloneDX SBOM of the package's runtime dependencies,
+          connect-the-things-{version}.cdx.json, is attached to each GitHub
+          release.
+  security:
+    assessments:
+      self:
+        evidence: https://github.com/phun-ky/connect-the-things/blob/main/SECURITY.md#security-expectations
+        date: '2026-11-04'
+        comment: |
+          The security expectations in SECURITY.md, checked against the
+          source: what the package does and doesn't do with the page and with
+          its options.
+    tools:
+      - name: CodeQL
+        type: SAST
+        rulesets:
+          - default
+        integration:
+          adhoc: false
+          ci: true
+          release: false
+        results: {}
+        comment: |
+          GitHub default setup, scanning JavaScript/TypeScript and the GitHub
+          Actions workflows on every push to main and every pull request.
+      - name: Dependabot
+        type: SCA
+        rulesets:
+          - default
+        integration:
+          adhoc: true
+          ci: false
+          release: false
+        results: {}
+        comment: |
+          Weekly checks of the npm dependencies and GitHub Actions, with
+          update pull requests, and security updates when an advisory is
+          published.
+      - name: Dependency Review
+        type: SCA
+        rulesets:
+          - default
+        integration:
+          adhoc: false
+          ci: true
+          release: false
+        results: {}
+        comment: |
+          Fails pull requests that add a dependency with a known high or
+          critical vulnerability. npm audit gates every release the same way.
+      - name: OpenSSF Scorecard
+        type: other
+        rulesets:
+          - default
+        integration:
+          adhoc: false
+          ci: true
+          release: false
+        results: {}
+        comment: |
+          Runs on every push to main and weekly; results at
+          https://scorecard.dev/viewer/?uri=github.com/phun-ky/connect-the-things
