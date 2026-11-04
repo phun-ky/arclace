@@ -22,6 +22,9 @@ hero:
     - theme: alt
       text: API
       link: /api/
+    - theme: alt
+      text: What's new in 1.0
+      link: /guide/releases/1.0
 
 features:
   - title: Three line types

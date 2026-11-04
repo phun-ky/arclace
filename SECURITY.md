@@ -6,20 +6,28 @@ chosen, tracked and kept clear of known vulnerabilities is described under
 
 ## Supported Versions
 
-| Release                  | Supported |
-| ------------------------ | --------- |
-| The latest `0.x` release | ✅        |
-| Earlier `0.x` releases   | ❌        |
+Support follows the major version:
 
-- **Only the latest release gets fixes.** A fix is released as a new version; to
-  get it, upgrade to the newest release.
-- **Up to 0.3, a minor release could break your code.** While the version was
-  below 1.0, breaking changes bumped the minor version (0.2 to 0.3). From now
-  on, a breaking change releases the next major version, starting with 1.0.0.
-  The release notes say what changed.
-- **Security comes first.** If a vulnerability can't be fixed without changing
-  an API, the fix changes it, and the advisory and the release notes say what
-  changed and why.
+| Release                       | Supported                               |
+| ----------------------------- | --------------------------------------- |
+| `1.x`, the current major      | ✅                                      |
+| `0.x`                         | ❌ no more releases now that 1.0 is out |
+| `@phun-ky/connect-the-things` | ❌ deprecated, renamed to Arclace       |
+
+- **The current major is supported as a whole.** Fixes are released as a new
+  patch or minor of it, and upgrading within a major never breaks your code.
+  That includes deprecated APIs, as long as the major ships them.
+- **The previous major gets fixes for high and critical vulnerabilities for 6
+  months** after the next major is released, as a patch on its latest release.
+  1.0 is the first major, so this starts with 2.0.
+- **Security comes before the deprecation grace period.** If a vulnerability
+  can't be fixed without breaking an API, the fix may change or remove it in a
+  patch or minor release instead of waiting for a major. The change is kept as
+  small as possible, and the advisory and the release notes say what changed and
+  why.
+
+To get a fix, upgrade to the newest release of your major. To move from 0.x,
+follow the [upgrading guide](https://phun-ky.net/arclace/guide/upgrading).
 
 ## Reporting a Vulnerability
 
