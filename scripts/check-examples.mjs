@@ -6,11 +6,14 @@
 //   few fixtures (arclace, connection, a, b, c, useEffect and refs) in scope when
 //   the block uses them without declaring them. Every connection they draw
 //   must have a path, and `expression; // 'value'` lines are asserted.
+//   `expression; // throws TypeError` lines must throw an error of that name.
 // - html blocks with a <script> run as pages, with CDN URLs for the package
 //   mapped to the installed files the CDN would serve.
 // - Other html blocks are the markup the next blocks in the file run on. A
 //   block starting with <g> shows rendered output and is skipped.
 // - css blocks must parse into as many rules as they have.
+// - A block marked no-run (```ts no-run) is skipped: code from an earlier
+//   release, such as the before half of the upgrading guide.
 //
 // Needs Chrome (google-chrome, or CHROME=/path/to/chrome).
 import { JsxEmit, ModuleKind, ScriptTarget, transpileModule } from 'typescript';
@@ -27,10 +30,12 @@ import { pathToFileURL } from 'node:url';
 // A cold CI runner can take over 10 seconds to start Chrome
 const CHROME_START_MS = 30_000;
 const CHROME_POLL_MS = 100;
-const BLOCK = /^```(\w*)\n([\s\S]*?)^```/gm;
+const BLOCK = /^```(\w*)([^\n]*)\n([\s\S]*?)^```/gm;
 // `expression; // 'value'`, with a string, number or boolean value
 const ASSERTED =
   /^(\s*)(.+?);\s*\/\/\s*('[^']*'|"[^"]*"|-?\d[\d.]*|true|false)\s*$/;
+// `expression; // throws TypeError`, with the name of the error
+const THROWS = /^(\s*)(.+?);\s*\/\/\s*throws\s+(\w+)\s*$/;
 const TYPES = {
   '.css': 'text/css',
   '.html': 'text/html',
@@ -80,6 +85,16 @@ const withAssertions = (code) => {
   let checks = 0;
 
   const lines = code.split('\n').map((line) => {
+    const throws = line.match(THROWS);
+
+    if (throws) {
+      const [, indent, expression, name] = throws;
+
+      checks += 1;
+
+      return `${indent}__throws(${JSON.stringify(expression)}, () => { ${expression}; }, ${JSON.stringify(name)});`;
+    }
+
     const match = line.match(ASSERTED);
 
     if (!match || /^\s*(const|let|var|import)\b/.test(match[2])) return line;
@@ -101,7 +116,8 @@ const blocksOf = (file, root) => {
     file,
     line: text.slice(0, match.index).split('\n').length,
     language: match[1],
-    code: match[2]
+    run: !/\bno-run\b/.test(match[2]),
+    code: match[3]
   }));
 };
 /** Start Chrome and connect to its first page over the DevTools protocol. */
@@ -260,7 +276,10 @@ export const checkExamples = async ({ root, app, pkg }) => {
         continue;
       }
 
-      if (!['ts', 'js', 'tsx', 'html', 'css'].includes(block.language))
+      if (
+        !block.run ||
+        !['ts', 'js', 'tsx', 'html', 'css'].includes(block.language)
+      )
         continue;
 
       const key = `${block.language}\n${markup}\n${block.code}`;
@@ -326,8 +345,12 @@ export const checkExamples = async ({ root, app, pkg }) => {
       );
 
       checks += count;
+      // A line that must throw draws nothing
       run.connects = /\b(connect|connectAll|createConnections)\(/.test(
         run.code
+          .split('\n')
+          .filter((line) => !THROWS.test(line))
+          .join('\n')
       );
       head.push(
         `<script type="importmap">${JSON.stringify({ imports: { [pkg.name]: moduleUrl } })}</script>`
@@ -340,6 +363,15 @@ export const checkExamples = async ({ root, app, pkg }) => {
 <script>
   window.__check = (source, actual, expected) => {
     if (actual !== expected) throw new Error(\`the example says \${source} is \${JSON.stringify(expected)}, but it is \${JSON.stringify(actual)}\`);
+  };
+  window.__throws = (source, run, name) => {
+    try {
+      run();
+    } catch (error) {
+      if (error?.name === name) return;
+      throw new Error(\`the example says \${source} throws a \${name}, but it throws \${error?.name}: \${error?.message}\`);
+    }
+    throw new Error(\`the example says \${source} throws a \${name}, but it doesn't throw\`);
   };
 </script>
 <script type="module">
