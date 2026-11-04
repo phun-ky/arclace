@@ -30,11 +30,37 @@ export default defineConfig({
         href: '/arclace/favicon.svg'
       }
     ],
+    [
+      'link',
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '32x32',
+        href: '/arclace/logo/favicon-32.png'
+      }
+    ],
+    [
+      'link',
+      { rel: 'apple-touch-icon', href: '/arclace/logo/apple-touch-icon.png' }
+    ],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:url', content: SITE }],
     ['meta', { property: 'og:title', content: 'Arclace' }],
     ['meta', { property: 'og:description', content: DESCRIPTION }],
-    ['meta', { property: 'og:locale', content: 'en_GB' }]
+    ['meta', { property: 'og:locale', content: 'en_GB' }],
+    ['meta', { property: 'og:image', content: `${SITE}logo/social@2x.png` }],
+    ['meta', { property: 'og:image:width', content: '2400' }],
+    ['meta', { property: 'og:image:height', content: '1260' }],
+    [
+      'meta',
+      {
+        property: 'og:image:alt',
+        content:
+          'The Arclace logo, one node with three lines spread out to three anchors, with the name and the tagline'
+      }
+    ],
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { name: 'twitter:image', content: `${SITE}logo/social@2x.png` }]
   ],
   markdown: {
     theme: { light: lightTheme, dark: darkTheme }
@@ -43,7 +69,8 @@ export default defineConfig({
   lastUpdated: true,
   sitemap: { hostname: SITE },
   themeConfig: {
-    logo: { src: '/favicon.svg', alt: '' },
+    // The site title is next to it, so the logo itself needs no text
+    logo: { light: '/logo/mark.svg', dark: '/logo/mark-dark.svg', alt: '' },
     search: { provider: 'local' },
     editLink: {
       pattern: 'https://github.com/phun-ky/arclace/edit/main/docs/:path',
