@@ -2,7 +2,7 @@
 
 # Class: Arclace
 
-Defined in: [Arclace.ts:57](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L57)
+Defined in: [src/Arclace.ts:71](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L71)
 
 Draws and maintains SVG lines between DOM elements.
 
@@ -25,7 +25,7 @@ arclace.connect('#a', '#b', { arrow: 'end', label: 'depends on' });
 
 > **new Arclace**(`options?`): `Arclace`
 
-Defined in: [Arclace.ts:77](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L77)
+Defined in: [src/Arclace.ts:97](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L97)
 
 #### Parameters
 
@@ -37,13 +37,26 @@ Defined in: [Arclace.ts:77](https://github.com/phun-ky/arclace/blob/main/src/Arc
 
 `Arclace`
 
+#### Throws
+
+When an option has the wrong type.
+
+#### Throws
+
+When an option is out of range.
+
+#### Throws
+
+When there is no DOM, or the container can't be
+  found.
+
 ## Properties
 
 ### container
 
 > `readonly` **container**: `HTMLElement`
 
-Defined in: [Arclace.ts:61](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L61)
+Defined in: [src/Arclace.ts:75](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L75)
 
 The element the overlay was added to.
 
@@ -53,7 +66,7 @@ The element the overlay was added to.
 
 > `readonly` **svg**: `SVGSVGElement`
 
-Defined in: [Arclace.ts:66](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L66)
+Defined in: [src/Arclace.ts:80](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L80)
 
 The SVG overlay all lines are drawn in.
 
@@ -65,7 +78,7 @@ The SVG overlay all lines are drawn in.
 
 > **get** **connections**(): [`Connection`](Connection.md)[]
 
-Defined in: [Arclace.ts:119](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L119)
+Defined in: [src/Arclace.ts:139](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L139)
 
 All current connections, in the order they were made.
 
@@ -79,7 +92,7 @@ All current connections, in the order they were made.
 
 > **clear**(): `void`
 
-Defined in: [Arclace.ts:231](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L231)
+Defined in: [src/Arclace.ts:298](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L298)
 
 Removes every connection.
 
@@ -91,9 +104,9 @@ Removes every connection.
 
 ### connect()
 
-> **connect**(`startElement`, `stopElement`, `options?`): [`Connection`](Connection.md)
+> **connect**(`startElement`, `endElement`, `options?`): [`Connection`](Connection.md)
 
-Defined in: [Arclace.ts:135](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L135)
+Defined in: [src/Arclace.ts:158](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L158)
 
 Connects two elements and draws the line right away.
 
@@ -105,11 +118,11 @@ Connects two elements and draws the line right away.
 
 The element (or selector) the line starts at.
 
-##### stopElement
+##### endElement
 
 [`ArcElementTargetType`](../type-aliases/ArcElementTargetType.md)
 
-The element (or selector) the line stops at.
+The element (or selector) the line ends at.
 
 ##### options?
 
@@ -123,7 +136,16 @@ Options for this connection, merged over the instance defaults.
 
 #### Throws
 
-When an element can't be found or the id is taken.
+When an element or an option has the wrong type.
+
+#### Throws
+
+When an option is out of range.
+
+#### Throws
+
+When an element can't be found, the id is taken
+  or the instance has been destroyed. Nothing is added.
 
 #### Example
 
@@ -137,9 +159,10 @@ const connection = arclace.connect(a, b, { type: 'orthogonal', arrow: 'end' });
 
 > **connectAll**(`definitions`): [`Connection`](Connection.md)[]
 
-Defined in: [Arclace.ts:158](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L158)
+Defined in: [src/Arclace.ts:189](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L189)
 
-Connects many pairs of elements and draws them in one go.
+Connects many pairs of elements and draws them in one go. Every
+definition is checked first, so either all of them are added or none.
 
 #### Parameters
 
@@ -151,12 +174,26 @@ Connects many pairs of elements and draws them in one go.
 
 [`Connection`](Connection.md)[]
 
+#### Throws
+
+When `definitions` isn't an array, or an element or
+  an option has the wrong type.
+
+#### Throws
+
+When an option is out of range.
+
+#### Throws
+
+When an element can't be found, an id is taken or
+  repeated, or the instance has been destroyed.
+
 #### Example
 
 ```ts
 arclace.connectAll([
-  { startElement: '#a', stopElement: '#b' },
-  { startElement: '#a', stopElement: '#c', dashed: true }
+  { startElement: '#a', endElement: '#b' },
+  { startElement: '#a', endElement: '#c', dashed: true }
 ]);
 ```
 
@@ -166,7 +203,7 @@ arclace.connectAll([
 
 > **destroy**(): `void`
 
-Defined in: [Arclace.ts:339](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L339)
+Defined in: [src/Arclace.ts:406](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L406)
 
 Removes every connection and the overlay, and stops listening for
 changes. The instance can't be used afterwards.
@@ -181,7 +218,7 @@ changes. The instance can't be used afterwards.
 
 > **disconnect**(`target`): `void`
 
-Defined in: [Arclace.ts:201](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L201)
+Defined in: [src/Arclace.ts:266](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L266)
 
 Removes connections.
 
@@ -193,11 +230,20 @@ Removes connections.
 
 A connection, a connection id, or an element (or
   selector) whose connections should all be removed. Targets that match
-  nothing are ignored.
+  nothing, and `null` or `undefined`, are ignored.
 
 #### Returns
 
 `void`
+
+#### Throws
+
+When the target is another kind of value.
+
+#### Throws
+
+When a string is neither an id nor a valid
+  selector.
 
 #### Example
 
@@ -213,9 +259,10 @@ arclace.disconnect(document.querySelector('#a'));
 
 > **find**(`target`): [`Connection`](Connection.md)[]
 
-Defined in: [Arclace.ts:179](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L179)
+Defined in: [src/Arclace.ts:236](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L236)
 
-Returns every connection that starts or stops at an element.
+Returns every connection that starts or ends at an element. A selector
+that matches nothing returns an empty array.
 
 #### Parameters
 
@@ -227,13 +274,21 @@ Returns every connection that starts or stops at an element.
 
 [`Connection`](Connection.md)[]
 
+#### Throws
+
+When the target is neither an element nor a string.
+
+#### Throws
+
+When the selector is invalid.
+
 ***
 
 ### get()
 
 > **get**(`id`): [`Connection`](Connection.md) \| `undefined`
 
-Defined in: [Arclace.ts:172](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L172)
+Defined in: [src/Arclace.ts:225](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L225)
 
 Returns the connection with the given id.
 
@@ -253,7 +308,7 @@ Returns the connection with the given id.
 
 > **update**(): `void`
 
-Defined in: [Arclace.ts:247](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L247)
+Defined in: [src/Arclace.ts:314](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L314)
 
 Remeasures every element and redraws every connection. Called
 automatically when `autoUpdate` is on; call it yourself after moving

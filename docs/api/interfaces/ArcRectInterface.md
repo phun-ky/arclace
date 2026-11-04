@@ -2,7 +2,7 @@
 
 # Interface: ArcRectInterface
 
-Defined in: [types.ts:36](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L36)
+Defined in: [src/types.ts:36](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L36)
 
 ## Properties
 
@@ -10,7 +10,7 @@ Defined in: [types.ts:36](https://github.com/phun-ky/arclace/blob/main/src/types
 
 > **bottom**: `number`
 
-Defined in: [types.ts:40](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L40)
+Defined in: [src/types.ts:40](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L40)
 
 ***
 
@@ -18,7 +18,7 @@ Defined in: [types.ts:40](https://github.com/phun-ky/arclace/blob/main/src/types
 
 > **height**: `number`
 
-Defined in: [types.ts:42](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L42)
+Defined in: [src/types.ts:42](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L42)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [types.ts:42](https://github.com/phun-ky/arclace/blob/main/src/types
 
 > **left**: `number`
 
-Defined in: [types.ts:37](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L37)
+Defined in: [src/types.ts:37](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L37)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [types.ts:37](https://github.com/phun-ky/arclace/blob/main/src/types
 
 > **right**: `number`
 
-Defined in: [types.ts:39](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L39)
+Defined in: [src/types.ts:39](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L39)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [types.ts:39](https://github.com/phun-ky/arclace/blob/main/src/types
 
 > **top**: `number`
 
-Defined in: [types.ts:38](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L38)
+Defined in: [src/types.ts:38](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L38)
 
 ***
 
@@ -50,4 +50,4 @@ Defined in: [types.ts:38](https://github.com/phun-ky/arclace/blob/main/src/types
 
 > **width**: `number`
 
-Defined in: [types.ts:41](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L41)
+Defined in: [src/types.ts:41](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L41)

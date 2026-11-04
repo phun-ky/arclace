@@ -51,7 +51,7 @@ describe('Arclace', () => {
     assert.ok(connection instanceof Connection);
     assert.equal(connection.path.getAttribute('d'), 'M 100 25 L 300 25');
     assert.equal(connection.geometry?.startSide, 'right');
-    assert.equal(connection.geometry?.stopSide, 'left');
+    assert.equal(connection.geometry?.endSide, 'left');
     assert.equal(connection.element.getAttribute('data-start-side'), 'right');
   });
 
@@ -62,10 +62,10 @@ describe('Arclace', () => {
     const connection = arclace.connect('#a', '#b');
 
     assert.equal(connection.startElement.id, 'a');
-    assert.equal(connection.stopElement.id, 'b');
+    assert.equal(connection.endElement.id, 'b');
     assert.throws(
       () => arclace.connect('#a', '#missing'),
-      /no stopElement matches/
+      /no endElement matches/
     );
   });
 
@@ -87,8 +87,8 @@ describe('Arclace', () => {
     const { a, b, c } = setup();
     const arclace = new Arclace({ autoUpdate: false });
     const [toC, toB] = arclace.connectAll([
-      { startElement: a, stopElement: c, startSide: 'right', spacing: 10 },
-      { startElement: a, stopElement: b, startSide: 'right', spacing: 10 }
+      { startElement: a, endElement: c, startSide: 'right', spacing: 10 },
+      { startElement: a, endElement: b, startSide: 'right', spacing: 10 }
     ]);
 
     // Sorted by the other end so the lines don't cross: b is above c
@@ -103,8 +103,8 @@ describe('Arclace', () => {
       defaults: { spread: false, startSide: 'right' }
     });
     const [one, two] = arclace.connectAll([
-      { startElement: a, stopElement: b },
-      { startElement: a, stopElement: c }
+      { startElement: a, endElement: b },
+      { startElement: a, endElement: c }
     ]);
 
     assert.deepEqual(one.geometry?.start, { x: 100, y: 25 });
@@ -150,7 +150,7 @@ describe('Arclace', () => {
     assert.equal(connection.path.getAttribute('marker-start'), null);
     // The line stops one arrow length (4 × stroke width) short of the edge
     assert.equal(connection.path.getAttribute('d'), 'M 100 25 L 292 25');
-    assert.deepEqual(connection.geometry?.stop, { x: 300, y: 25 });
+    assert.deepEqual(connection.geometry?.end, { x: 300, y: 25 });
 
     connection.setOptions({ arrow: 'none' });
 
@@ -246,7 +246,7 @@ describe('Arclace', () => {
 
     assert.throws(
       () => arclace.connect(a, {} as Element),
-      /stopElement must be an Element or a selector string/
+      /endElement must be an Element or a selector string/
     );
     assert.throws(() => arclace.connect('#nothing-here', a), /no startElement/);
   });
@@ -405,8 +405,8 @@ describe('createConnections', () => {
 
     const arclace = createConnections(
       [
-        { startElement: '#a', stopElement: '#b' },
-        { startElement: '#b', stopElement: '#c', arrow: 'both' }
+        { startElement: '#a', endElement: '#b' },
+        { startElement: '#b', endElement: '#c', arrow: 'both' }
       ],
       { autoUpdate: false }
     );

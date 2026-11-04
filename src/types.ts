@@ -62,9 +62,9 @@ export type ArcConnectionOptionsType = {
   startSide?: ArcSideOptionType;
 
   /**
-   * The side of the stop element the line arrives at. Defaults to `'auto'`.
+   * The side of the end element the line arrives at. Defaults to `'auto'`.
    */
-  stopSide?: ArcSideOptionType;
+  endSide?: ArcSideOptionType;
 
   /**
    * Where to draw arrow heads. Defaults to `'none'`.
@@ -93,7 +93,7 @@ export type ArcConnectionOptionsType = {
   dashed?: boolean;
 
   /**
-   * Animate the dashes from start to stop. Implies `dashed`. Requires the
+   * Animate the dashes from start to end. Implies `dashed`. Requires the
    * stylesheet. Defaults to `false`.
    */
   animated?: boolean;
@@ -152,7 +152,7 @@ export type ArcConnectionOptionsType = {
  */
 export type ArcConnectionDefinitionType = ArcConnectionOptionsType & {
   startElement: ArcElementTargetType;
-  stopElement: ArcElementTargetType;
+  endElement: ArcElementTargetType;
 };
 
 /**
@@ -192,9 +192,9 @@ export type ArcOptionsType = {
  */
 export type ArcGeometryType = {
   start: ArcPointInterface;
-  stop: ArcPointInterface;
+  end: ArcPointInterface;
   startSide: ArcSideType;
-  stopSide: ArcSideType;
+  endSide: ArcSideType;
   labelPoint: ArcPointInterface;
   d: string;
 };

@@ -192,15 +192,10 @@
         ['#theme', '#button', 'background', { className: 'highlight' }],
         ['#theme', '#card', 'surface'],
         ['#fonts', '#card', 'font', { dashed: true }],
-        [
-          '#theme',
-          '#docs',
-          'examples',
-          { startSide: 'bottom', stopSide: 'top' }
-        ]
+        ['#theme', '#docs', 'examples', { startSide: 'bottom', endSide: 'top' }]
       ];
-      const connections = edges.map(([start, stop, label, options]) =>
-        arclace.connect(start, stop, { ...options, label })
+      const connections = edges.map(([start, end, label, options]) =>
+        arclace.connect(start, end, { ...options, label })
       );
 
       const apply = () => {

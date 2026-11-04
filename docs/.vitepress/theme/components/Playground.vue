@@ -50,7 +50,7 @@ const edges: [string, string, string, ArcConnectionOptionsType?][] = [
   ['theme', 'button', 'background', { className: 'highlight' }],
   ['theme', 'card', 'surface'],
   ['fonts', 'card', 'font', { dashed: true }],
-  ['theme', 'docs', 'examples', { startSide: 'bottom', stopSide: 'top' }]
+  ['theme', 'docs', 'examples', { startSide: 'bottom', endSide: 'top' }]
 ];
 
 const type = ref<ArcPathType>('bezier');
@@ -123,9 +123,9 @@ onMounted(() => {
   fit();
   arclace = new Arclace({ container: world.value });
   arclace.connectAll(
-    edges.map(([start, stop, label, options]) => ({
+    edges.map(([start, end, label, options]) => ({
       startElement: `#arc-${start}`,
-      stopElement: `#arc-${stop}`,
+      endElement: `#arc-${end}`,
       ...options,
       label
     }))

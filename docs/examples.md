@@ -29,7 +29,7 @@ const arclace = new Arclace({ container: world });
 
 arclace.connect('#tokens', '#theme', { label: 'accent', arrow: 'end' });
 arclace.connect('#fonts', '#card', { label: 'font', dashed: true });
-arclace.connect('#theme', '#docs', { startSide: 'bottom', stopSide: 'top' });
+arclace.connect('#theme', '#docs', { startSide: 'bottom', endSide: 'top' });
 
 // When a control changes
 for (const connection of arclace.connections) {

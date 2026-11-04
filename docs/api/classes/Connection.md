@@ -2,9 +2,10 @@
 
 # Class: Connection
 
-Defined in: [Connection.ts:83](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L83)
+Defined in: [src/Connection.ts:97](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L97)
 
-A line between two elements. Created with [Arclace.connect](Arclace.md#connect).
+A line between two elements. Created with [Arclace.connect](Arclace.md#connect) or
+[Arclace.connectAll](Arclace.md#connectall), not with `new`.
 
 Each connection renders as:
 
@@ -14,30 +15,12 @@ Each connection renders as:
   <path class="arc-path" />
   <text class="arc-label">…</text>       <!-- when `label` is set -->
   <circle class="arc-anchor arc-anchor-start" />  <!-- when `anchors` is set -->
-  <circle class="arc-anchor arc-anchor-stop" />
+  <circle class="arc-anchor arc-anchor-end" />
 </g>
 ```
 
 The line, arrows and anchors use `currentColor`, so setting `color` on
 `.arc-connection` colors all of them.
-
-## Constructors
-
-### Constructor
-
-> **new Connection**(`params`): `Connection`
-
-Defined in: [Connection.ts:111](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L111)
-
-#### Parameters
-
-##### params
-
-[`ArcConnectionParamsType`](../type-aliases/ArcConnectionParamsType.md)
-
-#### Returns
-
-`Connection`
 
 ## Properties
 
@@ -45,20 +28,17 @@ Defined in: [Connection.ts:111](https://github.com/phun-ky/arclace/blob/main/src
 
 > `readonly` **element**: `SVGGElement`
 
-Defined in: [Connection.ts:91](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L91)
+Defined in: [src/Connection.ts:105](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L105)
 
 The `<g>` element holding everything this connection draws.
 
 ***
 
-### geometry
+### endElement
 
-> **geometry**: [`ArcGeometryType`](../type-aliases/ArcGeometryType.md) \| `null` = `null`
+> `readonly` **endElement**: `Element`
 
-Defined in: [Connection.ts:102](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L102)
-
-The geometry from the last update, or `null` when the connection is
-hidden because one of its elements is not rendered.
+Defined in: [src/Connection.ts:100](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L100)
 
 ***
 
@@ -66,7 +46,7 @@ hidden because one of its elements is not rendered.
 
 > `readonly` **id**: `string`
 
-Defined in: [Connection.ts:84](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L84)
+Defined in: [src/Connection.ts:98](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L98)
 
 ***
 
@@ -74,7 +54,7 @@ Defined in: [Connection.ts:84](https://github.com/phun-ky/arclace/blob/main/src/
 
 > `readonly` **path**: `SVGPathElement`
 
-Defined in: [Connection.ts:96](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L96)
+Defined in: [src/Connection.ts:110](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L110)
 
 The `<path>` element of the line.
 
@@ -84,17 +64,26 @@ The `<path>` element of the line.
 
 > `readonly` **startElement**: `Element`
 
-Defined in: [Connection.ts:85](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L85)
-
-***
-
-### stopElement
-
-> `readonly` **stopElement**: `Element`
-
-Defined in: [Connection.ts:86](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L86)
+Defined in: [src/Connection.ts:99](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L99)
 
 ## Accessors
+
+### geometry
+
+#### Get Signature
+
+> **get** **geometry**(): `Readonly`\<[`ArcGeometryType`](../type-aliases/ArcGeometryType.md)\> \| `null`
+
+Defined in: [src/Connection.ts:160](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L160)
+
+The geometry from the last update, or `null` when the connection is
+hidden because one of its elements is not rendered.
+
+##### Returns
+
+`Readonly`\<[`ArcGeometryType`](../type-aliases/ArcGeometryType.md)\> \| `null`
+
+***
 
 ### options
 
@@ -102,7 +91,7 @@ Defined in: [Connection.ts:86](https://github.com/phun-ky/arclace/blob/main/src/
 
 > **get** **options**(): `Readonly`\<[`ArcResolvedConnectionOptionsType`](../type-aliases/ArcResolvedConnectionOptionsType.md)\>
 
-Defined in: [Connection.ts:140](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L140)
+Defined in: [src/Connection.ts:167](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L167)
 
 The connection's options merged with the instance defaults.
 
@@ -116,7 +105,7 @@ The connection's options merged with the instance defaults.
 
 > **remove**(): `void`
 
-Defined in: [Connection.ts:175](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L175)
+Defined in: [src/Connection.ts:215](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L215)
 
 Removes this connection.
 
@@ -130,7 +119,7 @@ Removes this connection.
 
 > **setOptions**(`options`): `this`
 
-Defined in: [Connection.ts:157](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L157)
+Defined in: [src/Connection.ts:187](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L187)
 
 Changes options and redraws.
 
@@ -150,13 +139,25 @@ Changes options and redraws.
 connection.setOptions({ type: 'orthogonal', arrow: 'end' });
 ```
 
+#### Throws
+
+When an option has the wrong type, or `id` is set.
+
+#### Throws
+
+When an option is out of range.
+
+#### Throws
+
+When the connection has been removed.
+
 ***
 
 ### update()
 
 > **update**(): `void`
 
-Defined in: [Connection.ts:168](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L168)
+Defined in: [src/Connection.ts:208](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L208)
 
 Redraws every connection of the owning instance.
 

@@ -7,7 +7,7 @@ Each connection is rendered as:
   class="arc-connection arc-bezier"
   data-type="bezier"
   data-start-side="right"
-  data-stop-side="left"
+  data-end-side="left"
 >
   <marker class="arc-marker">…</marker>
   <!-- arrow -->
@@ -16,7 +16,7 @@ Each connection is rendered as:
   <!-- label -->
   <circle class="arc-anchor arc-anchor-start" />
   <!-- anchors -->
-  <circle class="arc-anchor arc-anchor-stop" />
+  <circle class="arc-anchor arc-anchor-end" />
 </g>
 ```
 

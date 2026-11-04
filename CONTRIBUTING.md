@@ -144,8 +144,12 @@ The package draws SVG lines between DOM elements, with no runtime dependencies:
 - **`src/utils/`** holds the pure parts: `measure.ts` converts element boxes
   into the overlay's coordinates (scroll and CSS transforms included),
   `sides.ts` picks the sides and anchor points, `paths.ts` builds the `bezier`,
-  `straight` and `orthogonal` path data, and `svg.ts`, `geometry.ts`, `id.ts`
-  and `resolve-element.ts` are small helpers.
+  `straight` and `orthogonal` path data, `validate.ts` checks every option
+  before anything is added, and `svg.ts`, `geometry.ts`, `id.ts` and
+  `resolve-element.ts` are small helpers.
+- **`src/errors.ts`** is `ArclaceError`, thrown when Arclace can't do what was
+  asked. Arguments of the wrong type throw a `TypeError`, and values out of
+  range a `RangeError`.
 - **`src/style.css`** is the optional stylesheet, shipped as
   `@phun-ky/arclace/style.css`.
 - **The build:** `vite.config.js` builds `dist/arclace.js` (ES module) and
@@ -208,6 +212,14 @@ CI on every pull request, and a pull request that fails them can't be merged.
 - **New functionality must come with tests** in `src/__tests__`, run by
   `npm test` with Node's test runner in jsdom.
 - **Bug fixes must come with a regression test** that fails without the fix.
+- **Property-based tests** in `src/__tests__/properties.spec.ts` use
+  [fast-check](https://fast-check.dev/) to run the geometry and the option
+  checks with random input. A change that keeps a rule for every input, such as
+  "orthogonal segments are horizontal or vertical", adds a property there. A
+  failing property prints the smallest input that breaks it, and the seed to run
+  it again.
+- **A new option** gets a check in `src/utils/validate.ts` and tests for the
+  values it rejects.
 - **Packaging and examples** are tested by `npm run check:pack`, which runs in
   CI. A changed example in the README or the docs must still run, and a value in
   a `// 'value'` comment is checked.

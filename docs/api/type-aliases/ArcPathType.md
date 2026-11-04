@@ -4,7 +4,7 @@
 
 > **ArcPathType** = `"bezier"` \| `"straight"` \| `"orthogonal"`
 
-Defined in: [types.ts:19](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L19)
+Defined in: [src/types.ts:19](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L19)
 
 How the line between two elements is drawn.
 
