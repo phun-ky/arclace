@@ -69,6 +69,7 @@
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
     "lint": "eslint .",
+    "prepare": "git config core.hooksPath .githooks || true",
     "prepublishOnly": "npm run build",
     "preview": "vite preview",
     "release": "release-it",
