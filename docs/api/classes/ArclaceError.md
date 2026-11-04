@@ -2,7 +2,7 @@
 
 # Class: ArclaceError
 
-Defined in: src/errors.ts:19
+Defined in: [src/errors.ts:19](https://github.com/phun-ky/arclace/blob/main/src/errors.ts#L19)
 
 Thrown when Arclace can't do what was asked, for example when a selector
 matches nothing, an id is taken, or the instance has been destroyed.
@@ -32,7 +32,7 @@ try {
 
 > **new ArclaceError**(`message`, `options?`): `ArclaceError`
 
-Defined in: src/errors.ts:22
+Defined in: [src/errors.ts:22](https://github.com/phun-ky/arclace/blob/main/src/errors.ts#L22)
 
 #### Parameters
 
@@ -82,7 +82,7 @@ Defined in: node\_modules/typescript/lib/lib.es5.d.ts:1077
 
 > **name**: `string` = `'ArclaceError'`
 
-Defined in: src/errors.ts:20
+Defined in: [src/errors.ts:20](https://github.com/phun-ky/arclace/blob/main/src/errors.ts#L20)
 
 #### Overrides
 
