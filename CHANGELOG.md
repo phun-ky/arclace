@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.0.0](https://github.com/phun-ky/arclace/compare/0.3.0...1.0.0) (2026-11-04)
+
+### Documentation
+
+* ✏️ 1.0 release notes, banners and policies ([e929cea](https://github.com/phun-ky/arclace/commit/e929ceace112eca7bc265b9bd57210d40a9ed347)), closes [#21](https://github.com/phun-ky/arclace/issues/21)
+* ✏️ a docs site design to match the Bow mark ([a769977](https://github.com/phun-ky/arclace/commit/a769977f01a220e30da64c02422a11775053d838)), closes [#75](https://github.com/phun-ky/arclace/issues/75)
+* ✏️ a logo for Arclace ([84b5dae](https://github.com/phun-ky/arclace/commit/84b5dae26ac836e4369506cd7e76351714386e24)), closes [#73](https://github.com/phun-ky/arclace/issues/73), references [#73](https://github.com/phun-ky/arclace/issues/73)
+* ✏️ meet AA text contrast on the docs site ([793ae66](https://github.com/phun-ky/arclace/commit/793ae66f53f1e999e8d2fdcd7b7f82ae25a14d6e)), closes [#68](https://github.com/phun-ky/arclace/issues/68), references [#99acb2](https://github.com/phun-ky/arclace/issues/99acb2) [#5d747b](https://github.com/phun-ky/arclace/issues/5d747b) [#2865f0](https://github.com/phun-ky/arclace/issues/2865f0) [#f2f6ff](https://github.com/phun-ky/arclace/issues/f2f6ff)
+* ✏️ record signed releases from 0.3.0 on ([7d84dfc](https://github.com/phun-ky/arclace/commit/7d84dfc53074013a9d360bbf08f140a9b8ce0f1b)), closes [#66](https://github.com/phun-ky/arclace/issues/66)
+* ✏️ say how the lines work with assistive technology ([f4b8419](https://github.com/phun-ky/arclace/commit/f4b84197b6f216d76cfda9f9884104555e12b8cf)), closes [#60](https://github.com/phun-ky/arclace/issues/60), references [#68](https://github.com/phun-ky/arclace/issues/68)
+* ✏️ switch the logo to the Bow mark ([9b3f6ac](https://github.com/phun-ky/arclace/commit/9b3f6ac5d57b219b6faa81f702ebd239d99fb33b)), references [#73](https://github.com/phun-ky/arclace/issues/73) [#73](https://github.com/phun-ky/arclace/issues/73)
+
+### Refactoring
+
+* 💡 share the Chrome renderer between the logo and the banners ([d626118](https://github.com/phun-ky/arclace/commit/d626118eba5efb3e17408e225079c0a634d86037)), references [#21](https://github.com/phun-ky/arclace/issues/21)
+
 ## [0.3.0](https://github.com/phun-ky/arclace/compare/0.2.0...0.3.0) (2026-11-04)
 
 ### ⚠ BREAKING CHANGES
