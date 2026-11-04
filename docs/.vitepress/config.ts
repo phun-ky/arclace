@@ -67,7 +67,8 @@ export default defineConfig({
             { text: 'Getting started', link: '/guide/' },
             { text: 'How it works', link: '/guide/how-it-works' },
             { text: 'Options', link: '/guide/options' },
-            { text: 'Styling', link: '/guide/styling' }
+            { text: 'Styling', link: '/guide/styling' },
+            { text: 'Why Arclace?', link: '/guide/why-arclace' }
           ]
         }
       ],
