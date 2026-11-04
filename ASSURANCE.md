@@ -74,8 +74,8 @@ container, no runtime dependencies, and a build and release pipeline.
   Don't build them from untrusted input; see the
   [security expectations](SECURITY.md#security-expectations).
 - **Assistive technology:** the overlay is `aria-hidden`, so what the lines show
-  must also be in the page's own HTML
-  ([#60](https://github.com/phun-ky/arclace/issues/60)).
+  must also be in the page's own HTML; the [README](README.md#accessibility)
+  shows how.
 - **One maintainer:** pull requests by the maintainer get no second review, and
   access to the repository and the package rests on one person; see
   [governance](GOVERNANCE.md#continuity).

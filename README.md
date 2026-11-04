@@ -89,7 +89,8 @@ const arclace = createConnections(
 
 Each instance adds one `<svg class="arc-svg">` to its container, absolutely
 positioned over the container's content, and draws every line into it. The
-overlay doesn't block clicks (`pointer-events: none`).
+overlay doesn't block clicks (`pointer-events: none`), and is hidden from
+assistive technology (`aria-hidden`); see [Accessibility](#accessibility).
 
 - Put all the elements you connect inside the container. If the container is
   `position: static` it is changed to `position: relative` so the overlay
@@ -247,8 +248,25 @@ clickable, turn pointer events back on for the paths:
 }
 ```
 
+A line can't take keyboard focus and is hidden from screen readers, so make a
+click on it a shortcut for a control that is in your page anyway, such as a
+button:
+
+```html
+<div id="diagram">
+  <div class="box" id="a">A</div>
+  <div class="box" id="b">B</div>
+  <div class="box" id="c">C</div>
+  <button type="button" id="details">Show A to B</button>
+</div>
+```
+
 ```ts
-connection.path.addEventListener('click', () => console.log(connection.id));
+const showDetails = () => console.log(connection.id);
+
+document.querySelector('#details')?.addEventListener('click', showDetails);
+// The same action for pointer users who click the line
+connection.path.addEventListener('click', showDetails);
 ```
 
 ## Keeping lines in sync
@@ -279,6 +297,49 @@ useEffect(() => {
   return () => arclace.destroy();
 }, []);
 ```
+
+## Accessibility
+
+The lines are decorative. The overlay has `aria-hidden="true"`, so screen
+readers don't announce lines, arrows or labels, and a line can't take keyboard
+focus. Whatever a line tells sighted users must also be in your page's own HTML.
+
+The simplest way is to connect elements whose markup already says how they
+relate. Lines between the items of an ordered list show a sequence that a screen
+reader reads out as a list of steps:
+
+```html
+<ol id="diagram">
+  <li class="box" id="a">Build</li>
+  <li class="box" id="b">Test</li>
+  <li class="box" id="c">Deploy</li>
+</ol>
+```
+
+```ts
+const arclace = new Arclace({ container: '#diagram' });
+
+arclace.connect('#a', '#b', { arrow: 'end' });
+arclace.connect('#b', '#c', { arrow: 'end' });
+```
+
+Beyond that:
+
+- **Describe other relationships in text,** for example in a table of what
+  connects to what, or in a sentence that `aria-describedby` on a focusable
+  element points at.
+- **Repeat labels in the page.** A label is part of the overlay, so its text
+  isn't announced either.
+- **Don't tell lines apart by color alone.** Use `dashed`, `arrow` or a label as
+  well, and give lines a contrast of at least 3:1 with the background so they
+  stay visible with low vision.
+- **Motion:** with the stylesheet, `animated` lines stop moving when the user
+  asks for reduced motion (`prefers-reduced-motion`).
+- **Clickable lines** need the same action on a control in the page; see
+  [Clickable lines](#clickable-lines).
+
+Arclace doesn't add `aria-describedby` or any other attribute to your elements:
+it only changes what it draws.
 
 ## Development
 

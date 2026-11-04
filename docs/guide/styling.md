@@ -61,6 +61,25 @@ clickable, turn pointer events back on for the paths:
 }
 ```
 
-```ts
-connection.path.addEventListener('click', () => console.log(connection.id));
+A line can't take keyboard focus and is hidden from screen readers, so make a
+click on it a shortcut for a control that is in your page anyway, such as a
+button:
+
+```html
+<div id="diagram">
+  <div class="box" id="a">A</div>
+  <div class="box" id="b">B</div>
+  <div class="box" id="c">C</div>
+  <button type="button" id="details">Show A to B</button>
+</div>
 ```
+
+```ts
+const showDetails = () => console.log(connection.id);
+
+document.querySelector('#details')?.addEventListener('click', showDetails);
+// The same action for pointer users who click the line
+connection.path.addEventListener('click', showDetails);
+```
+
+See [accessibility](/guide/accessibility) for the rest.
