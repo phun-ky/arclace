@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>connect-the-things</title>
+    <title>Arclace</title>
     <link rel="stylesheet" href="./src/style.css" />
     <style>
       *,
@@ -16,8 +16,13 @@
 
       body {
         font-family:
-          ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-          Roboto, sans-serif;
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          Roboto,
+          sans-serif;
         color: #2b2523;
         background: #faf9f7;
       }
@@ -48,7 +53,10 @@
         height: calc(100vh - 4.5rem);
         overflow: hidden;
         background-color: #f1ece8;
-        background-image: radial-gradient(rgba(110, 98, 94, 0.3) 1px, #f1ece8 0);
+        background-image: radial-gradient(
+          rgba(110, 98, 94, 0.3) 1px,
+          #f1ece8 0
+        );
         background-size: 20px 20px;
       }
 
@@ -56,8 +64,8 @@
         position: absolute;
         inset: 0;
         transform-origin: 0 0;
-        --ctt-color: #6e625e;
-        --ctt-label-halo: #f1ece8;
+        --arc-color: #6e625e;
+        --arc-label-halo: #f1ece8;
       }
 
       .node {
@@ -94,14 +102,14 @@
         color: #dbe6ff;
       }
 
-      .ctt-connection.highlight {
-        --ctt-color: #0054f0;
+      .arc-connection.highlight {
+        --arc-color: #0054f0;
       }
     </style>
   </head>
   <body>
     <header>
-      <h1>connect-the-things</h1>
+      <h1>Arclace</h1>
       <label>
         Type
         <select id="type">
@@ -124,7 +132,14 @@
       <label><input type="checkbox" id="animated" /> Animated</label>
       <label>
         Zoom
-        <input type="range" id="zoom" min="0.5" max="1.5" step="0.05" value="1" />
+        <input
+          type="range"
+          id="zoom"
+          min="0.5"
+          max="1.5"
+          step="0.05"
+          value="1"
+        />
       </label>
     </header>
 
@@ -152,7 +167,7 @@
     </main>
 
     <script type="module">
-      import { ConnectTheThings } from './src/index.ts';
+      import { Arclace } from './src/index.ts';
 
       const world = document.getElementById('world');
       const controls = {
@@ -170,17 +185,22 @@
         animated: controls.animated.checked
       });
 
-      const ctt = new ConnectTheThings({ container: world, defaults: shared() });
+      const arclace = new Arclace({ container: world, defaults: shared() });
       const edges = [
         ['#tokens', '#theme', 'accent'],
         ['#fonts', '#theme', 'font'],
         ['#theme', '#button', 'background', { className: 'highlight' }],
         ['#theme', '#card', 'surface'],
         ['#fonts', '#card', 'font', { dashed: true }],
-        ['#theme', '#docs', 'examples', { startSide: 'bottom', stopSide: 'top' }]
+        [
+          '#theme',
+          '#docs',
+          'examples',
+          { startSide: 'bottom', stopSide: 'top' }
+        ]
       ];
       const connections = edges.map(([start, stop, label, options]) =>
-        ctt.connect(start, stop, { ...options, label })
+        arclace.connect(start, stop, { ...options, label })
       );
 
       const apply = () => {
@@ -234,7 +254,7 @@
         node.addEventListener('pointercancel', stop);
       });
 
-      window.ctt = ctt;
+      window.arclace = arclace;
     </script>
   </body>
 </html>

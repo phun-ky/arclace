@@ -1,5 +1,5 @@
 {
-  "name": "@phun-ky/connect-the-things",
+  "name": "@phun-ky/arclace",
   "version": "0.1.0",
   "description": "Draw SVG lines between DOM elements. Framework agnostic, zero dependencies.",
   "keywords": [
@@ -17,31 +17,31 @@
     "dom",
     "bezier"
   ],
-  "homepage": "https://phun-ky.net/connect-the-things/",
+  "homepage": "https://phun-ky.net/arclace/",
   "bugs": {
-    "url": "https://github.com/phun-ky/connect-the-things/issues"
+    "url": "https://github.com/phun-ky/arclace/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/phun-ky/connect-the-things.git"
+    "url": "git+https://github.com/phun-ky/arclace.git"
   },
   "license": "MIT",
   "author": "Alexander Vassbotn Røyne-Helgesen <alexander@phun-ky.net>",
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/connect-the-things.d.ts",
-      "default": "./dist/connect-the-things.js"
+      "types": "./dist/arclace.d.ts",
+      "default": "./dist/arclace.js"
     },
     "./style.css": "./dist/style.css",
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
   },
-  "main": "./dist/connect-the-things.js",
-  "module": "./dist/connect-the-things.js",
-  "types": "./dist/connect-the-things.d.ts",
-  "unpkg": "./dist/connect-the-things.umd.cjs",
-  "jsdelivr": "./dist/connect-the-things.umd.cjs",
+  "main": "./dist/arclace.js",
+  "module": "./dist/arclace.js",
+  "types": "./dist/arclace.d.ts",
+  "unpkg": "./dist/arclace.umd.cjs",
+  "jsdelivr": "./dist/arclace.umd.cjs",
   "files": [
     "dist",
     "src",

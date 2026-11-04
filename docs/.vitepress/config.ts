@@ -5,29 +5,29 @@ import { fileURLToPath } from 'node:url';
 import pkg from '../../package.json' with { type: 'json' };
 import typedocSidebar from '../api/typedoc-sidebar.json' with { type: 'json' };
 
-const SITE = 'https://phun-ky.net/connect-the-things/';
+const SITE = 'https://phun-ky.net/arclace/';
 const DESCRIPTION = 'Draw SVG lines between DOM elements.';
 const source = (path: string): string =>
   fileURLToPath(new URL(`../../src/${path}`, import.meta.url));
 
 export default defineConfig({
-  base: '/connect-the-things/',
+  base: '/arclace/',
   lang: 'en-GB',
-  title: 'connect-the-things',
+  title: 'Arclace',
   description: DESCRIPTION,
   head: [
-    // head links aren't prefixed with base, so they carry /connect-the-things/
+    // head links aren't prefixed with base, so they carry /arclace/
     [
       'link',
       {
         rel: 'icon',
         type: 'image/svg+xml',
-        href: '/connect-the-things/favicon.svg'
+        href: '/arclace/favicon.svg'
       }
     ],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:url', content: SITE }],
-    ['meta', { property: 'og:title', content: 'connect-the-things' }],
+    ['meta', { property: 'og:title', content: 'Arclace' }],
     ['meta', { property: 'og:description', content: DESCRIPTION }],
     ['meta', { property: 'og:locale', content: 'en_GB' }]
   ],
@@ -38,8 +38,7 @@ export default defineConfig({
     logo: { src: '/favicon.svg', alt: '' },
     search: { provider: 'local' },
     editLink: {
-      pattern:
-        'https://github.com/phun-ky/connect-the-things/edit/main/docs/:path',
+      pattern: 'https://github.com/phun-ky/arclace/edit/main/docs/:path',
       text: 'Suggest changes to this page'
     },
     nav: [
@@ -51,11 +50,11 @@ export default defineConfig({
         items: [
           {
             text: 'Changelog',
-            link: 'https://github.com/phun-ky/connect-the-things/blob/main/CHANGELOG.md'
+            link: 'https://github.com/phun-ky/arclace/blob/main/CHANGELOG.md'
           },
           {
             text: 'Contributing',
-            link: 'https://github.com/phun-ky/connect-the-things/blob/main/CONTRIBUTING.md'
+            link: 'https://github.com/phun-ky/arclace/blob/main/CONTRIBUTING.md'
           }
         ]
       }
@@ -75,10 +74,10 @@ export default defineConfig({
       '/api/': [{ text: 'API', items: typedocSidebar }]
     },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/phun-ky/connect-the-things' },
+      { icon: 'github', link: 'https://github.com/phun-ky/arclace' },
       {
         icon: 'npm',
-        link: 'https://www.npmjs.com/package/@phun-ky/connect-the-things'
+        link: 'https://www.npmjs.com/package/@phun-ky/arclace'
       }
     ],
     footer: {
@@ -91,11 +90,11 @@ export default defineConfig({
       // Examples import the package by name and run the source
       alias: [
         {
-          find: /^@phun-ky\/connect-the-things\/style\.css$/,
+          find: /^@phun-ky\/arclace\/style\.css$/,
           replacement: source('style.css')
         },
         {
-          find: /^@phun-ky\/connect-the-things$/,
+          find: /^@phun-ky\/arclace$/,
           replacement: source('index.ts')
         }
       ]

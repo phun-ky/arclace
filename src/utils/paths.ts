@@ -1,4 +1,4 @@
-import type { CTTPointInterface, CTTSideType } from '../types';
+import type { ArcPointInterface, ArcSideType } from '../types';
 
 import {
   add,
@@ -9,7 +9,7 @@ import {
   OPPOSITE
 } from './geometry';
 
-export type CTTPathResultType = {
+export type ArcPathResultType = {
   /**
    * SVG path data.
    */
@@ -18,7 +18,7 @@ export type CTTPathResultType = {
   /**
    * The middle of the path, used to place labels.
    */
-  labelPoint: CTTPointInterface;
+  labelPoint: ArcPointInterface;
 };
 
 /**
@@ -70,9 +70,9 @@ export const curveMultiplierFromDistance = (
  * ```
  */
 export const straightPath = (
-  start: CTTPointInterface,
-  stop: CTTPointInterface
-): CTTPathResultType => ({
+  start: ArcPointInterface,
+  stop: ArcPointInterface
+): ArcPathResultType => ({
   d: `M ${fmt(start)} L ${fmt(stop)}`,
   labelPoint: { x: (start.x + stop.x) / 2, y: (start.y + stop.y) / 2 }
 });
@@ -87,12 +87,12 @@ export const straightPath = (
  * ```
  */
 export const bezierPath = (
-  start: CTTPointInterface,
-  startSide: CTTSideType,
-  stop: CTTPointInterface,
-  stopSide: CTTSideType,
+  start: ArcPointInterface,
+  startSide: ArcSideType,
+  stop: ArcPointInterface,
+  stopSide: ArcSideType,
   curvature = 1
-): CTTPathResultType => {
+): ArcPathResultType => {
   const length = distance(start, stop);
   const bulge = (length / curveMultiplierFromDistance(length)) * curvature;
   const c1 = add(start, NORMALS[startSide], bulge);
@@ -112,8 +112,8 @@ export const bezierPath = (
  * Removes repeated points and points in the middle of a straight segment.
  */
 export const simplifyPolyline = (
-  points: CTTPointInterface[]
-): CTTPointInterface[] => {
+  points: ArcPointInterface[]
+): ArcPointInterface[] => {
   const unique = points.filter(
     (point, i) => i === 0 || distance(point, points[i - 1]) > 0.01
   );
@@ -136,16 +136,16 @@ export const simplifyPolyline = (
  * curve. The radius shrinks on short segments so corners never overlap.
  */
 export const roundedPolyline = (
-  points: CTTPointInterface[],
+  points: ArcPointInterface[],
   radius: number
 ): string => {
   if (points.length === 0) return '';
 
   const towards = (
-    from: CTTPointInterface,
-    to: CTTPointInterface,
+    from: ArcPointInterface,
+    to: ArcPointInterface,
     length: number
-  ): CTTPointInterface => {
+  ): ArcPointInterface => {
     const total = distance(from, to);
 
     return {
@@ -185,8 +185,8 @@ export const roundedPolyline = (
  * The point halfway along a polyline.
  */
 export const polylineMidpoint = (
-  points: CTTPointInterface[]
-): CTTPointInterface => {
+  points: ArcPointInterface[]
+): ArcPointInterface => {
   const lengths = points.slice(1).map((point, i) => distance(points[i], point));
 
   let remaining = lengths.reduce((sum, length) => sum + length, 0) / 2;
@@ -209,13 +209,13 @@ export const polylineMidpoint = (
 
 // Swapping x and y turns vertical sides into horizontal ones, so only the
 // horizontal case has to be routed by hand.
-const SWAPPED_SIDE: Record<CTTSideType, CTTSideType> = {
+const SWAPPED_SIDE: Record<ArcSideType, ArcSideType> = {
   top: 'left',
   bottom: 'right',
   left: 'top',
   right: 'bottom'
 };
-const swap = (point: CTTPointInterface): CTTPointInterface => ({
+const swap = (point: ArcPointInterface): ArcPointInterface => ({
   x: point.y,
   y: point.x
 });
@@ -228,12 +228,12 @@ const swap = (point: CTTPointInterface): CTTPointInterface => ({
  * @returns The corner points of the route, including `start` and `stop`.
  */
 export const routeOrthogonal = (
-  start: CTTPointInterface,
-  startSide: CTTSideType,
-  stop: CTTPointInterface,
-  stopSide: CTTSideType,
+  start: ArcPointInterface,
+  startSide: ArcSideType,
+  stop: ArcPointInterface,
+  stopSide: ArcSideType,
   offset = 20
-): CTTPointInterface[] => {
+): ArcPointInterface[] => {
   if (!isHorizontalSide(startSide)) {
     return routeOrthogonal(
       swap(start),
@@ -293,12 +293,12 @@ export const routeOrthogonal = (
  * ```
  */
 export const orthogonalPath = (
-  start: CTTPointInterface,
-  startSide: CTTSideType,
-  stop: CTTPointInterface,
-  stopSide: CTTSideType,
+  start: ArcPointInterface,
+  startSide: ArcSideType,
+  stop: ArcPointInterface,
+  stopSide: ArcSideType,
   { radius = 8, offset = 20 }: { radius?: number; offset?: number } = {}
-): CTTPathResultType => {
+): ArcPathResultType => {
   const points = simplifyPolyline(
     routeOrthogonal(start, startSide, stop, stopSide, offset)
   );

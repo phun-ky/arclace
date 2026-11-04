@@ -1,4 +1,4 @@
-# @phun-ky/connect-the-things
+# @phun-ky/arclace
 
 > Draw SVG lines between DOM elements.
 
@@ -8,7 +8,7 @@ anchors. The lines follow the elements when they move, resize, scroll or get
 zoomed.
 
 It's framework agnostic and has zero dependencies. You keep your own HTML for
-the boxes; connect-the-things only draws the lines.
+the boxes; Arclace only draws the lines.
 
 - **Three line types**: `bezier`, `straight` and `orthogonal` (with rounded
   corners)
@@ -26,7 +26,7 @@ the boxes; connect-the-things only draws the lines.
 ## Install
 
 ```shell
-npm i @phun-ky/connect-the-things
+npm i @phun-ky/arclace
 ```
 
 ES modules; `require()` needs Node 22.12 or later. A UMD build is available for
@@ -43,22 +43,22 @@ script tags (see [Without a bundler](#without-a-bundler)).
 ```
 
 ```ts
-import { ConnectTheThings } from '@phun-ky/connect-the-things';
+import { Arclace } from '@phun-ky/arclace';
 // Optional: label halo, hollow anchors and the dash animation
-import '@phun-ky/connect-the-things/style.css';
+import '@phun-ky/arclace/style.css';
 
-const ctt = new ConnectTheThings({ container: '#diagram' });
+const arclace = new Arclace({ container: '#diagram' });
 
-ctt.connect('#a', '#b', { arrow: 'end', label: 'depends on' });
-ctt.connect('#a', '#c', { type: 'orthogonal', dashed: true });
+arclace.connect('#a', '#b', { arrow: 'end', label: 'depends on' });
+arclace.connect('#a', '#c', { type: 'orthogonal', dashed: true });
 ```
 
 Or create everything at once:
 
 ```ts
-import { createConnections } from '@phun-ky/connect-the-things';
+import { createConnections } from '@phun-ky/arclace';
 
-const ctt = createConnections(
+const arclace = createConnections(
   [
     { startElement: '#a', stopElement: '#b' },
     { startElement: '#b', stopElement: '#c', label: 'then' }
@@ -72,19 +72,19 @@ const ctt = createConnections(
 ```html
 <link
   rel="stylesheet"
-  href="https://unpkg.com/@phun-ky/connect-the-things/dist/style.css"
+  href="https://unpkg.com/@phun-ky/arclace/dist/style.css"
 />
-<script src="https://unpkg.com/@phun-ky/connect-the-things"></script>
+<script src="https://unpkg.com/@phun-ky/arclace"></script>
 <script>
-  const ctt = new ConnectTheThings.ConnectTheThings();
+  const arclace = new Arclace.Arclace();
 
-  ctt.connect('#a', '#b');
+  arclace.connect('#a', '#b');
 </script>
 ```
 
 ## How it works
 
-Each instance adds one `<svg class="ctt-svg">` to its container, absolutely
+Each instance adds one `<svg class="arc-svg">` to its container, absolutely
 positioned over the container's content, and draws every line into it. The
 overlay doesn't block clicks (`pointer-events: none`).
 
@@ -96,11 +96,11 @@ overlay doesn't block clicks (`pointer-events: none`).
   in scrolled containers and when the container is scaled with CSS transforms
   (for example by a pan/zoom library).
 - The overlay is the container's first child, so it is painted below positioned
-  elements that come after it. Set `z-index` on `.ctt-svg` to change that.
+  elements that come after it. Set `z-index` on `.arc-svg` to change that.
 
 ## API
 
-### `new ConnectTheThings(options?)`
+### `new Arclace(options?)`
 
 | Option       | Type                                      | Default         | Description                                                                                                                                                                             |
 | ------------ | ----------------------------------------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -147,7 +147,7 @@ and shown again when it comes back.
 | `stopSide`    | same as `startSide`                                | `'auto'`   | Side of the stop element.                                                      |
 | `arrow`       | `'none' \| 'start' \| 'end' \| 'both'`             | `'none'`   | Arrow heads.                                                                   |
 | `label`       | `string`                                           |            | Text in the middle of the line.                                                |
-| `color`       | `string`                                           |            | Line color. Without it, lines use `--ctt-color` or the container's text color. |
+| `color`       | `string`                                           |            | Line color. Without it, lines use `--arc-color` or the container's text color. |
 | `strokeWidth` | `number`                                           | `2`        | Line width in pixels. Arrows and anchors scale with it.                        |
 | `dashed`      | `boolean`                                          | `false`    | Dashed line.                                                                   |
 | `animated`    | `boolean`                                          | `false`    | Dashes flowing from start to stop. Needs `style.css`.                          |
@@ -169,35 +169,35 @@ Each connection is rendered as:
 
 ```html
 <g
-  class="ctt-connection ctt-bezier"
+  class="arc-connection arc-bezier"
   data-type="bezier"
   data-start-side="right"
   data-stop-side="left"
 >
-  <marker class="ctt-marker">…</marker>
+  <marker class="arc-marker">…</marker>
   <!-- arrow -->
-  <path class="ctt-path" />
-  <text class="ctt-label">…</text>
+  <path class="arc-path" />
+  <text class="arc-label">…</text>
   <!-- label -->
-  <circle class="ctt-anchor ctt-anchor-start" />
+  <circle class="arc-anchor arc-anchor-start" />
   <!-- anchors -->
-  <circle class="ctt-anchor ctt-anchor-stop" />
+  <circle class="arc-anchor arc-anchor-stop" />
 </g>
 ```
 
-Lines, arrows and anchors use `currentColor`, so `color` on `.ctt-connection`
+Lines, arrows and anchors use `currentColor`, so `color` on `.arc-connection`
 colors all of them:
 
 ```css
-.ctt-connection {
+.arc-connection {
   color: #6e625e;
 }
 
-.ctt-connection.important {
+.arc-connection.important {
   color: #0054f0;
 }
 
-.ctt-path {
+.arc-path {
   stroke-width: 3;
 }
 ```
@@ -208,11 +208,11 @@ custom properties:
 
 | Property            | Default        |
 | ------------------- | -------------- |
-| `--ctt-color`       | `currentColor` |
-| `--ctt-label-color` | `currentColor` |
-| `--ctt-label-halo`  | `#fff`         |
-| `--ctt-label-size`  | `12px`         |
-| `--ctt-anchor-fill` | `#fff`         |
+| `--arc-color`       | `currentColor` |
+| `--arc-label-color` | `currentColor` |
+| `--arc-label-halo`  | `#fff`         |
+| `--arc-label-size`  | `12px`         |
+| `--arc-anchor-fill` | `#fff`         |
 
 ### Clickable lines
 
@@ -220,7 +220,7 @@ The overlay ignores the pointer so it never blocks your page. To make lines
 clickable, turn pointer events back on for the paths:
 
 ```css
-.ctt-path {
+.arc-path {
   pointer-events: visibleStroke;
   cursor: pointer;
 }
@@ -242,7 +242,7 @@ when:
   `style.transform` just works.
 
 For movement it can't observe, like CSS transitions and animations, either call
-`ctt.update()` yourself or use `autoUpdate: 'frame'`.
+`arclace.update()` yourself or use `autoUpdate: 'frame'`.
 
 ## With frameworks
 
@@ -251,11 +251,11 @@ React:
 
 ```tsx
 useEffect(() => {
-  const ctt = new ConnectTheThings({ container: containerRef.current });
+  const arclace = new Arclace({ container: containerRef.current });
 
-  ctt.connect(aRef.current, bRef.current, { arrow: 'end' });
+  arclace.connect(aRef.current, bRef.current, { arrow: 'end' });
 
-  return () => ctt.destroy();
+  return () => arclace.destroy();
 }, []);
 ```
 
@@ -270,7 +270,7 @@ npm run lint
 npm run build      # dist/
 npm run check:pack # pack, install and run every example in Chrome
 npm run docs:gen   # API docs in docs/api/
-npm run docs:dev   # docs site at http://localhost:5173/connect-the-things/
+npm run docs:dev   # docs site at http://localhost:5173/arclace/
 ```
 
 ## License

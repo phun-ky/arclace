@@ -21,18 +21,18 @@ connection when a control changes:
 ```
 
 ```ts
-import { ConnectTheThings } from '@phun-ky/connect-the-things';
-import '@phun-ky/connect-the-things/style.css';
+import { Arclace } from '@phun-ky/arclace';
+import '@phun-ky/arclace/style.css';
 
 const world = document.getElementById('world');
-const ctt = new ConnectTheThings({ container: world });
+const arclace = new Arclace({ container: world });
 
-ctt.connect('#tokens', '#theme', { label: 'accent', arrow: 'end' });
-ctt.connect('#fonts', '#card', { label: 'font', dashed: true });
-ctt.connect('#theme', '#docs', { startSide: 'bottom', stopSide: 'top' });
+arclace.connect('#tokens', '#theme', { label: 'accent', arrow: 'end' });
+arclace.connect('#fonts', '#card', { label: 'font', dashed: true });
+arclace.connect('#theme', '#docs', { startSide: 'bottom', stopSide: 'top' });
 
 // When a control changes
-for (const connection of ctt.connections) {
+for (const connection of arclace.connections) {
   connection.setOptions({ type: 'orthogonal' });
 }
 ```

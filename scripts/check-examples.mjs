@@ -3,7 +3,7 @@
 // packed tarball first.
 //
 // - ts, js and tsx blocks run as modules, with the package's exports and a
-//   few fixtures (ctt, connection, a, b, c, useEffect and refs) in scope when
+//   few fixtures (arclace, connection, a, b, c, useEffect and refs) in scope when
 //   the block uses them without declaring them. Every connection they draw
 //   must have a path, and `expression; // 'value'` lines are asserted.
 // - html blocks with a <script> run as pages, with CDN URLs for the package
@@ -44,9 +44,9 @@ const FIXTURES = {
   a: 'const a = document.querySelector("#a");',
   b: 'const b = document.querySelector("#b");',
   c: 'const c = document.querySelector("#c");',
-  ctt: 'const ctt = new ConnectTheThings({ container: "#diagram" });',
+  arclace: 'const arclace = new Arclace({ container: "#diagram" });',
   connection:
-    'const connection = ctt.connect("#a", "#b", { id: "my-connection-id" });',
+    'const connection = arclace.connect("#a", "#b", { id: "my-connection-id" });',
   // React's useEffect: run the effect now, keep the cleanup for later
   useEffect:
     'const useEffect = (effect) => { window.__cleanup = effect() ?? undefined; };',
@@ -56,7 +56,7 @@ const FIXTURES = {
   bRef: 'const bRef = { current: document.querySelector("#b") };'
 };
 // Fixtures that need other fixtures or exports first
-const NEEDS = { connection: ['ctt'], ctt: ['ConnectTheThings'] };
+const NEEDS = { connection: ['arclace'], arclace: ['Arclace'] };
 /** Names a block declares or imports. */
 const declaredIn = (code) =>
   new Set([
@@ -281,7 +281,7 @@ export const checkExamples = async ({ root, app, pkg }) => {
           `/pkg/${(path ?? pkg[cdn === 'unpkg.com' ? 'unpkg' : 'jsdelivr']).replace(/^\/|^\.\//g, '')}`
       );
     } else {
-      const imports = /['"]@phun-ky\/connect-the-things\/style\.css['"]/;
+      const imports = /['"]@phun-ky\/arclace\/style\.css['"]/;
       const { code: asserted, checks: count } = withAssertions(
         run.code.replace(new RegExp(`^import ${imports.source};?$`, 'm'), '')
       );
@@ -293,9 +293,11 @@ export const checkExamples = async ({ root, app, pkg }) => {
         for (const need of NEEDS[name] ?? []) want(need);
         wanted.add(name);
       };
+      // A name inside a string, such as the package name, isn't a use
+      const code = asserted.replace(/(['"`])(?:\\.|(?!\1).)*\1/g, '""');
 
       for (const name of [...exported, ...Object.keys(FIXTURES)]) {
-        if (new RegExp(`\\b${name}\\b`).test(asserted)) want(name);
+        if (new RegExp(`\\b${name}\\b`).test(code)) want(name);
       }
 
       const names = [...wanted];
@@ -382,7 +384,7 @@ window.__ran = true;
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
 
   const origin = `http://127.0.0.1:${server.address().port}`;
-  const profile = mkdtempSync(join(tmpdir(), 'connect-the-things-chrome-'));
+  const profile = mkdtempSync(join(tmpdir(), 'arclace-chrome-'));
 
   let chrome;
   let errors = [];
@@ -446,7 +448,7 @@ window.__ran = true;
       );
 
       const state = await evaluate(`(() => {
-        const paths = [...document.querySelectorAll('.ctt-path')];
+        const paths = [...document.querySelectorAll('.arc-path')];
         const cleanup = window.__cleanup;
         const result = {
           ran: window.__ran === true,
@@ -456,7 +458,7 @@ window.__ran = true;
         };
         if (typeof cleanup === 'function') {
           cleanup();
-          result.cleanedUp = document.querySelectorAll('.ctt-svg').length === 0;
+          result.cleanedUp = document.querySelectorAll('.arc-svg').length === 0;
         }
         return result;
       })()`);

@@ -84,7 +84,7 @@ const entryPoints = (pkg) => {
     .map((path) => path.replace(/^\.\//, ''));
 };
 const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'));
-const work = mkdtempSync(join(tmpdir(), 'connect-the-things-pack-'));
+const work = mkdtempSync(join(tmpdir(), 'arclace-pack-'));
 const problems = [];
 
 try {
@@ -247,12 +247,12 @@ try {
     // exists and refuses to run without a document
     const expect = `
       const check = (how, api) => {
-        if (typeof api?.ConnectTheThings !== 'function') throw new Error(how + ': ConnectTheThings is ' + typeof api?.ConnectTheThings);
+        if (typeof api?.Arclace !== 'function') throw new Error(how + ': Arclace is ' + typeof api?.Arclace);
         const { d } = api.straightPath({ x: 0, y: 0 }, { x: 100, y: 50 });
         if (d !== 'M 0 0 L 100 50') throw new Error(how + ': straightPath gave ' + d);
         let message;
-        try { new api.ConnectTheThings(); } catch (error) { message = error.message; }
-        if (!/a DOM is required/.test(message)) throw new Error(how + ': new ConnectTheThings() without a DOM gave ' + message);
+        try { new api.Arclace(); } catch (error) { message = error.message; }
+        if (!/a DOM is required/.test(message)) throw new Error(how + ': new Arclace() without a DOM gave ' + message);
         console.log(how + ': straightPath = ' + d);
       };
     `;
@@ -274,13 +274,13 @@ try {
       'dist path import': [
         '--input-type=module',
         '-e',
-        `${expect} check('dist path', await import(${JSON.stringify(`${pkg.name}/dist/connect-the-things.js`)}));`
+        `${expect} check('dist path', await import(${JSON.stringify(`${pkg.name}/dist/arclace.js`)}));`
       ],
       // A <script> tag: no module system, the UMD build sets a global
       'UMD script global': [
         '--input-type=commonjs',
         '-e',
-        `${expect} const vm = require('node:vm'); const sandbox = {}; vm.runInNewContext(require('node:fs').readFileSync(${umd}, 'utf8'), sandbox); check('UMD global', sandbox.ConnectTheThings);`
+        `${expect} const vm = require('node:vm'); const sandbox = {}; vm.runInNewContext(require('node:fs').readFileSync(${umd}, 'utf8'), sandbox); check('UMD global', sandbox.Arclace);`
       ],
       // An AMD or CommonJS loader running the UMD build
       'UMD under CommonJS': [

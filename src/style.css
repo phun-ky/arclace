@@ -1,52 +1,52 @@
 /**
- * Optional styles for @phun-ky/connect-the-things.
+ * Optional styles for @phun-ky/arclace.
  *
  * Lines work without this file. It adds the label halo, hollow anchors and
  * the dash animation, and exposes custom properties for theming:
  *
- *   --ctt-color          line, arrow and anchor color
- *   --ctt-label-color    label text color
- *   --ctt-label-halo     outline drawn behind labels so they stay readable
- *   --ctt-label-size     label font size
- *   --ctt-anchor-fill    inside of anchor dots
+ *   --arc-color          line, arrow and anchor color
+ *   --arc-label-color    label text color
+ *   --arc-label-halo     outline drawn behind labels so they stay readable
+ *   --arc-label-size     label font size
+ *   --arc-anchor-fill    inside of anchor dots
  */
 
-.ctt-connection {
-  color: var(--ctt-color, currentColor);
+.arc-connection {
+  color: var(--arc-color, currentColor);
 }
 
-.ctt-path {
+.arc-path {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-.ctt-label {
-  fill: var(--ctt-label-color, currentColor);
-  font-size: var(--ctt-label-size, 12px);
+.arc-label {
+  fill: var(--arc-label-color, currentColor);
+  font-size: var(--arc-label-size, 12px);
   paint-order: stroke;
-  stroke: var(--ctt-label-halo, #fff);
+  stroke: var(--arc-label-halo, #fff);
   stroke-width: 4px;
   stroke-linejoin: round;
 }
 
-.ctt-anchor {
-  fill: var(--ctt-anchor-fill, #fff);
+.arc-anchor {
+  fill: var(--arc-anchor-fill, #fff);
   stroke: currentColor;
   stroke-width: 2px;
 }
 
-.ctt-animated .ctt-path {
-  animation: ctt-dash 0.6s linear infinite;
+.arc-animated .arc-path {
+  animation: arc-dash 0.6s linear infinite;
 }
 
-@keyframes ctt-dash {
+@keyframes arc-dash {
   to {
     stroke-dashoffset: -12;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ctt-animated .ctt-path {
+  .arc-animated .arc-path {
     animation: none;
   }
 }

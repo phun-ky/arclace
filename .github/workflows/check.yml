@@ -66,10 +66,10 @@ jobs:
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          slug: phun-ky/connect-the-things
+          slug: phun-ky/arclace
           files: coverage/cobertura-coverage.xml
 
-  # Deploys phun-ky.net/connect-the-things from main, after every check passed
+  # Deploys phun-ky.net/arclace from main, after every check passed
   deploy:
     name: Deploy
     needs: check

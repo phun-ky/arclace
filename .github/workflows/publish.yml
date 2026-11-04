@@ -72,7 +72,7 @@ jobs:
         if: steps.guard.outputs.release == 'true'
         run: |
           version=$(node -p "require('./package.json').version")
-          file="$RUNNER_TEMP/connect-the-things-$version.cdx.json"
+          file="$RUNNER_TEMP/arclace-$version.cdx.json"
           npm sbom --sbom-format cyclonedx --omit dev > "$file"
           gh release upload "$version" "$file" --clobber
         env:
