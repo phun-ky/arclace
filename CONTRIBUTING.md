@@ -31,6 +31,7 @@ forward to your contributions. 🎉
     - [Suggesting Enhancements](#suggesting-enhancements)
       - [Before Submitting an Enhancement](#before-submitting-an-enhancement)
       - [How Do I Submit a Good Enhancement Suggestion?](#how-do-i-submit-a-good-enhancement-suggestion)
+    - [Developer Certificate of Origin](#developer-certificate-of-origin)
   - [Attribution](#attribution)
 
 ## Code of Conduct
@@ -176,6 +177,28 @@ Enhancement suggestions are tracked as
 - **Explain why this enhancement would be useful** to most
   **@phun-ky/connect-the-things** users. You may also want to point out the
   other projects that solved it better and which could serve as inspiration.
+
+### Developer Certificate of Origin
+
+Every commit must be signed off under the
+[Developer Certificate of Origin](https://developercertificate.org/) (DCO): a
+statement that you wrote the change, or otherwise have the right to submit it
+under the project's licence. You agree to it by adding a `Signed-off-by` line
+with your name and email to the commit message:
+
+```text
+Signed-off-by: Your Name <you@example.com>
+```
+
+- **Per commit:** `git commit -s` adds the line for you.
+- **Always:** `npm install` sets `core.hooksPath` to `.githooks`, and the hook
+  in `.githooks/prepare-commit-msg` adds the line to every commit, including
+  those made by `npm run commit` or your editor.
+- **Forgot?** Sign off every commit on your branch and push again:
+  `git rebase --signoff main` then `git push --force-with-lease`.
+
+The DCO check on every pull request fails if a commit isn't signed off. Commits
+by Dependabot are exempt.
 
 ## Attribution
 
