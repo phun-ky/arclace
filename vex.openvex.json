@@ -1,0 +1,32 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "https://github.com/phun-ky/arclace/blob/main/vex.openvex.json",
+  "author": "Alexander Vassbotn Røyne-Helgesen",
+  "role": "Maintainer",
+  "timestamp": "2026-11-04T00:00:00Z",
+  "version": 1,
+  "statements": [
+    {
+      "vulnerability": {
+        "@id": "https://github.com/advisories/GHSA-g3hv-75wg-m249",
+        "name": "GHSA-g3hv-75wg-m249"
+      },
+      "timestamp": "2026-11-04T00:00:00Z",
+      "products": [{ "@id": "pkg:npm/%40phun-ky/arclace" }],
+      "status": "not_affected",
+      "justification": "component_not_present",
+      "impact_statement": "minimatch is a development dependency only (eslint, typescript-eslint, eslint-plugin-import-x and typedoc) and is not a dependency of the published package, which has no runtime dependencies. In development, it only matches the glob patterns in the repository's own ESLint and TypeDoc configuration, never patterns from outside the project."
+    },
+    {
+      "vulnerability": {
+        "@id": "https://github.com/advisories/GHSA-gcqx-w48m-w2h4",
+        "name": "GHSA-gcqx-w48m-w2h4"
+      },
+      "timestamp": "2026-11-04T00:00:00Z",
+      "products": [{ "@id": "pkg:npm/%40phun-ky/arclace" }],
+      "status": "not_affected",
+      "justification": "component_not_present",
+      "impact_statement": "deepmerge is a development dependency only (@rollup/plugin-node-resolve) and is not a dependency of the published package, which has no runtime dependencies. In development, only scripts/check-pack.mjs uses the plugin, to bundle the packed package in a test, and it merges only the options that script passes."
+    }
+  ]
+}

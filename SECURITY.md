@@ -57,7 +57,7 @@ What you can rely on:
 - **It only changes what it draws.** Besides its overlay, it changes one thing
   in your page: a container other than `document.body` with `position: static`
   gets `position: relative`, and `destroy()` restores it.
-- **Releases are traceable** from 0.1.1 on (see below).
+- **Releases are traceable** from the first release after 0.2.0 on (see below).
 
 What you can't rely on:
 
@@ -73,9 +73,10 @@ What you can't rely on:
 
 Releases are published from GitHub Actions with npm trusted publishing, and
 carry a signed provenance attestation (Sigstore) that links them to the commit
-and workflow run that built them. The exception is 0.1.0, the first release,
-which was published by hand: it has npm's registry signatures, but no
-provenance.
+and workflow run that built them. The exceptions are the two releases published
+by hand: 0.1.0, the first release (as `@phun-ky/connect-the-things`), and 0.2.0,
+the first under the name `@phun-ky/arclace`. They have npm's registry
+signatures, but no provenance.
 
 To verify the packages you've installed:
 
@@ -127,6 +128,12 @@ yet and can't be exploited through this project may be allowed in dependency
 review. Each one is listed here with the reason, and removed as soon as a fix is
 reachable. There are none today.
 
+**Findings that don't affect the package.** A vulnerability in a development
+dependency that isn't part of the published package is recorded as an OpenVEX
+statement in
+[`vex.openvex.json`](https://github.com/phun-ky/arclace/blob/main/vex.openvex.json),
+with the reason, and updated as soon as a fixed version is reachable.
+
 ## Code Scanning
 
 CodeQL analyses every pull request and every push to `main`. The ruleset on
@@ -151,3 +158,8 @@ Publishing to npm needs no secret: it uses short-lived OIDC tokens from GitHub.
   available to workflows run from forks.
 - **Rotation:** at least once a year, and immediately if one may have been
   exposed.
+
+## Assurance Case
+
+Why these expectations hold, where they don't hold yet, and the threat model and
+trust boundaries behind them are set out in the [assurance case](ASSURANCE.md).
