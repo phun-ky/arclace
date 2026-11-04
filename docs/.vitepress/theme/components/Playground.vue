@@ -179,7 +179,7 @@ watch([type, arrow, labels, anchors, animated], apply);
     </div>
     <div
       ref="canvas"
-      class="canvas"
+      class="canvas arc-canvas"
       :style="{ height: `${WORLD_HEIGHT * Math.max(fitted, 0.5)}px` }"
     >
       <!-- Zooming scales the container; lines are measured in its local space -->
@@ -237,9 +237,6 @@ watch([type, arrow, labels, anchors, animated], apply);
 .canvas {
   position: relative;
   overflow: hidden;
-  background-color: var(--vp-c-bg-soft);
-  background-image: radial-gradient(var(--vp-c-divider) 1px, transparent 0);
-  background-size: 20px 20px;
 }
 
 .world {
@@ -249,8 +246,8 @@ watch([type, arrow, labels, anchors, animated], apply);
   transform-origin: 0 0;
   --arc-color: var(--vp-c-text-2);
   --arc-label-color: var(--vp-c-text-1);
-  --arc-label-halo: var(--vp-c-bg-soft);
-  --arc-anchor-fill: var(--vp-c-bg-soft);
+  --arc-label-halo: var(--arc-canvas-bg);
+  --arc-anchor-fill: var(--arc-canvas-bg);
 }
 
 .node {
@@ -259,7 +256,7 @@ watch([type, arrow, labels, anchors, animated], apply);
   padding: 0.75rem 1rem;
   border: 1px solid var(--vp-c-divider);
   border-radius: 0.75rem;
-  background: var(--vp-c-bg);
+  background: var(--arc-node-bg);
   color: var(--vp-c-text-1);
   box-shadow: var(--vp-shadow-2);
   font-size: 14px;
