@@ -3,6 +3,7 @@
 ## Classes
 
 - [Arclace](classes/Arclace.md)
+- [ArclaceError](classes/ArclaceError.md)
 - [Connection](classes/Connection.md)
 
 ## Interfaces
@@ -15,10 +16,8 @@
 - [ArcArrowType](type-aliases/ArcArrowType.md)
 - [ArcConnectionDefinitionType](type-aliases/ArcConnectionDefinitionType.md)
 - [ArcConnectionOptionsType](type-aliases/ArcConnectionOptionsType.md)
-- [ArcConnectionParamsType](type-aliases/ArcConnectionParamsType.md)
 - [ArcElementTargetType](type-aliases/ArcElementTargetType.md)
 - [ArcGeometryType](type-aliases/ArcGeometryType.md)
-- [ArcOptionalKeysType](type-aliases/ArcOptionalKeysType.md)
 - [ArcOptionsType](type-aliases/ArcOptionsType.md)
 - [ArcPathResultType](type-aliases/ArcPathResultType.md)
 - [ArcPathType](type-aliases/ArcPathType.md)

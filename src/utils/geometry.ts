@@ -7,19 +7,22 @@ import type {
 /**
  * Unit vectors pointing away from each side of a box.
  */
-export const NORMALS: Record<ArcSideType, ArcPointInterface> = {
-  top: { x: 0, y: -1 },
-  right: { x: 1, y: 0 },
-  bottom: { x: 0, y: 1 },
-  left: { x: -1, y: 0 }
-};
+export const NORMALS: Readonly<
+  Record<ArcSideType, Readonly<ArcPointInterface>>
+> = Object.freeze({
+  top: Object.freeze({ x: 0, y: -1 }),
+  right: Object.freeze({ x: 1, y: 0 }),
+  bottom: Object.freeze({ x: 0, y: 1 }),
+  left: Object.freeze({ x: -1, y: 0 })
+});
 
-export const OPPOSITE: Record<ArcSideType, ArcSideType> = {
-  top: 'bottom',
-  right: 'left',
-  bottom: 'top',
-  left: 'right'
-};
+export const OPPOSITE: Readonly<Record<ArcSideType, ArcSideType>> =
+  Object.freeze({
+    top: 'bottom',
+    right: 'left',
+    bottom: 'top',
+    left: 'right'
+  });
 
 export const isHorizontalSide = (side: ArcSideType): boolean =>
   side === 'left' || side === 'right';

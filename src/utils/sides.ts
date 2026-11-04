@@ -44,19 +44,19 @@ export const facingSide = (
  *
  * @example
  * ```ts
- * resolveSides(startRect, stopRect, 'auto', 'auto');
- * // { startSide: 'right', stopSide: 'left' }
+ * resolveSides(startRect, endRect, 'auto', 'auto');
+ * // { startSide: 'right', endSide: 'left' }
  * ```
  */
 export const resolveSides = (
   startRect: ArcRectInterface,
-  stopRect: ArcRectInterface,
+  endRect: ArcRectInterface,
   startSide: ArcSideOptionType = 'auto',
-  stopSide: ArcSideOptionType = 'auto'
-): { startSide: ArcSideType; stopSide: ArcSideType } => ({
-  startSide: startSide === 'auto' ? facingSide(startRect, stopRect) : startSide,
-  stopSide:
-    stopSide === 'auto' ? OPPOSITE[facingSide(startRect, stopRect)] : stopSide
+  endSide: ArcSideOptionType = 'auto'
+): { startSide: ArcSideType; endSide: ArcSideType } => ({
+  startSide: startSide === 'auto' ? facingSide(startRect, endRect) : startSide,
+  endSide:
+    endSide === 'auto' ? OPPOSITE[facingSide(startRect, endRect)] : endSide
 });
 
 /**

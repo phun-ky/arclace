@@ -36,18 +36,18 @@ describe('resolveSides', () => {
   it('connects facing sides by default', () => {
     assert.deepEqual(resolveSides(rect(0, 0), rect(300, 0)), {
       startSide: 'right',
-      stopSide: 'left'
+      endSide: 'left'
     });
   });
 
   it('keeps explicit sides', () => {
     assert.deepEqual(resolveSides(rect(0, 0), rect(300, 0), 'bottom', 'auto'), {
       startSide: 'bottom',
-      stopSide: 'left'
+      endSide: 'left'
     });
     assert.deepEqual(resolveSides(rect(0, 0), rect(300, 0), 'top', 'top'), {
       startSide: 'top',
-      stopSide: 'top'
+      endSide: 'top'
     });
   });
 });

@@ -45,8 +45,8 @@ import { createConnections } from '@phun-ky/arclace';
 
 const arclace = createConnections(
   [
-    { startElement: '#a', stopElement: '#b' },
-    { startElement: '#b', stopElement: '#c', label: 'then' }
+    { startElement: '#a', endElement: '#b' },
+    { startElement: '#b', endElement: '#c', label: 'then' }
   ],
   { container: '#diagram', defaults: { type: 'orthogonal', arrow: 'end' } }
 );

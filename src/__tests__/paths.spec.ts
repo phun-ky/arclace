@@ -133,12 +133,12 @@ describe('routeOrthogonal', () => {
     const sides = ['top', 'right', 'bottom', 'left'] as const;
 
     for (const startSide of sides) {
-      for (const stopSide of sides) {
+      for (const endSide of sides) {
         const points = routeOrthogonal(
           { x: 10, y: 20 },
           startSide,
           { x: 300, y: -150 },
-          stopSide
+          endSide
         );
 
         points.slice(1).forEach((point, i) => {
@@ -146,7 +146,7 @@ describe('routeOrthogonal', () => {
 
           assert.ok(
             point.x === prev.x || point.y === prev.y,
-            `${startSide} → ${stopSide}: diagonal segment`
+            `${startSide} → ${endSide}: diagonal segment`
           );
         });
       }

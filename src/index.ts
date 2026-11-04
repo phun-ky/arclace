@@ -3,10 +3,10 @@ export { Arclace, createConnections } from './Arclace';
 export {
   Connection,
   DEFAULT_CONNECTION_OPTIONS,
-  type ArcConnectionParamsType,
-  type ArcOptionalKeysType,
   type ArcResolvedConnectionOptionsType
 } from './Connection';
+
+export { ArclaceError } from './errors';
 
 export type {
   ArcArrowType,

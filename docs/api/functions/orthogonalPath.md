@@ -2,9 +2,9 @@
 
 # Function: orthogonalPath()
 
-> **orthogonalPath**(`start`, `startSide`, `stop`, `stopSide`, `__namedParameters?`): [`ArcPathResultType`](../type-aliases/ArcPathResultType.md)
+> **orthogonalPath**(`start`, `startSide`, `end`, `endSide`, `__namedParameters?`): [`ArcPathResultType`](../type-aliases/ArcPathResultType.md)
 
-Defined in: [utils/paths.ts:295](https://github.com/phun-ky/arclace/blob/main/src/utils/paths.ts#L295)
+Defined in: [src/utils/paths.ts:326](https://github.com/phun-ky/arclace/blob/main/src/utils/paths.ts#L326)
 
 An orthogonal line with rounded corners.
 
@@ -18,11 +18,11 @@ An orthogonal line with rounded corners.
 
 [`ArcSideType`](../type-aliases/ArcSideType.md)
 
-### stop
+### end
 
 [`ArcPointInterface`](../interfaces/ArcPointInterface.md)
 
-### stopSide
+### endSide
 
 [`ArcSideType`](../type-aliases/ArcSideType.md)
 
@@ -39,6 +39,15 @@ An orthogonal line with rounded corners.
 ## Returns
 
 [`ArcPathResultType`](../type-aliases/ArcPathResultType.md)
+
+## Throws
+
+When a point, `radius` or `offset` isn't finite.
+
+## Throws
+
+When a side isn't `top`, `right`, `bottom` or `left`,
+  or `radius` or `offset` is negative.
 
 ## Example
 

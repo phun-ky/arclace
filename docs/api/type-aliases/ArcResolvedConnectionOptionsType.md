@@ -2,11 +2,12 @@
 
 # Type Alias: ArcResolvedConnectionOptionsType
 
-> **ArcResolvedConnectionOptionsType** = `Required`\<`Omit`\<[`ArcConnectionOptionsType`](ArcConnectionOptionsType.md), [`ArcOptionalKeysType`](ArcOptionalKeysType.md)\>\> & `Pick`\<[`ArcConnectionOptionsType`](ArcConnectionOptionsType.md), [`ArcOptionalKeysType`](ArcOptionalKeysType.md)\> & `object`
+> **ArcResolvedConnectionOptionsType** = `Required`\<`Omit`\<[`ArcConnectionOptionsType`](ArcConnectionOptionsType.md), `"id"` \| `"label"` \| `"color"` \| `"className"`\>\> & `Pick`\<[`ArcConnectionOptionsType`](ArcConnectionOptionsType.md), `"label"` \| `"color"` \| `"className"`\> & `object`
 
-Defined in: [Connection.ts:26](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L26)
+Defined in: [src/Connection.ts:24](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L24)
 
-Connection options with every default filled in.
+Connection options with every default filled in. `label`, `color` and
+`className` have no default.
 
 ## Type Declaration
 

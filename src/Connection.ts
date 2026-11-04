@@ -1,4 +1,5 @@
 import type { Arclace } from './Arclace';
+import { ArclaceError } from './errors';
 import type {
   ArcConnectionOptionsType,
   ArcGeometryType,
@@ -14,29 +15,31 @@ import {
   straightPath
 } from './utils/paths';
 import { createSVGElement, setAttributes } from './utils/svg';
+import { validateConnectionOptions } from './utils/validate';
 
 /**
- * Connection options that have no default.
- */
-export type ArcOptionalKeysType = 'id' | 'label' | 'color' | 'className';
-
-/**
- * Connection options with every default filled in.
+ * Connection options with every default filled in. `label`, `color` and
+ * `className` have no default.
  */
 export type ArcResolvedConnectionOptionsType = Required<
-  Omit<ArcConnectionOptionsType, ArcOptionalKeysType>
+  Omit<ArcConnectionOptionsType, 'id' | 'label' | 'color' | 'className'>
 > &
-  Pick<ArcConnectionOptionsType, ArcOptionalKeysType> & { id: string };
+  Pick<ArcConnectionOptionsType, 'label' | 'color' | 'className'> & {
+    id: string;
+  };
 
 /**
- * Options every connection falls back to.
+ * Options every connection falls back to. Frozen: set your own defaults with
+ * the `defaults` option of {@link Arclace} instead.
  */
-export const DEFAULT_CONNECTION_OPTIONS: Required<
-  Omit<ArcConnectionOptionsType, ArcOptionalKeysType>
-> = {
+export const DEFAULT_CONNECTION_OPTIONS: Readonly<
+  Required<
+    Omit<ArcConnectionOptionsType, 'id' | 'label' | 'color' | 'className'>
+  >
+> = Object.freeze({
   type: 'bezier',
   startSide: 'auto',
-  stopSide: 'auto',
+  endSide: 'auto',
   arrow: 'none',
   strokeWidth: 2,
   dashed: false,
@@ -48,22 +51,33 @@ export const DEFAULT_CONNECTION_OPTIONS: Required<
   curvature: 1,
   radius: 8,
   offset: 20
-};
+});
 
+/**
+ * Drops options set to `undefined`, so they fall back to the defaults instead
+ * of replacing them.
+ */
+const definedOnly = (
+  options: ArcConnectionOptionsType
+): ArcConnectionOptionsType =>
+  Object.fromEntries(
+    Object.entries(options).filter(([, value]) => value !== undefined)
+  );
 // Arrow length in multiples of the stroke width
 const ARROW_SIZE = 4;
 
-export type ArcConnectionParamsType = {
+type ArcConnectionParamsType = {
   id: string;
   startElement: Element;
-  stopElement: Element;
+  endElement: Element;
   options: ArcConnectionOptionsType;
   defaults?: ArcConnectionOptionsType;
   owner: Arclace;
 };
 
 /**
- * A line between two elements. Created with {@link Arclace.connect}.
+ * A line between two elements. Created with {@link Arclace.connect} or
+ * {@link Arclace.connectAll}, not with `new`.
  *
  * Each connection renders as:
  *
@@ -73,7 +87,7 @@ export type ArcConnectionParamsType = {
  *   <path class="arc-path" />
  *   <text class="arc-label">…</text>       <!-- when `label` is set -->
  *   <circle class="arc-anchor arc-anchor-start" />  <!-- when `anchors` is set -->
- *   <circle class="arc-anchor arc-anchor-stop" />
+ *   <circle class="arc-anchor arc-anchor-end" />
  * </g>
  * ```
  *
@@ -83,7 +97,7 @@ export type ArcConnectionParamsType = {
 export class Connection {
   readonly id: string;
   readonly startElement: Element;
-  readonly stopElement: Element;
+  readonly endElement: Element;
 
   /**
    * The `<g>` element holding everything this connection draws.
@@ -95,12 +109,8 @@ export class Connection {
    */
   readonly path: SVGPathElement;
 
-  /**
-   * The geometry from the last update, or `null` when the connection is
-   * hidden because one of its elements is not rendered.
-   */
-  geometry: ArcGeometryType | null = null;
-
+  #geometry: ArcGeometryType | null = null;
+  #removed = false;
   #owner: Arclace;
   #options: ArcConnectionOptionsType;
   #defaults: ArcConnectionOptionsType;
@@ -108,11 +118,11 @@ export class Connection {
   #label: SVGTextElement | null = null;
   #anchors: [SVGCircleElement, SVGCircleElement] | null = null;
 
-  constructor(params: ArcConnectionParamsType) {
+  private constructor(params: ArcConnectionParamsType) {
     const {
       id,
       startElement,
-      stopElement,
+      endElement,
       options,
       defaults = {},
       owner
@@ -120,7 +130,7 @@ export class Connection {
 
     this.id = id;
     this.startElement = startElement;
-    this.stopElement = stopElement;
+    this.endElement = endElement;
     this.#owner = owner;
     this.#options = { ...options };
     this.#defaults = defaults;
@@ -135,13 +145,30 @@ export class Connection {
   }
 
   /**
+   * Creates a connection for its owner. Options must already be validated.
+   *
+   * @internal
+   */
+  static _create(params: ArcConnectionParamsType): Connection {
+    return new Connection(params);
+  }
+
+  /**
+   * The geometry from the last update, or `null` when the connection is
+   * hidden because one of its elements is not rendered.
+   */
+  get geometry(): Readonly<ArcGeometryType> | null {
+    return this.#geometry;
+  }
+
+  /**
    * The connection's options merged with the instance defaults.
    */
   get options(): Readonly<ArcResolvedConnectionOptionsType> {
     return {
       ...DEFAULT_CONNECTION_OPTIONS,
-      ...this.#defaults,
-      ...this.#options,
+      ...definedOnly(this.#defaults),
+      ...definedOnly(this.#options),
       id: this.id
     };
   }
@@ -153,8 +180,21 @@ export class Connection {
    * ```ts
    * connection.setOptions({ type: 'orthogonal', arrow: 'end' });
    * ```
+   * @throws {TypeError} When an option has the wrong type, or `id` is set.
+   * @throws {RangeError} When an option is out of range.
+   * @throws {ArclaceError} When the connection has been removed.
    */
   setOptions(options: Omit<ArcConnectionOptionsType, 'id'>): this {
+    if (this.#removed) {
+      throw new ArclaceError(`connection "${this.id}" has been removed`);
+    }
+
+    validateConnectionOptions(options);
+
+    if ((options as ArcConnectionOptionsType).id !== undefined) {
+      throw new TypeError('arclace: setOptions() cannot change the id');
+    }
+
     this.#options = { ...this.#options, ...options };
     this.#applyOptions();
     this.#owner.update();
@@ -184,8 +224,8 @@ export class Connection {
   _draw(
     start: ArcPointInterface,
     startSide: ArcSideType,
-    stop: ArcPointInterface,
-    stopSide: ArcSideType
+    end: ArcPointInterface,
+    endSide: ArcSideType
   ): void {
     const { arrow, strokeWidth } = this.options;
     const arrowLength = ARROW_SIZE * strokeWidth;
@@ -193,25 +233,32 @@ export class Connection {
     // elements
     const pathStart =
       arrow === 'start' || arrow === 'both'
-        ? this.#pullBack(start, startSide, stop, arrowLength)
+        ? this.#pullBack(start, startSide, end, arrowLength)
         : start;
-    const pathStop =
+    const pathEnd =
       arrow === 'end' || arrow === 'both'
-        ? this.#pullBack(stop, stopSide, start, arrowLength)
-        : stop;
+        ? this.#pullBack(end, endSide, start, arrowLength)
+        : end;
     const { d, labelPoint } = this.#buildPath(
       pathStart,
       startSide,
-      pathStop,
-      stopSide
+      pathEnd,
+      endSide
     );
 
-    this.geometry = { start, stop, startSide, stopSide, labelPoint, d };
+    this.#geometry = Object.freeze({
+      start,
+      end,
+      startSide,
+      endSide,
+      labelPoint,
+      d
+    });
 
     this.element.removeAttribute('display');
     setAttributes(this.element, {
       'data-start-side': startSide,
-      'data-stop-side': stopSide
+      'data-end-side': endSide
     });
     this.path.setAttribute('d', d);
 
@@ -219,7 +266,7 @@ export class Connection {
 
     if (this.#anchors) {
       setAttributes(this.#anchors[0], { cx: start.x, cy: start.y });
-      setAttributes(this.#anchors[1], { cx: stop.x, cy: stop.y });
+      setAttributes(this.#anchors[1], { cx: end.x, cy: end.y });
     }
   }
 
@@ -229,7 +276,7 @@ export class Connection {
    * @internal
    */
   _hide(): void {
-    this.geometry = null;
+    this.#geometry = null;
     this.element.setAttribute('display', 'none');
   }
 
@@ -239,27 +286,28 @@ export class Connection {
    * @internal
    */
   _dispose(): void {
+    this.#removed = true;
     this.element.remove();
   }
 
   #buildPath(
     start: ArcPointInterface,
     startSide: ArcSideType,
-    stop: ArcPointInterface,
-    stopSide: ArcSideType
+    end: ArcPointInterface,
+    endSide: ArcSideType
   ): ArcPathResultType {
     const { type, curvature, radius, offset } = this.options;
 
-    if (type === 'straight') return straightPath(start, stop);
+    if (type === 'straight') return straightPath(start, end);
 
     if (type === 'orthogonal') {
-      return orthogonalPath(start, startSide, stop, stopSide, {
+      return orthogonalPath(start, startSide, end, endSide, {
         radius,
         offset
       });
     }
 
-    return bezierPath(start, startSide, stop, stopSide, curvature);
+    return bezierPath(start, startSide, end, endSide, curvature);
   }
 
   #pullBack(
@@ -377,8 +425,8 @@ export class Connection {
       });
       this.path.after(this.#label);
 
-      if (this.geometry)
-        setAttributes(this.#label, { ...this.geometry.labelPoint });
+      if (this.#geometry)
+        setAttributes(this.#label, { ...this.#geometry.labelPoint });
     }
 
     this.#label.textContent = label;
@@ -395,7 +443,7 @@ export class Connection {
     if (!this.#anchors) {
       this.#anchors = [
         createSVGElement('circle', { class: 'arc-anchor arc-anchor-start' }),
-        createSVGElement('circle', { class: 'arc-anchor arc-anchor-stop' })
+        createSVGElement('circle', { class: 'arc-anchor arc-anchor-end' })
       ];
       this.element.append(...this.#anchors);
     }

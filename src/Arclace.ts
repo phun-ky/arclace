@@ -1,4 +1,5 @@
 import { Connection } from './Connection';
+import { ArclaceError } from './errors';
 import type {
   ArcConnectionDefinitionType,
   ArcConnectionOptionsType,
@@ -10,18 +11,31 @@ import type {
 import { center, isHorizontalSide } from './utils/geometry';
 import { uniqueID } from './utils/id';
 import { getLocalRect, getOrigin, isRendered } from './utils/measure';
-import { resolveElement } from './utils/resolve-element';
+import { querySelector, resolveElement } from './utils/resolve-element';
 import { getAnchorPoint, resolveSides } from './utils/sides';
 import { createSVGElement } from './utils/svg';
+import {
+  assertObject,
+  validateConnectionOptions,
+  validateOptions
+} from './utils/validate';
 
 type ArcLayoutItemType = {
   connection: Connection;
   startRect: ArcRectInterface;
-  stopRect: ArcRectInterface;
+  endRect: ArcRectInterface;
   startSide: ArcSideType;
-  stopSide: ArcSideType;
+  endSide: ArcSideType;
   startSlot: { index: number; count: number };
-  stopSlot: { index: number; count: number };
+  endSlot: { index: number; count: number };
+};
+
+// A connection that has been checked and can be added
+type ArcPreparedConnectionType = {
+  id: string;
+  startElement: Element;
+  endElement: Element;
+  options: ArcConnectionOptionsType;
 };
 
 type ArcSlotEntryType = {
@@ -74,12 +88,18 @@ export class Arclace {
   #mutationObserver: MutationObserver | null = null;
   #originalPosition: string | null = null;
 
+  /**
+   * @throws {TypeError} When an option has the wrong type.
+   * @throws {RangeError} When an option is out of range.
+   * @throws {ArclaceError} When there is no DOM, or the container can't be
+   *   found.
+   */
   constructor(options: ArcOptionsType = {}) {
     if (typeof document === 'undefined') {
-      throw Error('arclace: a DOM is required');
+      throw new ArclaceError('a DOM is required');
     }
 
-    this.#options = options;
+    this.#options = validateOptions(options);
     this.container = (
       options.container
         ? resolveElement(options.container, 'container')
@@ -124,9 +144,12 @@ export class Arclace {
    * Connects two elements and draws the line right away.
    *
    * @param startElement - The element (or selector) the line starts at.
-   * @param stopElement - The element (or selector) the line stops at.
+   * @param endElement - The element (or selector) the line ends at.
    * @param options - Options for this connection, merged over the instance defaults.
-   * @throws {Error} When an element can't be found or the id is taken.
+   * @throws {TypeError} When an element or an option has the wrong type.
+   * @throws {RangeError} When an option is out of range.
+   * @throws {ArclaceError} When an element can't be found, the id is taken
+   *   or the instance has been destroyed. Nothing is added.
    * @example
    * ```ts
    * const connection = arclace.connect(a, b, { type: 'orthogonal', arrow: 'end' });
@@ -134,10 +157,12 @@ export class Arclace {
    */
   connect(
     startElement: ArcElementTargetType,
-    stopElement: ArcElementTargetType,
+    endElement: ArcElementTargetType,
     options: ArcConnectionOptionsType = {}
   ): Connection {
-    const connection = this.#add(startElement, stopElement, options);
+    const connection = this.#add(
+      this.#prepare(startElement, endElement, options, 'options')
+    );
 
     this.update();
 
@@ -145,21 +170,49 @@ export class Arclace {
   }
 
   /**
-   * Connects many pairs of elements and draws them in one go.
+   * Connects many pairs of elements and draws them in one go. Every
+   * definition is checked first, so either all of them are added or none.
    *
+   * @throws {TypeError} When `definitions` isn't an array, or an element or
+   *   an option has the wrong type.
+   * @throws {RangeError} When an option is out of range.
+   * @throws {ArclaceError} When an element can't be found, an id is taken or
+   *   repeated, or the instance has been destroyed.
    * @example
    * ```ts
    * arclace.connectAll([
-   *   { startElement: '#a', stopElement: '#b' },
-   *   { startElement: '#a', stopElement: '#c', dashed: true }
+   *   { startElement: '#a', endElement: '#b' },
+   *   { startElement: '#a', endElement: '#c', dashed: true }
    * ]);
    * ```
    */
   connectAll(definitions: ArcConnectionDefinitionType[]): Connection[] {
-    const connections = definitions.map(
-      ({ startElement, stopElement, ...options }) =>
-        this.#add(startElement, stopElement, options)
-    );
+    if (!Array.isArray(definitions)) {
+      throw new TypeError(
+        'arclace: connectAll() needs an array of definitions'
+      );
+    }
+
+    const ids = new Set<string>();
+    const prepared = definitions.map((definition, index) => {
+      const name = `definitions[${index}]`;
+
+      assertObject(definition, name);
+
+      const { startElement, endElement, ...options } = definition;
+      const connection = this.#prepare(startElement, endElement, options, name);
+
+      if (ids.has(connection.id)) {
+        throw new ArclaceError(
+          `${name}.id "${connection.id}" is used more than once`
+        );
+      }
+
+      ids.add(connection.id);
+
+      return connection;
+    });
+    const connections = prepared.map((connection) => this.#add(connection));
 
     this.update();
 
@@ -174,14 +227,23 @@ export class Arclace {
   }
 
   /**
-   * Returns every connection that starts or stops at an element.
+   * Returns every connection that starts or ends at an element. A selector
+   * that matches nothing returns an empty array.
+   *
+   * @throws {TypeError} When the target is neither an element nor a string.
+   * @throws {ArclaceError} When the selector is invalid.
    */
   find(target: ArcElementTargetType): Connection[] {
-    const el = resolveElement(target);
+    const el =
+      typeof target === 'string'
+        ? querySelector(target)
+        : resolveElement(target);
+
+    if (!el) return [];
 
     return this.connections.filter(
       (connection) =>
-        connection.startElement === el || connection.stopElement === el
+        connection.startElement === el || connection.endElement === el
     );
   }
 
@@ -190,7 +252,10 @@ export class Arclace {
    *
    * @param target - A connection, a connection id, or an element (or
    *   selector) whose connections should all be removed. Targets that match
-   *   nothing are ignored.
+   *   nothing, and `null` or `undefined`, are ignored.
+   * @throws {TypeError} When the target is another kind of value.
+   * @throws {ArclaceError} When a string is neither an id nor a valid
+   *   selector.
    * @example
    * ```ts
    * arclace.disconnect(connection);
@@ -199,18 +264,20 @@ export class Arclace {
    * ```
    */
   disconnect(target: Connection | string | Element): void {
-    let removed: Connection[] = [];
+    let removed: Connection[];
+
+    if (target === null || target === undefined) return;
 
     if (target instanceof Connection) {
       removed = [target];
     } else if (typeof target === 'string' && this.#connections.has(target)) {
       removed = [this.#connections.get(target)!];
-    } else if (target instanceof Element) {
+    } else if (typeof target === 'string' || target instanceof Element) {
       removed = this.find(target);
     } else {
-      const el = document.querySelector(target);
-
-      if (el) removed = this.find(el);
+      throw new TypeError(
+        'arclace: disconnect() needs a connection, an id, an element or a selector'
+      );
     }
 
     for (const connection of removed) {
@@ -219,7 +286,7 @@ export class Arclace {
       this.#connections.delete(connection.id);
       connection._dispose();
       this.#unobserve(connection.startElement);
-      this.#unobserve(connection.stopElement);
+      this.#unobserve(connection.endElement);
     }
 
     if (removed.length > 0) this.update();
@@ -277,29 +344,29 @@ export class Arclace {
     };
 
     for (const connection of this.#connections.values()) {
-      const { startElement, stopElement } = connection;
+      const { startElement, endElement } = connection;
 
-      if (!isRendered(startElement) || !isRendered(stopElement)) {
+      if (!isRendered(startElement) || !isRendered(endElement)) {
         connection._hide();
         continue;
       }
 
-      const { spread, startSide, stopSide } = connection.options;
+      const { spread, startSide, endSide } = connection.options;
       const startRect = getLocalRect(startElement, origin);
-      const stopRect = getLocalRect(stopElement, origin);
-      const sides = resolveSides(startRect, stopRect, startSide, stopSide);
+      const endRect = getLocalRect(endElement, origin);
+      const sides = resolveSides(startRect, endRect, startSide, endSide);
       const solo = { index: 0, count: 1 };
 
       items.push({
         connection,
         startRect,
-        stopRect,
+        endRect,
         ...sides,
         startSlot: spread
-          ? addToSlot(startElement, sides.startSide, stopRect)
+          ? addToSlot(startElement, sides.startSide, endRect)
           : solo,
-        stopSlot: spread
-          ? addToSlot(stopElement, sides.stopSide, startRect)
+        endSlot: spread
+          ? addToSlot(endElement, sides.endSide, startRect)
           : { ...solo }
       });
     }
@@ -316,7 +383,7 @@ export class Arclace {
     }
 
     for (const item of items) {
-      const { connection, startRect, stopRect, startSide, stopSide } = item;
+      const { connection, startRect, endRect, startSide, endSide } = item;
       const { spacing, gap } = connection.options;
 
       connection._draw(
@@ -326,8 +393,8 @@ export class Arclace {
           gap
         }),
         startSide,
-        getAnchorPoint(stopRect, stopSide, { ...item.stopSlot, spacing, gap }),
-        stopSide
+        getAnchorPoint(endRect, endSide, { ...item.endSlot, spacing, gap }),
+        endSide
       );
     }
   }
@@ -359,27 +426,44 @@ export class Arclace {
     }
   }
 
-  #add(
-    startTarget: ArcElementTargetType,
-    stopTarget: ArcElementTargetType,
-    options: ArcConnectionOptionsType
-  ): Connection {
+  /**
+   * Checks a connection without adding anything, so a bad option can't leave
+   * a connection behind that breaks every later update.
+   */
+  #prepare(
+    startTarget: unknown,
+    endTarget: unknown,
+    options: unknown,
+    name: string
+  ): ArcPreparedConnectionType {
     if (this.#destroyed) {
-      throw Error('arclace: this instance has been destroyed');
+      throw new ArclaceError('this instance has been destroyed');
     }
+
+    validateConnectionOptions(options, name);
 
     const startElement = resolveElement(startTarget, 'startElement');
-    const stopElement = resolveElement(stopTarget, 'stopElement');
-    const id = options.id ?? `arc-${uniqueID()}`;
+    const endElement = resolveElement(endTarget, 'endElement');
+    const valid = options as ArcConnectionOptionsType;
+    const id = valid.id ?? `arc-${uniqueID()}`;
 
     if (this.#connections.has(id)) {
-      throw Error(`arclace: a connection with id "${id}" exists`);
+      throw new ArclaceError(`a connection with id "${id}" exists`);
     }
 
-    const connection = new Connection({
+    return { id, startElement, endElement, options: valid };
+  }
+
+  #add({
+    id,
+    startElement,
+    endElement,
+    options
+  }: ArcPreparedConnectionType): Connection {
+    const connection = Connection._create({
       id,
       startElement,
-      stopElement,
+      endElement,
       options,
       defaults: this.#options.defaults,
       owner: this
@@ -388,7 +472,7 @@ export class Arclace {
     this.#connections.set(id, connection);
     this.svg.appendChild(connection.element);
     this.#resizeObserver?.observe(startElement);
-    this.#resizeObserver?.observe(stopElement);
+    this.#resizeObserver?.observe(endElement);
 
     return connection;
   }
@@ -398,7 +482,7 @@ export class Arclace {
 
     const inUse = this.connections.some(
       (connection) =>
-        connection.startElement === el || connection.stopElement === el
+        connection.startElement === el || connection.endElement === el
     );
 
     if (!inUse) this.#resizeObserver.unobserve(el);
@@ -469,8 +553,8 @@ export class Arclace {
  *
  * const arclace = createConnections(
  *   [
- *     { startElement: '#a', stopElement: '#b' },
- *     { startElement: '#b', stopElement: '#c', arrow: 'end' }
+ *     { startElement: '#a', endElement: '#b' },
+ *     { startElement: '#b', endElement: '#c', arrow: 'end' }
  *   ],
  *   { defaults: { type: 'orthogonal' } }
  * );
@@ -482,7 +566,13 @@ export const createConnections = (
 ): Arclace => {
   const arclace = new Arclace(options);
 
-  arclace.connectAll(definitions);
+  try {
+    arclace.connectAll(definitions);
+  } catch (error) {
+    // Don't leave an overlay and its listeners behind
+    arclace.destroy();
+    throw error;
+  }
 
   return arclace;
 };

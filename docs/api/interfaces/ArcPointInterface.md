@@ -2,7 +2,7 @@
 
 # Interface: ArcPointInterface
 
-Defined in: [types.ts:31](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L31)
+Defined in: [src/types.ts:31](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L31)
 
 ## Properties
 
@@ -10,7 +10,7 @@ Defined in: [types.ts:31](https://github.com/phun-ky/arclace/blob/main/src/types
 
 > **x**: `number`
 
-Defined in: [types.ts:32](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L32)
+Defined in: [src/types.ts:32](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L32)
 
 ***
 
@@ -18,4 +18,4 @@ Defined in: [types.ts:32](https://github.com/phun-ky/arclace/blob/main/src/types
 
 > **y**: `number`
 
-Defined in: [types.ts:33](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L33)
+Defined in: [src/types.ts:33](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L33)
