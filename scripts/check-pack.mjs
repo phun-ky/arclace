@@ -3,7 +3,9 @@
 // tests, lint it with publint and @arethetypeswrong/cli, then install it in an
 // empty project, check every source map resolves, and call the package through
 // import, require, the dist path, the UMD build and a browser bundle. It also
-// checks that the ES module build bundles no dependencies.
+// checks that the ES module build bundles no dependencies. Last, it runs every
+// example in the README and the docs site in headless Chrome against the
+// installed package (see check-examples.mjs).
 // Run after `npm run build`.
 //
 // With CHECK_PACK_NODE set to another Node binary, the smoke tests also run on
@@ -26,6 +28,8 @@ import { tmpdir } from 'node:os';
 import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runInNewContext } from 'node:vm';
+
+import { checkExamples } from './check-examples.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const BIN = join(ROOT, 'node_modules', '.bin');
@@ -353,6 +357,17 @@ try {
       problems.push(
         `a browser bundle of the installed tarball failed: ${error}`
       );
+    }
+
+    try {
+      const examples = await checkExamples({ root: ROOT, app, pkg });
+
+      problems.push(...examples.problems);
+      console.log(
+        `examples: ${examples.blocks} run in Chrome, ${examples.checks} commented values checked`
+      );
+    } catch (error) {
+      problems.push(`the examples could not run: ${error.message}`);
     }
   }
 } finally {

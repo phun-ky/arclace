@@ -268,6 +268,7 @@ npm test
 npm run test:ci    # with coverage thresholds
 npm run lint
 npm run build      # dist/
+npm run check:pack # pack, install and run every example in Chrome
 npm run docs:gen   # API docs in docs/api/
 npm run docs:dev   # docs site at http://localhost:5173/connect-the-things/
 ```

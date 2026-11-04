@@ -42,7 +42,9 @@ jobs:
         run: npm run test:ci
       - name: Build
         run: npm run build
-      - name: Check package # Packs, installs and imports the package from every entry point, on Node 24 and the engines floor
+      # Packs, installs and imports the package from every entry point, on Node
+      # 24 and the engines floor, and runs every README and docs example in Chrome
+      - name: Check package
         run: npm run check:pack
       - name: Check the API docs # Fails on any TypeDoc warning
         run: npm run docs:check
