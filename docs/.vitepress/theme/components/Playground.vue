@@ -182,11 +182,16 @@ watch([type, arrow, labels, anchors, animated], apply);
       class="canvas arc-canvas"
       :style="{ height: `${WORLD_HEIGHT * Math.max(fitted, 0.5)}px` }"
     >
-      <!-- Zooming scales the container; lines are measured in its local space -->
+      <!-- Zooming scales the container around the canvas centre; lines are
+           measured in its local space -->
       <div
         ref="world"
         class="world"
-        :style="{ transform: `scale(${zoom})` }"
+        :style="{
+          width: `${WORLD_WIDTH}px`,
+          height: `${WORLD_HEIGHT}px`,
+          transform: `translate(-50%, -50%) scale(${zoom})`
+        }"
         @pointerdown="drag"
       >
         <div
@@ -240,10 +245,11 @@ watch([type, arrow, labels, anchors, animated], apply);
 }
 
 .world {
+  /* Centred in the canvas, and scaled around its own centre */
   position: absolute;
-  inset: 0;
-  width: 900px;
-  transform-origin: 0 0;
+  top: 50%;
+  left: 50%;
+  transform-origin: 50% 50%;
   --arc-color: var(--vp-c-text-2);
   --arc-label-color: var(--vp-c-text-1);
   --arc-label-halo: var(--arc-canvas-bg);
