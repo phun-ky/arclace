@@ -6,12 +6,12 @@ anchors. The lines follow the elements when they move, resize, scroll or get
 zoomed.
 
 It's framework agnostic and has zero dependencies. You keep your own HTML for
-the boxes; connect-the-things only draws the lines.
+the boxes; Arclace only draws the lines.
 
 ## Install
 
 ```shell
-npm i @phun-ky/connect-the-things
+npm i @phun-ky/arclace
 ```
 
 ES modules; `require()` needs Node 22.12 or later. A UMD build is available for
@@ -28,22 +28,22 @@ script tags (see [Without a bundler](#without-a-bundler)).
 ```
 
 ```ts
-import { ConnectTheThings } from '@phun-ky/connect-the-things';
+import { Arclace } from '@phun-ky/arclace';
 // Optional: label halo, hollow anchors and the dash animation
-import '@phun-ky/connect-the-things/style.css';
+import '@phun-ky/arclace/style.css';
 
-const ctt = new ConnectTheThings({ container: '#diagram' });
+const arclace = new Arclace({ container: '#diagram' });
 
-ctt.connect('#a', '#b', { arrow: 'end', label: 'depends on' });
-ctt.connect('#a', '#c', { type: 'orthogonal', dashed: true });
+arclace.connect('#a', '#b', { arrow: 'end', label: 'depends on' });
+arclace.connect('#a', '#c', { type: 'orthogonal', dashed: true });
 ```
 
 Or create everything at once:
 
 ```ts
-import { createConnections } from '@phun-ky/connect-the-things';
+import { createConnections } from '@phun-ky/arclace';
 
-const ctt = createConnections(
+const arclace = createConnections(
   [
     { startElement: '#a', stopElement: '#b' },
     { startElement: '#b', stopElement: '#c', label: 'then' }
@@ -57,12 +57,12 @@ const ctt = createConnections(
 ```html
 <link
   rel="stylesheet"
-  href="https://unpkg.com/@phun-ky/connect-the-things/dist/style.css"
+  href="https://unpkg.com/@phun-ky/arclace/dist/style.css"
 />
-<script src="https://unpkg.com/@phun-ky/connect-the-things"></script>
+<script src="https://unpkg.com/@phun-ky/arclace"></script>
 <script>
-  const ctt = new ConnectTheThings.ConnectTheThings();
+  const arclace = new Arclace.Arclace();
 
-  ctt.connect('#a', '#b');
+  arclace.connect('#a', '#b');
 </script>
 ```

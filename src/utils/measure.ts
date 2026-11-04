@@ -1,10 +1,10 @@
-import type { CTTRectInterface } from '../types';
+import type { ArcRectInterface } from '../types';
 
 /**
  * Where the SVG overlay is on screen, and how much it is scaled by CSS
  * transforms on its ancestors.
  */
-export type CTTOriginType = {
+export type ArcOriginType = {
   left: number;
   top: number;
   scaleX: number;
@@ -16,7 +16,7 @@ export type CTTOriginType = {
  * inside it. Because the overlay is measured directly, this works no matter
  * how the container is positioned, scrolled or scaled.
  */
-export const getOrigin = (svg: SVGSVGElement): CTTOriginType => {
+export const getOrigin = (svg: SVGSVGElement): ArcOriginType => {
   const rect = svg.getBoundingClientRect();
   const { clientWidth, clientHeight } = svg;
 
@@ -38,8 +38,8 @@ export const getOrigin = (svg: SVGSVGElement): CTTOriginType => {
  */
 export const getLocalRect = (
   el: Element,
-  origin: CTTOriginType
-): CTTRectInterface => {
+  origin: ArcOriginType
+): ArcRectInterface => {
   const rect = el.getBoundingClientRect();
   const left = (rect.left - origin.left) / origin.scaleX;
   const top = (rect.top - origin.top) / origin.scaleY;

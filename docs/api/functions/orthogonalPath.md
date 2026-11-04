@@ -1,10 +1,10 @@
-[@phun-ky/connect-the-things](../index.md) / orthogonalPath
+[@phun-ky/arclace](../index.md) / orthogonalPath
 
 # Function: orthogonalPath()
 
-> **orthogonalPath**(`start`, `startSide`, `stop`, `stopSide`, `__namedParameters?`): [`CTTPathResultType`](../type-aliases/CTTPathResultType.md)
+> **orthogonalPath**(`start`, `startSide`, `stop`, `stopSide`, `__namedParameters?`): [`ArcPathResultType`](../type-aliases/ArcPathResultType.md)
 
-Defined in: [utils/paths.ts:295](https://github.com/phun-ky/connect-the-things/blob/main/src/utils/paths.ts#L295)
+Defined in: [utils/paths.ts:295](https://github.com/phun-ky/arclace/blob/main/src/utils/paths.ts#L295)
 
 An orthogonal line with rounded corners.
 
@@ -12,19 +12,19 @@ An orthogonal line with rounded corners.
 
 ### start
 
-[`CTTPointInterface`](../interfaces/CTTPointInterface.md)
+[`ArcPointInterface`](../interfaces/ArcPointInterface.md)
 
 ### startSide
 
-[`CTTSideType`](../type-aliases/CTTSideType.md)
+[`ArcSideType`](../type-aliases/ArcSideType.md)
 
 ### stop
 
-[`CTTPointInterface`](../interfaces/CTTPointInterface.md)
+[`ArcPointInterface`](../interfaces/ArcPointInterface.md)
 
 ### stopSide
 
-[`CTTSideType`](../type-aliases/CTTSideType.md)
+[`ArcSideType`](../type-aliases/ArcSideType.md)
 
 ### \_\_namedParameters?
 
@@ -38,7 +38,7 @@ An orthogonal line with rounded corners.
 
 ## Returns
 
-[`CTTPathResultType`](../type-aliases/CTTPathResultType.md)
+[`ArcPathResultType`](../type-aliases/ArcPathResultType.md)
 
 ## Example
 

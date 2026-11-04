@@ -1,4 +1,4 @@
-import type { CTTElementTargetType } from '../types';
+import type { ArcElementTargetType } from '../types';
 
 /**
  * Resolves an element or a CSS selector to an element.
@@ -10,21 +10,19 @@ import type { CTTElementTargetType } from '../types';
  * ```
  */
 export const resolveElement = (
-  target: CTTElementTargetType,
+  target: ArcElementTargetType,
   name = 'element'
 ): Element => {
   if (typeof target === 'string') {
     const el = document.querySelector(target);
 
-    if (!el) throw Error(`connect-the-things: no ${name} matches "${target}"`);
+    if (!el) throw Error(`arclace: no ${name} matches "${target}"`);
 
     return el;
   }
 
   if (!(target instanceof Element)) {
-    throw Error(
-      `connect-the-things: ${name} must be an Element or a selector string`
-    );
+    throw Error(`arclace: ${name} must be an Element or a selector string`);
   }
 
   return target;

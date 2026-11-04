@@ -2,7 +2,7 @@
 
 The full reference, with every type, is in the [API](/api/).
 
-## `new ConnectTheThings(options?)`
+## `new Arclace(options?)`
 
 | Option       | Type                                      | Default         | Description                                                                                                                                                                             |
 | ------------ | ----------------------------------------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -49,7 +49,7 @@ and shown again when it comes back.
 | `stopSide`    | same as `startSide`                                | `'auto'`   | Side of the stop element.                                                      |
 | `arrow`       | `'none' \| 'start' \| 'end' \| 'both'`             | `'none'`   | Arrow heads.                                                                   |
 | `label`       | `string`                                           |            | Text in the middle of the line.                                                |
-| `color`       | `string`                                           |            | Line color. Without it, lines use `--ctt-color` or the container's text color. |
+| `color`       | `string`                                           |            | Line color. Without it, lines use `--arc-color` or the container's text color. |
 | `strokeWidth` | `number`                                           | `2`        | Line width in pixels. Arrows and anchors scale with it.                        |
 | `dashed`      | `boolean`                                          | `false`    | Dashed line.                                                                   |
 | `animated`    | `boolean`                                          | `false`    | Dashes flowing from start to stop. Needs `style.css`.                          |

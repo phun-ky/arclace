@@ -1,6 +1,6 @@
 # How it works
 
-Each instance adds one `<svg class="ctt-svg">` to its container, absolutely
+Each instance adds one `<svg class="arc-svg">` to its container, absolutely
 positioned over the container's content, and draws every line into it. The
 overlay doesn't block clicks (`pointer-events: none`).
 
@@ -12,7 +12,7 @@ overlay doesn't block clicks (`pointer-events: none`).
   in scrolled containers and when the container is scaled with CSS transforms
   (for example by a pan/zoom library).
 - The overlay is the container's first child, so it is painted below positioned
-  elements that come after it. Set `z-index` on `.ctt-svg` to change that.
+  elements that come after it. Set `z-index` on `.arc-svg` to change that.
 
 ## Keeping lines in sync
 
@@ -26,7 +26,7 @@ when:
   `style.transform` just works.
 
 For movement it can't observe, like CSS transitions and animations, either call
-`ctt.update()` yourself or use `autoUpdate: 'frame'`.
+`arclace.update()` yourself or use `autoUpdate: 'frame'`.
 
 ## With frameworks
 
@@ -35,10 +35,10 @@ React:
 
 ```tsx
 useEffect(() => {
-  const ctt = new ConnectTheThings({ container: containerRef.current });
+  const arclace = new Arclace({ container: containerRef.current });
 
-  ctt.connect(aRef.current, bRef.current, { arrow: 'end' });
+  arclace.connect(aRef.current, bRef.current, { arrow: 'end' });
 
-  return () => ctt.destroy();
+  return () => arclace.destroy();
 }, []);
 ```

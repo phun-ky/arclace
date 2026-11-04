@@ -1,8 +1,8 @@
 # Security Policy
 
-`@phun-ky/connect-the-things` has no runtime dependencies. How development
-dependencies are chosen, tracked and kept clear of known vulnerabilities is
-described under [Dependencies](#dependencies).
+`@phun-ky/arclace` has no runtime dependencies. How development dependencies are
+chosen, tracked and kept clear of known vulnerabilities is described under
+[Dependencies](#dependencies).
 
 ## Supported Versions
 
@@ -23,7 +23,7 @@ described under [Dependencies](#dependencies).
 ## Reporting a Vulnerability
 
 Report vulnerabilities privately, either with GitHub's
-[private vulnerability reporting](https://github.com/phun-ky/connect-the-things/security/advisories/new)
+[private vulnerability reporting](https://github.com/phun-ky/arclace/security/advisories/new)
 or by email to <security@phun-ky.net>. Please don't open a public issue for a
 security problem.
 
@@ -43,8 +43,8 @@ security problem.
 
 ## Security Expectations
 
-`connect-the-things` draws SVG lines between elements you give it. It reads
-their positions and writes one SVG overlay into the container you choose.
+Arclace draws SVG lines between elements you give it. It reads their positions
+and writes one SVG overlay into the container you choose.
 
 What you can rely on:
 
@@ -83,15 +83,14 @@ To verify the packages you've installed:
 npm audit signatures
 ```
 
-The provenance must name the repository `phun-ky/connect-the-things` and the
-workflow `.github/workflows/publish.yml`. The package's page on npm shows this
-under "Provenance", and
-`npm view @phun-ky/connect-the-things@<version> dist.attestations` lists the
-attestations.
+The provenance must name the repository `phun-ky/arclace` and the workflow
+`.github/workflows/publish.yml`. The package's page on npm shows this under
+"Provenance", and `npm view @phun-ky/arclace@<version> dist.attestations` lists
+the attestations.
 
 Each GitHub release also has a software bill of materials attached, in CycloneDX
-format (`connect-the-things-<version>.cdx.json`), listing the runtime
-dependencies, which today are none.
+format (`arclace-<version>.cdx.json`), listing the runtime dependencies, which
+today are none.
 
 ## Dependencies
 
@@ -110,7 +109,7 @@ Actions are pinned to commit SHAs.
 **Tracking them.** Dependabot proposes version updates weekly, once a release is
 14 days old, and security updates as soon as an advisory is published. Every
 pull request runs
-[dependency review](https://github.com/phun-ky/connect-the-things/blob/main/.github/workflows/dependency-review.yml),
+[dependency review](https://github.com/phun-ky/arclace/blob/main/.github/workflows/dependency-review.yml),
 and every release runs `npm audit` on runtime dependencies first.
 
 **Fixing known vulnerabilities.** Findings are checked against the GitHub

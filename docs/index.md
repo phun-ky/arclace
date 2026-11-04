@@ -2,7 +2,7 @@
 layout: home
 
 hero:
-  name: connect-the-things
+  name: Arclace
   text: Draw SVG lines between DOM elements
   tagline:
     Curves, straight lines or orthogonal lines, with arrows, labels and anchors,

@@ -1,13 +1,13 @@
 /**
  * A side of an element's bounding box.
  */
-export type CTTSideType = 'top' | 'right' | 'bottom' | 'left';
+export type ArcSideType = 'top' | 'right' | 'bottom' | 'left';
 
 /**
- * A side, or `'auto'` to let connect-the-things pick the side that faces the
+ * A side, or `'auto'` to let Arclace pick the side that faces the
  * other element.
  */
-export type CTTSideOptionType = CTTSideType | 'auto';
+export type ArcSideOptionType = ArcSideType | 'auto';
 
 /**
  * How the line between two elements is drawn.
@@ -16,24 +16,24 @@ export type CTTSideOptionType = CTTSideType | 'auto';
  * - `straight`: a straight line
  * - `orthogonal`: horizontal and vertical segments with rounded corners
  */
-export type CTTPathType = 'bezier' | 'straight' | 'orthogonal';
+export type ArcPathType = 'bezier' | 'straight' | 'orthogonal';
 
 /**
  * Where to draw arrow heads.
  */
-export type CTTArrowType = 'none' | 'start' | 'end' | 'both';
+export type ArcArrowType = 'none' | 'start' | 'end' | 'both';
 
 /**
  * An element, or a CSS selector that resolves to one.
  */
-export type CTTElementTargetType = Element | string;
+export type ArcElementTargetType = Element | string;
 
-export interface CTTPointInterface {
+export interface ArcPointInterface {
   x: number;
   y: number;
 }
 
-export interface CTTRectInterface {
+export interface ArcRectInterface {
   left: number;
   top: number;
   right: number;
@@ -45,7 +45,7 @@ export interface CTTRectInterface {
 /**
  * Options for a single connection.
  */
-export type CTTConnectionOptionsType = {
+export type ArcConnectionOptionsType = {
   /**
    * A unique id for the connection. Generated when omitted.
    */
@@ -54,22 +54,22 @@ export type CTTConnectionOptionsType = {
   /**
    * How the line is drawn. Defaults to `'bezier'`.
    */
-  type?: CTTPathType;
+  type?: ArcPathType;
 
   /**
    * The side of the start element the line leaves from. Defaults to `'auto'`.
    */
-  startSide?: CTTSideOptionType;
+  startSide?: ArcSideOptionType;
 
   /**
    * The side of the stop element the line arrives at. Defaults to `'auto'`.
    */
-  stopSide?: CTTSideOptionType;
+  stopSide?: ArcSideOptionType;
 
   /**
    * Where to draw arrow heads. Defaults to `'none'`.
    */
-  arrow?: CTTArrowType;
+  arrow?: ArcArrowType;
 
   /**
    * Text drawn at the middle of the line.
@@ -78,7 +78,7 @@ export type CTTConnectionOptionsType = {
 
   /**
    * Line color. Any CSS color. Defaults to `currentColor` of the container,
-   * or `--ctt-color` when the stylesheet is loaded.
+   * or `--arc-color` when the stylesheet is loaded.
    */
   color?: string;
 
@@ -148,22 +148,22 @@ export type CTTConnectionOptionsType = {
 
 /**
  * A connection between two elements, used with
- * {@link ConnectTheThings.connectAll} and {@link createConnections}.
+ * {@link Arclace.connectAll} and {@link createConnections}.
  */
-export type CTTConnectionDefinitionType = CTTConnectionOptionsType & {
-  startElement: CTTElementTargetType;
-  stopElement: CTTElementTargetType;
+export type ArcConnectionDefinitionType = ArcConnectionOptionsType & {
+  startElement: ArcElementTargetType;
+  stopElement: ArcElementTargetType;
 };
 
 /**
- * Options for a {@link ConnectTheThings} instance.
+ * Options for a {@link Arclace} instance.
  */
-export type CTTOptionsType = {
+export type ArcOptionsType = {
   /**
    * The element the SVG overlay is added to. All connected elements should
    * be inside it. Defaults to `document.body`.
    */
-  container?: CTTElementTargetType;
+  container?: ArcElementTargetType;
 
   /**
    * Keep lines in sync with the page.
@@ -179,7 +179,7 @@ export type CTTOptionsType = {
   /**
    * Default options for every connection made by this instance.
    */
-  defaults?: CTTConnectionOptionsType;
+  defaults?: ArcConnectionOptionsType;
 
   /**
    * Extra class names added to the SVG overlay.
@@ -190,11 +190,11 @@ export type CTTOptionsType = {
 /**
  * The computed geometry of a connection after the last update.
  */
-export type CTTGeometryType = {
-  start: CTTPointInterface;
-  stop: CTTPointInterface;
-  startSide: CTTSideType;
-  stopSide: CTTSideType;
-  labelPoint: CTTPointInterface;
+export type ArcGeometryType = {
+  start: ArcPointInterface;
+  stop: ArcPointInterface;
+  startSide: ArcSideType;
+  stopSide: ArcSideType;
+  labelPoint: ArcPointInterface;
   d: string;
 };

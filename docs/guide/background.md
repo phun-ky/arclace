@@ -1,9 +1,9 @@
 # Background
 
-connect-the-things comes from [SPECCER](https://speccer.dev). While building
-SPECCER, I spent most of the time on my own SVG feature for drawing the lines
-between its pins and the elements they point at, with bezier curves shaped into
-curly brackets.
+Arclace comes from [SPECCER](https://speccer.dev). While building SPECCER, I
+spent most of the time on my own SVG feature for drawing the lines between its
+pins and the elements they point at, with bezier curves shaped into curly
+brackets.
 
 I then found I could reuse that code to give a better overview of design tokens
 and how they relate to one another. The first public proof of concept is

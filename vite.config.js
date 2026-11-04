@@ -9,8 +9,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(root, 'src/index.ts'),
-      name: 'ConnectTheThings',
-      fileName: 'connect-the-things',
+      name: 'Arclace',
+      fileName: 'arclace',
       formats: ['es', 'umd']
     },
     sourcemap: true
@@ -19,7 +19,7 @@ export default defineConfig({
     {
       // The stylesheet is optional, so it's shipped as a plain file instead of
       // being imported by the library code
-      name: 'ctt-copy-styles',
+      name: 'arc-copy-styles',
       apply: 'build',
       writeBundle() {
         copyFileSync(

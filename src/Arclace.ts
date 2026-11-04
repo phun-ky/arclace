@@ -1,11 +1,11 @@
 import { Connection } from './Connection';
 import type {
-  CTTConnectionDefinitionType,
-  CTTConnectionOptionsType,
-  CTTElementTargetType,
-  CTTOptionsType,
-  CTTRectInterface,
-  CTTSideType
+  ArcConnectionDefinitionType,
+  ArcConnectionOptionsType,
+  ArcElementTargetType,
+  ArcOptionsType,
+  ArcRectInterface,
+  ArcSideType
 } from './types';
 import { center, isHorizontalSide } from './utils/geometry';
 import { uniqueID } from './utils/id';
@@ -14,17 +14,17 @@ import { resolveElement } from './utils/resolve-element';
 import { getAnchorPoint, resolveSides } from './utils/sides';
 import { createSVGElement } from './utils/svg';
 
-type CTTLayoutItemType = {
+type ArcLayoutItemType = {
   connection: Connection;
-  startRect: CTTRectInterface;
-  stopRect: CTTRectInterface;
-  startSide: CTTSideType;
-  stopSide: CTTSideType;
+  startRect: ArcRectInterface;
+  stopRect: ArcRectInterface;
+  startSide: ArcSideType;
+  stopSide: ArcSideType;
   startSlot: { index: number; count: number };
   stopSlot: { index: number; count: number };
 };
 
-type CTTSlotEntryType = {
+type ArcSlotEntryType = {
   slot: { index: number; count: number };
   // Position of the other end along the side, used to avoid crossing lines
   key: number;
@@ -42,19 +42,19 @@ const cancelFrame = (handle: number): void => {
 /**
  * Draws and maintains SVG lines between DOM elements.
  *
- * An instance adds one `<svg class="ctt-svg">` overlay to its container and
+ * An instance adds one `<svg class="arc-svg">` overlay to its container and
  * draws every connection into it.
  *
  * @example
  * ```ts
- * import { ConnectTheThings } from '@phun-ky/connect-the-things';
+ * import { Arclace } from '@phun-ky/arclace';
  *
- * const ctt = new ConnectTheThings({ container: '#diagram' });
+ * const arclace = new Arclace({ container: '#diagram' });
  *
- * ctt.connect('#a', '#b', { arrow: 'end', label: 'depends on' });
+ * arclace.connect('#a', '#b', { arrow: 'end', label: 'depends on' });
  * ```
  */
-export class ConnectTheThings {
+export class Arclace {
   /**
    * The element the overlay was added to.
    */
@@ -65,7 +65,7 @@ export class ConnectTheThings {
    */
   readonly svg: SVGSVGElement;
 
-  #options: CTTOptionsType;
+  #options: ArcOptionsType;
   #connections = new Map<string, Connection>();
   #frame = 0;
   #loop = 0;
@@ -74,9 +74,9 @@ export class ConnectTheThings {
   #mutationObserver: MutationObserver | null = null;
   #originalPosition: string | null = null;
 
-  constructor(options: CTTOptionsType = {}) {
+  constructor(options: ArcOptionsType = {}) {
     if (typeof document === 'undefined') {
-      throw Error('connect-the-things: a DOM is required');
+      throw Error('arclace: a DOM is required');
     }
 
     this.#options = options;
@@ -97,7 +97,7 @@ export class ConnectTheThings {
     }
 
     this.svg = createSVGElement('svg', {
-      class: ['ctt-svg', options.className].filter(Boolean).join(' '),
+      class: ['arc-svg', options.className].filter(Boolean).join(' '),
       'aria-hidden': 'true'
     });
     Object.assign(this.svg.style, {
@@ -129,13 +129,13 @@ export class ConnectTheThings {
    * @throws {Error} When an element can't be found or the id is taken.
    * @example
    * ```ts
-   * const connection = ctt.connect(a, b, { type: 'orthogonal', arrow: 'end' });
+   * const connection = arclace.connect(a, b, { type: 'orthogonal', arrow: 'end' });
    * ```
    */
   connect(
-    startElement: CTTElementTargetType,
-    stopElement: CTTElementTargetType,
-    options: CTTConnectionOptionsType = {}
+    startElement: ArcElementTargetType,
+    stopElement: ArcElementTargetType,
+    options: ArcConnectionOptionsType = {}
   ): Connection {
     const connection = this.#add(startElement, stopElement, options);
 
@@ -149,13 +149,13 @@ export class ConnectTheThings {
    *
    * @example
    * ```ts
-   * ctt.connectAll([
+   * arclace.connectAll([
    *   { startElement: '#a', stopElement: '#b' },
    *   { startElement: '#a', stopElement: '#c', dashed: true }
    * ]);
    * ```
    */
-  connectAll(definitions: CTTConnectionDefinitionType[]): Connection[] {
+  connectAll(definitions: ArcConnectionDefinitionType[]): Connection[] {
     const connections = definitions.map(
       ({ startElement, stopElement, ...options }) =>
         this.#add(startElement, stopElement, options)
@@ -176,7 +176,7 @@ export class ConnectTheThings {
   /**
    * Returns every connection that starts or stops at an element.
    */
-  find(target: CTTElementTargetType): Connection[] {
+  find(target: ArcElementTargetType): Connection[] {
     const el = resolveElement(target);
 
     return this.connections.filter(
@@ -193,9 +193,9 @@ export class ConnectTheThings {
    *   nothing are ignored.
    * @example
    * ```ts
-   * ctt.disconnect(connection);
-   * ctt.disconnect('my-connection-id');
-   * ctt.disconnect(document.querySelector('#a'));
+   * arclace.disconnect(connection);
+   * arclace.disconnect('my-connection-id');
+   * arclace.disconnect(document.querySelector('#a'));
    * ```
    */
   disconnect(target: Connection | string | Element): void {
@@ -254,12 +254,12 @@ export class ConnectTheThings {
 
     // Measure everything first, then write, so the browser only lays out once
     const origin = getOrigin(this.svg);
-    const items: CTTLayoutItemType[] = [];
-    const slots = new Map<Element, Record<CTTSideType, CTTSlotEntryType[]>>();
+    const items: ArcLayoutItemType[] = [];
+    const slots = new Map<Element, Record<ArcSideType, ArcSlotEntryType[]>>();
     const addToSlot = (
       el: Element,
-      side: CTTSideType,
-      otherRect: CTTRectInterface
+      side: ArcSideType,
+      otherRect: ArcRectInterface
     ): { index: number; count: number } => {
       const slot = { index: 0, count: 1 };
       const other = center(otherRect);
@@ -360,20 +360,20 @@ export class ConnectTheThings {
   }
 
   #add(
-    startTarget: CTTElementTargetType,
-    stopTarget: CTTElementTargetType,
-    options: CTTConnectionOptionsType
+    startTarget: ArcElementTargetType,
+    stopTarget: ArcElementTargetType,
+    options: ArcConnectionOptionsType
   ): Connection {
     if (this.#destroyed) {
-      throw Error('connect-the-things: this instance has been destroyed');
+      throw Error('arclace: this instance has been destroyed');
     }
 
     const startElement = resolveElement(startTarget, 'startElement');
     const stopElement = resolveElement(stopTarget, 'stopElement');
-    const id = options.id ?? `ctt-${uniqueID()}`;
+    const id = options.id ?? `arc-${uniqueID()}`;
 
     if (this.#connections.has(id)) {
-      throw Error(`connect-the-things: a connection with id "${id}" exists`);
+      throw Error(`arclace: a connection with id "${id}" exists`);
     }
 
     const connection = new Connection({
@@ -461,13 +461,13 @@ export class ConnectTheThings {
 }
 
 /**
- * Creates a {@link ConnectTheThings} instance and connects the given pairs.
+ * Creates a {@link Arclace} instance and connects the given pairs.
  *
  * @example
  * ```ts
- * import { createConnections } from '@phun-ky/connect-the-things';
+ * import { createConnections } from '@phun-ky/arclace';
  *
- * const ctt = createConnections(
+ * const arclace = createConnections(
  *   [
  *     { startElement: '#a', stopElement: '#b' },
  *     { startElement: '#b', stopElement: '#c', arrow: 'end' }
@@ -477,12 +477,12 @@ export class ConnectTheThings {
  * ```
  */
 export const createConnections = (
-  definitions: CTTConnectionDefinitionType[],
-  options?: CTTOptionsType
-): ConnectTheThings => {
-  const ctt = new ConnectTheThings(options);
+  definitions: ArcConnectionDefinitionType[],
+  options?: ArcOptionsType
+): Arclace => {
+  const arclace = new Arclace(options);
 
-  ctt.connectAll(definitions);
+  arclace.connectAll(definitions);
 
-  return ctt;
+  return arclace;
 };

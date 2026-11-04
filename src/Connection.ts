@@ -1,15 +1,15 @@
-import type { ConnectTheThings } from './ConnectTheThings';
+import type { Arclace } from './Arclace';
 import type {
-  CTTConnectionOptionsType,
-  CTTGeometryType,
-  CTTPointInterface,
-  CTTSideType
+  ArcConnectionOptionsType,
+  ArcGeometryType,
+  ArcPointInterface,
+  ArcSideType
 } from './types';
 import { add, distance, NORMALS } from './utils/geometry';
 import { uniqueID } from './utils/id';
 import {
   bezierPath,
-  type CTTPathResultType,
+  type ArcPathResultType,
   orthogonalPath,
   straightPath
 } from './utils/paths';
@@ -18,21 +18,21 @@ import { createSVGElement, setAttributes } from './utils/svg';
 /**
  * Connection options that have no default.
  */
-export type CTTOptionalKeysType = 'id' | 'label' | 'color' | 'className';
+export type ArcOptionalKeysType = 'id' | 'label' | 'color' | 'className';
 
 /**
  * Connection options with every default filled in.
  */
-export type CTTResolvedConnectionOptionsType = Required<
-  Omit<CTTConnectionOptionsType, CTTOptionalKeysType>
+export type ArcResolvedConnectionOptionsType = Required<
+  Omit<ArcConnectionOptionsType, ArcOptionalKeysType>
 > &
-  Pick<CTTConnectionOptionsType, CTTOptionalKeysType> & { id: string };
+  Pick<ArcConnectionOptionsType, ArcOptionalKeysType> & { id: string };
 
 /**
  * Options every connection falls back to.
  */
 export const DEFAULT_CONNECTION_OPTIONS: Required<
-  Omit<CTTConnectionOptionsType, CTTOptionalKeysType>
+  Omit<ArcConnectionOptionsType, ArcOptionalKeysType>
 > = {
   type: 'bezier',
   startSide: 'auto',
@@ -53,32 +53,32 @@ export const DEFAULT_CONNECTION_OPTIONS: Required<
 // Arrow length in multiples of the stroke width
 const ARROW_SIZE = 4;
 
-export type CTTConnectionParamsType = {
+export type ArcConnectionParamsType = {
   id: string;
   startElement: Element;
   stopElement: Element;
-  options: CTTConnectionOptionsType;
-  defaults?: CTTConnectionOptionsType;
-  owner: ConnectTheThings;
+  options: ArcConnectionOptionsType;
+  defaults?: ArcConnectionOptionsType;
+  owner: Arclace;
 };
 
 /**
- * A line between two elements. Created with {@link ConnectTheThings.connect}.
+ * A line between two elements. Created with {@link Arclace.connect}.
  *
  * Each connection renders as:
  *
  * ```html
- * <g class="ctt-connection ctt-bezier">
- *   <marker class="ctt-marker">…</marker>  <!-- when `arrow` is set -->
- *   <path class="ctt-path" />
- *   <text class="ctt-label">…</text>       <!-- when `label` is set -->
- *   <circle class="ctt-anchor ctt-anchor-start" />  <!-- when `anchors` is set -->
- *   <circle class="ctt-anchor ctt-anchor-stop" />
+ * <g class="arc-connection arc-bezier">
+ *   <marker class="arc-marker">…</marker>  <!-- when `arrow` is set -->
+ *   <path class="arc-path" />
+ *   <text class="arc-label">…</text>       <!-- when `label` is set -->
+ *   <circle class="arc-anchor arc-anchor-start" />  <!-- when `anchors` is set -->
+ *   <circle class="arc-anchor arc-anchor-stop" />
  * </g>
  * ```
  *
  * The line, arrows and anchors use `currentColor`, so setting `color` on
- * `.ctt-connection` colors all of them.
+ * `.arc-connection` colors all of them.
  */
 export class Connection {
   readonly id: string;
@@ -99,16 +99,16 @@ export class Connection {
    * The geometry from the last update, or `null` when the connection is
    * hidden because one of its elements is not rendered.
    */
-  geometry: CTTGeometryType | null = null;
+  geometry: ArcGeometryType | null = null;
 
-  #owner: ConnectTheThings;
-  #options: CTTConnectionOptionsType;
-  #defaults: CTTConnectionOptionsType;
+  #owner: Arclace;
+  #options: ArcConnectionOptionsType;
+  #defaults: ArcConnectionOptionsType;
   #marker: SVGMarkerElement | null = null;
   #label: SVGTextElement | null = null;
   #anchors: [SVGCircleElement, SVGCircleElement] | null = null;
 
-  constructor(params: CTTConnectionParamsType) {
+  constructor(params: ArcConnectionParamsType) {
     const {
       id,
       startElement,
@@ -124,9 +124,9 @@ export class Connection {
     this.#owner = owner;
     this.#options = { ...options };
     this.#defaults = defaults;
-    this.element = createSVGElement('g', { 'data-ctt-id': id });
+    this.element = createSVGElement('g', { 'data-arc-id': id });
     this.path = createSVGElement('path', {
-      class: 'ctt-path',
+      class: 'arc-path',
       fill: 'none',
       stroke: 'currentColor'
     });
@@ -137,7 +137,7 @@ export class Connection {
   /**
    * The connection's options merged with the instance defaults.
    */
-  get options(): Readonly<CTTResolvedConnectionOptionsType> {
+  get options(): Readonly<ArcResolvedConnectionOptionsType> {
     return {
       ...DEFAULT_CONNECTION_OPTIONS,
       ...this.#defaults,
@@ -154,7 +154,7 @@ export class Connection {
    * connection.setOptions({ type: 'orthogonal', arrow: 'end' });
    * ```
    */
-  setOptions(options: Omit<CTTConnectionOptionsType, 'id'>): this {
+  setOptions(options: Omit<ArcConnectionOptionsType, 'id'>): this {
     this.#options = { ...this.#options, ...options };
     this.#applyOptions();
     this.#owner.update();
@@ -182,10 +182,10 @@ export class Connection {
    * @internal
    */
   _draw(
-    start: CTTPointInterface,
-    startSide: CTTSideType,
-    stop: CTTPointInterface,
-    stopSide: CTTSideType
+    start: ArcPointInterface,
+    startSide: ArcSideType,
+    stop: ArcPointInterface,
+    stopSide: ArcSideType
   ): void {
     const { arrow, strokeWidth } = this.options;
     const arrowLength = ARROW_SIZE * strokeWidth;
@@ -243,11 +243,11 @@ export class Connection {
   }
 
   #buildPath(
-    start: CTTPointInterface,
-    startSide: CTTSideType,
-    stop: CTTPointInterface,
-    stopSide: CTTSideType
-  ): CTTPathResultType {
+    start: ArcPointInterface,
+    startSide: ArcSideType,
+    stop: ArcPointInterface,
+    stopSide: ArcSideType
+  ): ArcPathResultType {
     const { type, curvature, radius, offset } = this.options;
 
     if (type === 'straight') return straightPath(start, stop);
@@ -263,11 +263,11 @@ export class Connection {
   }
 
   #pullBack(
-    point: CTTPointInterface,
-    side: CTTSideType,
-    other: CTTPointInterface,
+    point: ArcPointInterface,
+    side: ArcSideType,
+    other: ArcPointInterface,
     length: number
-  ): CTTPointInterface {
+  ): ArcPointInterface {
     const total = distance(point, other);
     const amount = Math.min(length, total / 3);
 
@@ -295,11 +295,11 @@ export class Connection {
       anchors,
       className
     } = this.options;
-    const classes = ['ctt-connection', `ctt-${type}`];
+    const classes = ['arc-connection', `arc-${type}`];
 
-    if (dashed || animated) classes.push('ctt-dashed');
+    if (dashed || animated) classes.push('arc-dashed');
 
-    if (animated) classes.push('ctt-animated');
+    if (animated) classes.push('arc-animated');
 
     if (className) classes.push(...className.split(/\s+/).filter(Boolean));
 
@@ -307,7 +307,7 @@ export class Connection {
       class: classes.join(' '),
       'data-type': type
     });
-    // Inline so it wins over the stylesheet's --ctt-color
+    // Inline so it wins over the stylesheet's --arc-color
     this.element.style.color = color ?? '';
 
     setAttributes(this.path, {
@@ -320,7 +320,7 @@ export class Connection {
     this.#applyAnchors(anchors, strokeWidth);
   }
 
-  #applyArrow(arrow: CTTResolvedConnectionOptionsType['arrow']): void {
+  #applyArrow(arrow: ArcResolvedConnectionOptionsType['arrow']): void {
     if (arrow === 'none') {
       this.#marker?.remove();
       this.#marker = null;
@@ -333,8 +333,8 @@ export class Connection {
       // The marker lives inside the connection's group so it inherits the
       // group's color
       this.#marker = createSVGElement('marker', {
-        id: `ctt-arrow-${uniqueID()}`,
-        class: 'ctt-marker',
+        id: `arc-arrow-${uniqueID()}`,
+        class: 'arc-marker',
         viewBox: '0 0 10 10',
         refX: 0,
         refY: 5,
@@ -370,7 +370,7 @@ export class Connection {
 
     if (!this.#label) {
       this.#label = createSVGElement('text', {
-        class: 'ctt-label',
+        class: 'arc-label',
         fill: 'currentColor',
         'text-anchor': 'middle',
         'dominant-baseline': 'central'
@@ -394,8 +394,8 @@ export class Connection {
 
     if (!this.#anchors) {
       this.#anchors = [
-        createSVGElement('circle', { class: 'ctt-anchor ctt-anchor-start' }),
-        createSVGElement('circle', { class: 'ctt-anchor ctt-anchor-stop' })
+        createSVGElement('circle', { class: 'arc-anchor arc-anchor-start' }),
+        createSVGElement('circle', { class: 'arc-anchor arc-anchor-stop' })
       ];
       this.element.append(...this.#anchors);
     }

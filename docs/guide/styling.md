@@ -4,35 +4,35 @@ Each connection is rendered as:
 
 ```html
 <g
-  class="ctt-connection ctt-bezier"
+  class="arc-connection arc-bezier"
   data-type="bezier"
   data-start-side="right"
   data-stop-side="left"
 >
-  <marker class="ctt-marker">…</marker>
+  <marker class="arc-marker">…</marker>
   <!-- arrow -->
-  <path class="ctt-path" />
-  <text class="ctt-label">…</text>
+  <path class="arc-path" />
+  <text class="arc-label">…</text>
   <!-- label -->
-  <circle class="ctt-anchor ctt-anchor-start" />
+  <circle class="arc-anchor arc-anchor-start" />
   <!-- anchors -->
-  <circle class="ctt-anchor ctt-anchor-stop" />
+  <circle class="arc-anchor arc-anchor-stop" />
 </g>
 ```
 
-Lines, arrows and anchors use `currentColor`, so `color` on `.ctt-connection`
+Lines, arrows and anchors use `currentColor`, so `color` on `.arc-connection`
 colors all of them:
 
 ```css
-.ctt-connection {
+.arc-connection {
   color: #6e625e;
 }
 
-.ctt-connection.important {
+.arc-connection.important {
   color: #0054f0;
 }
 
-.ctt-path {
+.arc-path {
   stroke-width: 3;
 }
 ```
@@ -43,11 +43,11 @@ custom properties:
 
 | Property            | Default        |
 | ------------------- | -------------- |
-| `--ctt-color`       | `currentColor` |
-| `--ctt-label-color` | `currentColor` |
-| `--ctt-label-halo`  | `#fff`         |
-| `--ctt-label-size`  | `12px`         |
-| `--ctt-anchor-fill` | `#fff`         |
+| `--arc-color`       | `currentColor` |
+| `--arc-label-color` | `currentColor` |
+| `--arc-label-halo`  | `#fff`         |
+| `--arc-label-size`  | `12px`         |
+| `--arc-anchor-fill` | `#fff`         |
 
 ## Clickable lines
 
@@ -55,7 +55,7 @@ The overlay ignores the pointer so it never blocks your page. To make lines
 clickable, turn pointer events back on for the paths:
 
 ```css
-.ctt-path {
+.arc-path {
   pointer-events: visibleStroke;
   cursor: pointer;
 }

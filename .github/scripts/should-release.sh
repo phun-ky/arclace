@@ -49,6 +49,20 @@ if [[ -z "$last_tag" ]]; then
   decide false "Skipping release: no release tag found. The first release is published by hand."
 fi
 
+# Trusted publishing only works for a package that exists, so the first
+# release under a new package name is published by hand too
+name=$(node -p "require('./package.json').name")
+
+if ! registry=$(npm view "$name" version 2>&1); then
+  if grep -q 'E404' <<< "$registry"; then
+    decide false "Skipping release: $name is not on npm yet. The first release under a new name is published by hand."
+  fi
+
+  echo "error: npm view $name failed:" >&2
+  echo "$registry" >&2
+  exit 1
+fi
+
 echo "Commits since $last_tag touching published files:"
 
 # A commit and its revert both after the last tag cancel out, as they do in

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import {
-  ConnectTheThings,
-  type CTTConnectionOptionsType,
-  type CTTPathType,
-  type CTTArrowType
-} from '@phun-ky/connect-the-things';
-import '@phun-ky/connect-the-things/style.css';
+  Arclace,
+  type ArcConnectionOptionsType,
+  type ArcPathType,
+  type ArcArrowType
+} from '@phun-ky/arclace';
+import '@phun-ky/arclace/style.css';
 import { onMounted, onUnmounted, ref, watch } from 'vue';
 
 // The world is laid out at this size, and zoomed out to fit narrower pages
@@ -44,7 +44,7 @@ const nodes = [
     top: 400
   }
 ];
-const edges: [string, string, string, CTTConnectionOptionsType?][] = [
+const edges: [string, string, string, ArcConnectionOptionsType?][] = [
   ['tokens', 'theme', 'accent'],
   ['fonts', 'theme', 'font'],
   ['theme', 'button', 'background', { className: 'highlight' }],
@@ -53,8 +53,8 @@ const edges: [string, string, string, CTTConnectionOptionsType?][] = [
   ['theme', 'docs', 'examples', { startSide: 'bottom', stopSide: 'top' }]
 ];
 
-const type = ref<CTTPathType>('bezier');
-const arrow = ref<CTTArrowType>('end');
+const type = ref<ArcPathType>('bezier');
+const arrow = ref<ArcArrowType>('end');
 const labels = ref(true);
 const anchors = ref(false);
 const animated = ref(false);
@@ -64,7 +64,7 @@ const fitted = ref(1);
 const canvas = ref<HTMLElement>();
 const world = ref<HTMLElement>();
 
-let ctt: ConnectTheThings | undefined;
+let arclace: Arclace | undefined;
 let resizeObserver: ResizeObserver | undefined;
 
 const fit = (): void => {
@@ -75,7 +75,7 @@ const fit = (): void => {
 };
 
 const apply = (): void => {
-  ctt?.connections.forEach((connection, i) =>
+  arclace?.connections.forEach((connection, i) =>
     connection.setOptions({
       type: type.value,
       arrow: arrow.value,
@@ -121,11 +121,11 @@ const drag = (event: PointerEvent): void => {
 
 onMounted(() => {
   fit();
-  ctt = new ConnectTheThings({ container: world.value });
-  ctt.connectAll(
+  arclace = new Arclace({ container: world.value });
+  arclace.connectAll(
     edges.map(([start, stop, label, options]) => ({
-      startElement: `#ctt-${start}`,
-      stopElement: `#ctt-${stop}`,
+      startElement: `#arc-${start}`,
+      stopElement: `#arc-${stop}`,
       ...options,
       label
     }))
@@ -137,7 +137,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   resizeObserver?.disconnect();
-  ctt?.destroy();
+  arclace?.destroy();
 });
 
 watch([type, arrow, labels, anchors, animated], apply);
@@ -191,7 +191,7 @@ watch([type, arrow, labels, anchors, animated], apply);
       >
         <div
           v-for="node in nodes"
-          :id="`ctt-${node.id}`"
+          :id="`arc-${node.id}`"
           :key="node.id"
           class="node"
           :class="{ accent: node.accent }"
@@ -247,10 +247,10 @@ watch([type, arrow, labels, anchors, animated], apply);
   inset: 0;
   width: 900px;
   transform-origin: 0 0;
-  --ctt-color: var(--vp-c-text-2);
-  --ctt-label-color: var(--vp-c-text-1);
-  --ctt-label-halo: var(--vp-c-bg-soft);
-  --ctt-anchor-fill: var(--vp-c-bg-soft);
+  --arc-color: var(--vp-c-text-2);
+  --arc-label-color: var(--vp-c-text-1);
+  --arc-label-halo: var(--vp-c-bg-soft);
+  --arc-anchor-fill: var(--vp-c-bg-soft);
 }
 
 .node {
@@ -290,7 +290,7 @@ watch([type, arrow, labels, anchors, animated], apply);
   color: #dbe6ff;
 }
 
-.world :deep(.ctt-connection.highlight) {
-  --ctt-color: var(--vp-c-brand-1);
+.world :deep(.arc-connection.highlight) {
+  --arc-color: var(--vp-c-brand-1);
 }
 </style>

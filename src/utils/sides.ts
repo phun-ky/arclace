@@ -1,8 +1,8 @@
 import type {
-  CTTPointInterface,
-  CTTRectInterface,
-  CTTSideOptionType,
-  CTTSideType
+  ArcPointInterface,
+  ArcRectInterface,
+  ArcSideOptionType,
+  ArcSideType
 } from '../types';
 
 import { add, center, NORMALS, OPPOSITE } from './geometry';
@@ -22,9 +22,9 @@ import { add, center, NORMALS, OPPOSITE } from './geometry';
  * ```
  */
 export const facingSide = (
-  from: CTTRectInterface,
-  to: CTTRectInterface
-): CTTSideType => {
+  from: ArcRectInterface,
+  to: ArcRectInterface
+): ArcSideType => {
   const a = center(from);
   const b = center(to);
   const dx = b.x - a.x;
@@ -49,11 +49,11 @@ export const facingSide = (
  * ```
  */
 export const resolveSides = (
-  startRect: CTTRectInterface,
-  stopRect: CTTRectInterface,
-  startSide: CTTSideOptionType = 'auto',
-  stopSide: CTTSideOptionType = 'auto'
-): { startSide: CTTSideType; stopSide: CTTSideType } => ({
+  startRect: ArcRectInterface,
+  stopRect: ArcRectInterface,
+  startSide: ArcSideOptionType = 'auto',
+  stopSide: ArcSideOptionType = 'auto'
+): { startSide: ArcSideType; stopSide: ArcSideType } => ({
   startSide: startSide === 'auto' ? facingSide(startRect, stopRect) : startSide,
   stopSide:
     stopSide === 'auto' ? OPPOSITE[facingSide(startRect, stopRect)] : stopSide
@@ -73,21 +73,21 @@ export const resolveSides = (
  * ```
  */
 export const getAnchorPoint = (
-  rect: CTTRectInterface,
-  side: CTTSideType,
+  rect: ArcRectInterface,
+  side: ArcSideType,
   {
     index = 0,
     count = 1,
     spacing = 16,
     gap = 0
   }: { index?: number; count?: number; spacing?: number; gap?: number } = {}
-): CTTPointInterface => {
+): ArcPointInterface => {
   const length = side === 'top' || side === 'bottom' ? rect.width : rect.height;
   const step = count > 1 ? Math.min(spacing, length / count) : 0;
   const shift = (index - (count - 1) / 2) * step;
   const { x: cx, y: cy } = center(rect);
 
-  let point: CTTPointInterface;
+  let point: ArcPointInterface;
 
   switch (side) {
     case 'top':

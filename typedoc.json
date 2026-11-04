@@ -10,5 +10,6 @@
   "readme": "none",
   "githubPages": false,
   "gitRevision": "main",
-  "hideGenerator": true
+  "hideGenerator": true,
+  "sourceLinkTemplate": "https://github.com/phun-ky/arclace/blob/{gitRevision}/{path}#L{line}"
 }
