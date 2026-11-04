@@ -17,7 +17,7 @@
     "dom",
     "bezier"
   ],
-  "homepage": "https://github.com/phun-ky/connect-the-things#readme",
+  "homepage": "https://phun-ky.net/connect-the-things/",
   "bugs": {
     "url": "https://github.com/phun-ky/connect-the-things/issues"
   },
@@ -63,6 +63,11 @@
     "commit": "npx git-cz",
     "dev": "vite --force",
     "docs:gen": "typedoc",
+    "docs:check": "typedoc --emit none --treatWarningsAsErrors",
+    "predocs:dev": "npm run docs:gen",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
     "lint": "eslint .",
     "prepublishOnly": "npm run build",
     "preview": "vite preview",
@@ -93,8 +98,10 @@
     "tsx": "^4.23.15",
     "typedoc": "^0.28.20",
     "typedoc-plugin-markdown": "^4.14.1",
+    "typedoc-vitepress-theme": "^1.1.4",
     "typescript": "~5.7.2",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "vitepress": "^1.6.4"
   },
   "overrides": {
     "get-uri": {
@@ -102,6 +109,9 @@
     },
     "micromark-extension-math": {
       "katex": "^0.18.2"
+    },
+    "vitepress": {
+      "vite": "^6.4.5"
     }
   }
 }

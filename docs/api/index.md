@@ -1,7 +1,3 @@
-**@phun-ky/connect-the-things**
-
-***
-
 # @phun-ky/connect-the-things
 
 ## Classes

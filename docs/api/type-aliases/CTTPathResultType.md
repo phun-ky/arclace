@@ -1,14 +1,10 @@
-[**@phun-ky/connect-the-things**](../README.md)
-
-***
-
-[@phun-ky/connect-the-things](../README.md) / CTTPathResultType
+[@phun-ky/connect-the-things](../index.md) / CTTPathResultType
 
 # Type Alias: CTTPathResultType
 
 > **CTTPathResultType** = `object`
 
-Defined in: [utils/paths.ts:12](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/utils/paths.ts#L12)
+Defined in: [utils/paths.ts:12](https://github.com/phun-ky/connect-the-things/blob/main/src/utils/paths.ts#L12)
 
 ## Properties
 
@@ -16,7 +12,7 @@ Defined in: [utils/paths.ts:12](https://github.com/phun-ky/connect-the-things/bl
 
 > **d**: `string`
 
-Defined in: [utils/paths.ts:16](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/utils/paths.ts#L16)
+Defined in: [utils/paths.ts:16](https://github.com/phun-ky/connect-the-things/blob/main/src/utils/paths.ts#L16)
 
 SVG path data.
 
@@ -26,6 +22,6 @@ SVG path data.
 
 > **labelPoint**: [`CTTPointInterface`](../interfaces/CTTPointInterface.md)
 
-Defined in: [utils/paths.ts:21](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/utils/paths.ts#L21)
+Defined in: [utils/paths.ts:21](https://github.com/phun-ky/connect-the-things/blob/main/src/utils/paths.ts#L21)
 
 The middle of the path, used to place labels.

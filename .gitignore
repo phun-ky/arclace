@@ -26,6 +26,8 @@ dist-ssr
 # Generated
 coverage
 dts
+docs/.vitepress/cache
+docs/.vitepress/dist
 
 # Claude Code local state
 .claude

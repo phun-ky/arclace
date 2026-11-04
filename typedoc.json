@@ -1,11 +1,14 @@
 {
-  "$schema": "https://typedoc.org/schema.json",
+  "$schema": "https://typedoc-plugin-markdown.org/schema.json",
   "entryPoints": ["src/index.ts"],
   "tsconfig": "tsconfig.build.json",
   "out": "docs/api",
-  "plugin": ["typedoc-plugin-markdown"],
+  "docsRoot": "./docs",
+  "plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
   "excludeInternal": true,
   "excludePrivate": true,
   "readme": "none",
-  "githubPages": false
+  "githubPages": false,
+  "gitRevision": "main",
+  "hideGenerator": true
 }
