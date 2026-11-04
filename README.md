@@ -1,5 +1,8 @@
 # @phun-ky/arclace
 
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/16333/badge)](https://www.bestpractices.dev/projects/16333)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/phun-ky/arclace/badge)](https://scorecard.dev/viewer/?uri=github.com/phun-ky/arclace)
+
 > Draw SVG lines between DOM elements.
 
 Point it at two elements and it draws a line between them: a curve, a straight

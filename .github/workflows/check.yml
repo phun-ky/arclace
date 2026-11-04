@@ -52,6 +52,8 @@ jobs:
         run: |
           npm run docs:gen
           git diff --exit-code -- docs/api
+      - name: Check OpenSSF answers # Valid statuses, and every linked file and heading exists
+        run: npm run check:bestpractices
       # A broken site fails the pull request, not the deploy
       - name: Build the docs site
         run: npm run docs:build

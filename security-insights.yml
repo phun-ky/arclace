@@ -54,6 +54,8 @@ repository:
     contributing-guide: https://github.com/phun-ky/arclace/blob/main/CONTRIBUTING.md
     security-policy: https://github.com/phun-ky/arclace/blob/main/SECURITY.md
     dependency-management-policy: https://github.com/phun-ky/arclace/blob/main/SECURITY.md#dependencies
+    governance: https://github.com/phun-ky/arclace/blob/main/GOVERNANCE.md
+    review-policy: https://github.com/phun-ky/arclace/blob/main/GOVERNANCE.md#reviews
   license:
     url: https://github.com/phun-ky/arclace/blob/main/LICENSE
     expression: MIT
@@ -68,10 +70,10 @@ repository:
         predicate-uri: https://slsa.dev/provenance/v1
         location: https://registry.npmjs.org/-/npm/v1/attestations/@phun-ky%2farclace@{version}
         comment: |
-          Releases from 0.1.1 on are published from GitHub Actions with npm
+          Releases after 0.2.0 are published from GitHub Actions with npm
           trusted publishing and a Sigstore-signed provenance attestation.
-          0.1.0 was published by hand and has none. Replace {version}, or run
-          npm audit signatures.
+          0.2.0, the first release under this name, was published by hand and
+          has none. Replace {version}, or run npm audit signatures.
       - name: SBOM
         predicate-uri: https://cyclonedx.org/bom
         location: https://github.com/phun-ky/arclace/releases/tag/{version}
@@ -82,12 +84,12 @@ repository:
   security:
     assessments:
       self:
-        evidence: https://github.com/phun-ky/arclace/blob/main/SECURITY.md#security-expectations
+        evidence: https://github.com/phun-ky/arclace/blob/main/ASSURANCE.md
         date: '2026-11-04'
         comment: |
-          The security expectations in SECURITY.md, checked against the
-          source: what the package does and doesn't do with the page and with
-          its options.
+          The assurance case: the threat model, trust boundaries, secure
+          design principles and known gaps behind the security expectations
+          in SECURITY.md, checked against the source.
     tools:
       - name: CodeQL
         type: SAST
