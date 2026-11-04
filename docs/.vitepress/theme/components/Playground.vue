@@ -287,7 +287,8 @@ watch([type, arrow, labels, anchors, animated], apply);
 }
 
 .node.accent small {
-  color: #dbe6ff;
+  /* 4.5:1 or more on the brand blue in both color schemes */
+  color: #f2f6ff;
 }
 
 .world :deep(.arc-connection.highlight) {
