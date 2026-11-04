@@ -24,6 +24,9 @@ import { extname, join, relative } from 'node:path';
 import { setTimeout as wait } from 'node:timers/promises';
 import { pathToFileURL } from 'node:url';
 
+// A cold CI runner can take over 10 seconds to start Chrome
+const CHROME_START_MS = 30_000;
+const CHROME_POLL_MS = 100;
 const BLOCK = /^```(\w*)\n([\s\S]*?)^```/gm;
 // `expression; // 'value'`, with a string, number or boolean value
 const ASSERTED =
@@ -132,8 +135,10 @@ const launch = async (profile) => {
   try {
     let port;
 
-    for (let i = 0; i < 100 && !port; i++) {
-      const ended = await Promise.race([exited, wait(100)]);
+    const started = Date.now();
+
+    while (!port && Date.now() - started < CHROME_START_MS) {
+      const ended = await Promise.race([exited, wait(CHROME_POLL_MS)]);
 
       if (ended !== undefined)
         throw new Error(
@@ -149,7 +154,10 @@ const launch = async (profile) => {
       }
     }
 
-    if (!port) throw new Error('Chrome did not open a DevTools port');
+    if (!port)
+      throw new Error(
+        `Chrome did not open a DevTools port within ${Math.round((Date.now() - started) / 1000)} seconds`
+      );
 
     const targets = await (
       await fetch(`http://127.0.0.1:${port}/json/list`)
