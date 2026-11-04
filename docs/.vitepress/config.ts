@@ -107,6 +107,14 @@ export default defineConfig({
             { text: 'Background', link: '/guide/background' },
             { text: 'Why Arclace?', link: '/guide/why-arclace' }
           ]
+        },
+        {
+          text: 'Releases',
+          items: [
+            { text: 'Release notes', link: '/guide/releases/' },
+            { text: '1.0 release notes', link: '/guide/releases/1.0' },
+            { text: 'Upgrading', link: '/guide/upgrading' }
+          ]
         }
       ],
       '/api/': [{ text: 'API', items: typedocSidebar }]

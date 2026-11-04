@@ -10,6 +10,9 @@
 
 > Draw SVG lines between DOM elements.
 
+**1.0 is out:** [release notes](https://phun-ky.net/arclace/guide/releases/1.0)
+and [upgrading from 0.x](https://phun-ky.net/arclace/guide/upgrading).
+
 Point it at two elements and it draws a line between them: a curve, a straight
 line or an orthogonal "circuit board" line, with optional arrows, labels and
 anchors. The lines follow the elements when they move, resize, scroll or get

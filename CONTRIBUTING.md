@@ -221,8 +221,10 @@ CI on every pull request, and a pull request that fails them can't be merged.
 - **A new option** gets a check in `src/utils/validate.ts` and tests for the
   values it rejects.
 - **Packaging and examples** are tested by `npm run check:pack`, which runs in
-  CI. A changed example in the README or the docs must still run, and a value in
-  a `// 'value'` comment is checked.
+  CI. A changed example in the README or the docs must still run, a value in a
+  `// 'value'` comment is checked, and a line ending in `// throws TypeError`
+  must throw an error of that name. Code from an earlier release, such as the
+  before half of the upgrading guide, is marked ` ```ts no-run ` and skipped.
 - **Coverage must not drop.** `npm run test:ci` fails when the source falls
   below 99% of lines, 100% of functions or 95% of branches, and CI uploads a
   coverage report for every pull request.
@@ -265,8 +267,10 @@ by Dependabot are exempt.
   and the changelog are generated from them (see [Releases](#releases)), so pick
   the type that matches the change. A breaking change needs a `type!:` and a
   `BREAKING CHANGE:` footer that says what to change.
-- A breaking change is released as a new major version, also below 1.0: from 0.3
-  it releases 1.0.0. Up to 0.3, breaking changes bumped the minor version.
+- A breaking change is released as a new major version, and waits for the next
+  major's milestone, with release notes and a section in the
+  [upgrading guide](https://phun-ky.net/arclace/guide/upgrading). Up to 0.3,
+  breaking changes bumped the minor version.
 - Deprecating an API isn't a breaking change, so it can land in any release.
   Mark it `@deprecated` with its replacement and the version it will be removed
   in. From 1.0 on, it keeps working through one full major: deprecated during

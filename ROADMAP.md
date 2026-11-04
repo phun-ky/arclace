@@ -8,20 +8,20 @@ milestones.
 
 ## Planned
 
-### 1.0
+### 1.0, and keeping it stable
 
-Arclace is at `0.x`. Up to 0.3, breaking changes were released as minor
-versions; from now on a breaking change releases a major, so the next one would
-be 1.0.0. See the [security policy](SECURITY.md#supported-versions). The API was
-reviewed for 1.0 in [#20](https://github.com/phun-ky/arclace/issues/20): options
-are validated, failures throw `ArclaceError`, and `stop` became `end`. The docs
-say how the lines work with assistive technology
-([#60](https://github.com/phun-ky/arclace/issues/60)). Before 1.0:
+Arclace reached 1.0 in November 2026
+([#21](https://github.com/phun-ky/arclace/issues/21)), after an API review
+([#20](https://github.com/phun-ky/arclace/issues/20)): options are validated,
+failures throw `ArclaceError`, and `stop` became `end`. See the
+[1.0 release notes](https://phun-ky.net/arclace/guide/releases/1.0). From here:
 
-- **Release notes and policies for 1.0**: from then on, no breaking changes
-  within a major, deprecations that keep working through one full major, and
-  high and critical security fixes for the previous major for 6 months
-  ([#21](https://github.com/phun-ky/arclace/issues/21)).
+- **No breaking changes in 1.x.** The current major is supported as a whole and
+  the previous one gets high and critical security fixes for 6 months; see the
+  [security policy](SECURITY.md#supported-versions).
+- **Deprecations before removals:** a deprecated API keeps working through one
+  full major, and every major comes with release notes and an
+  [upgrading guide](https://phun-ky.net/arclace/guide/upgrading).
 
 ### Project health
 

@@ -58,6 +58,7 @@
     "node": ">=22.12.0"
   },
   "scripts": {
+    "banners": "node scripts/banners/render.mjs",
     "bestpractices:url": "node scripts/bestpractices-url.mjs",
     "build": "rm -rf dts && vite build && tsc -p tsconfig.build.json && rollup -c",
     "check:bestpractices": "node scripts/check-bestpractices.mjs",
