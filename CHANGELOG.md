@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.2.0](https://github.com/phun-ky/arclace/compare/0.1.0...0.2.0) (2026-11-04)
+
+### ⚠ BREAKING CHANGES
+
+* 💡 rename the package to Arclace
+
+### Tasks
+
+* 🤖 sign off every commit with a prepare-commit-msg hook ([940e06b](https://github.com/phun-ky/arclace/commit/940e06b72871db570ccb516f76d81bcb5ea3e53b)), references [#18](https://github.com/phun-ky/arclace/issues/18)
+* 🤖 skip the first release under a new package name ([738c8b6](https://github.com/phun-ky/arclace/commit/738c8b6534c860d53361811781268ae0bf08c7dd)), references [#58](https://github.com/phun-ky/arclace/issues/58)
+
+### Documentation
+
+* ✏️ add a VitePress docs site with the API reference ([3125b4c](https://github.com/phun-ky/arclace/commit/3125b4c17ac477aa9b331dac6513a2ce69a93d2e)), references [#15](https://github.com/phun-ky/arclace/issues/15)
+* ✏️ explain the name Arclace ([180ca0d](https://github.com/phun-ky/arclace/commit/180ca0d781d85e1ff7b96cb41d1b5cc6cc07f495)), references [#58](https://github.com/phun-ky/arclace/issues/58)
+* ✏️ rewrite the security policy and add security insights ([2942a2c](https://github.com/phun-ky/arclace/commit/2942a2cb86c595810ae5c5493e664ad13b5bebf2)), references [#17](https://github.com/phun-ky/arclace/issues/17)
+* ✏️ show the markup the playground example runs on ([a5251de](https://github.com/phun-ky/arclace/commit/a5251de0298dc051cc2eb451e3e30b70c3644f92)), references [#16](https://github.com/phun-ky/arclace/issues/16)
+* ✏️ tell where connect-the-things comes from ([9df2bdf](https://github.com/phun-ky/arclace/commit/9df2bdff7e9dcf50e223fb60e64eb0301406acf7)), references [#56](https://github.com/phun-ky/arclace/issues/56)
+
+### Refactoring
+
+* 💡 rename the package to Arclace ([5758e91](https://github.com/phun-ky/arclace/commit/5758e91483c20a13b2010e0afab0635e04ee8cd0))
+
 ## 0.1.0 (2026-11-03)
 
 ### Tasks
