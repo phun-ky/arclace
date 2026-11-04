@@ -2,7 +2,7 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./docs/public/logo/banner-dark.png">
-  <img alt="Arclace: one node with three lines spread out to three anchors, with the tagline: draw SVG lines between DOM elements" src="./docs/public/logo/banner-light.png">
+  <img alt="Arclace: a tied lace with two loops and two tails, with the tagline: draw SVG lines between DOM elements" src="./docs/public/logo/banner-light.png">
 </picture>
 
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/16333/badge)](https://www.bestpractices.dev/projects/16333)

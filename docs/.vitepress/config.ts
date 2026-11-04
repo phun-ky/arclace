@@ -56,7 +56,7 @@ export default defineConfig({
       {
         property: 'og:image:alt',
         content:
-          'The Arclace logo, one node with three lines spread out to three anchors, with the name and the tagline'
+          'The Arclace logo, a tied lace with two loops and two tails, with the name and the tagline'
       }
     ],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
