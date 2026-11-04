@@ -11,12 +11,10 @@ milestones.
 ### 1.0
 
 Arclace is at `0.x`, so a minor release may still break the API; see the
-[security policy](SECURITY.md#supported-versions). Before 1.0:
+[security policy](SECURITY.md#supported-versions). The API was reviewed for 1.0
+in [#20](https://github.com/phun-ky/arclace/issues/20): options are validated,
+failures throw `ArclaceError`, and `stop` became `end`. Before 1.0:
 
-- **An API review**: validation that throws `TypeError` and `RangeError` for bad
-  input, one error class, frozen lookup tables, which exports stay public, and
-  property-based tests for the geometry
-  ([#20](https://github.com/phun-ky/arclace/issues/20)).
 - **Release notes and policies for 1.0**: from then on, no breaking changes
   within a major, deprecations that keep working through one full major, and
   high and critical security fixes for the previous major for 6 months
