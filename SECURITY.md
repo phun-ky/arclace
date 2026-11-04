@@ -57,7 +57,7 @@ What you can rely on:
 - **It only changes what it draws.** Besides its overlay, it changes one thing
   in your page: a container other than `document.body` with `position: static`
   gets `position: relative`, and `destroy()` restores it.
-- **Releases are traceable** from the first release after 0.2.0 on (see below).
+- **Releases are traceable** from 0.3.0 on (see below).
 
 What you can't rely on:
 
