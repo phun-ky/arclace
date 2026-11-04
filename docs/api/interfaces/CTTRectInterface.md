@@ -1,12 +1,8 @@
-[**@phun-ky/connect-the-things**](../README.md)
-
-***
-
-[@phun-ky/connect-the-things](../README.md) / CTTRectInterface
+[@phun-ky/connect-the-things](../index.md) / CTTRectInterface
 
 # Interface: CTTRectInterface
 
-Defined in: [types.ts:36](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L36)
+Defined in: [types.ts:36](https://github.com/phun-ky/connect-the-things/blob/main/src/types.ts#L36)
 
 ## Properties
 
@@ -14,7 +10,7 @@ Defined in: [types.ts:36](https://github.com/phun-ky/connect-the-things/blob/718
 
 > **bottom**: `number`
 
-Defined in: [types.ts:40](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L40)
+Defined in: [types.ts:40](https://github.com/phun-ky/connect-the-things/blob/main/src/types.ts#L40)
 
 ***
 
@@ -22,7 +18,7 @@ Defined in: [types.ts:40](https://github.com/phun-ky/connect-the-things/blob/718
 
 > **height**: `number`
 
-Defined in: [types.ts:42](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L42)
+Defined in: [types.ts:42](https://github.com/phun-ky/connect-the-things/blob/main/src/types.ts#L42)
 
 ***
 
@@ -30,7 +26,7 @@ Defined in: [types.ts:42](https://github.com/phun-ky/connect-the-things/blob/718
 
 > **left**: `number`
 
-Defined in: [types.ts:37](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L37)
+Defined in: [types.ts:37](https://github.com/phun-ky/connect-the-things/blob/main/src/types.ts#L37)
 
 ***
 
@@ -38,7 +34,7 @@ Defined in: [types.ts:37](https://github.com/phun-ky/connect-the-things/blob/718
 
 > **right**: `number`
 
-Defined in: [types.ts:39](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L39)
+Defined in: [types.ts:39](https://github.com/phun-ky/connect-the-things/blob/main/src/types.ts#L39)
 
 ***
 
@@ -46,7 +42,7 @@ Defined in: [types.ts:39](https://github.com/phun-ky/connect-the-things/blob/718
 
 > **top**: `number`
 
-Defined in: [types.ts:38](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L38)
+Defined in: [types.ts:38](https://github.com/phun-ky/connect-the-things/blob/main/src/types.ts#L38)
 
 ***
 
@@ -54,4 +50,4 @@ Defined in: [types.ts:38](https://github.com/phun-ky/connect-the-things/blob/718
 
 > **width**: `number`
 
-Defined in: [types.ts:41](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L41)
+Defined in: [types.ts:41](https://github.com/phun-ky/connect-the-things/blob/main/src/types.ts#L41)

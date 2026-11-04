@@ -1,12 +1,8 @@
-[**@phun-ky/connect-the-things**](../README.md)
-
-***
-
-[@phun-ky/connect-the-things](../README.md) / CTTPointInterface
+[@phun-ky/connect-the-things](../index.md) / CTTPointInterface
 
 # Interface: CTTPointInterface
 
-Defined in: [types.ts:31](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L31)
+Defined in: [types.ts:31](https://github.com/phun-ky/connect-the-things/blob/main/src/types.ts#L31)
 
 ## Properties
 
@@ -14,7 +10,7 @@ Defined in: [types.ts:31](https://github.com/phun-ky/connect-the-things/blob/718
 
 > **x**: `number`
 
-Defined in: [types.ts:32](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L32)
+Defined in: [types.ts:32](https://github.com/phun-ky/connect-the-things/blob/main/src/types.ts#L32)
 
 ***
 
@@ -22,4 +18,4 @@ Defined in: [types.ts:32](https://github.com/phun-ky/connect-the-things/blob/718
 
 > **y**: `number`
 
-Defined in: [types.ts:33](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L33)
+Defined in: [types.ts:33](https://github.com/phun-ky/connect-the-things/blob/main/src/types.ts#L33)

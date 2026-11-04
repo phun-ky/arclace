@@ -1,12 +1,8 @@
-[**@phun-ky/connect-the-things**](../README.md)
-
-***
-
-[@phun-ky/connect-the-things](../README.md) / Connection
+[@phun-ky/connect-the-things](../index.md) / Connection
 
 # Class: Connection
 
-Defined in: [Connection.ts:83](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/Connection.ts#L83)
+Defined in: [Connection.ts:83](https://github.com/phun-ky/connect-the-things/blob/main/src/Connection.ts#L83)
 
 A line between two elements. Created with [ConnectTheThings.connect](ConnectTheThings.md#connect).
 
@@ -31,7 +27,7 @@ The line, arrows and anchors use `currentColor`, so setting `color` on
 
 > **new Connection**(`params`): `Connection`
 
-Defined in: [Connection.ts:111](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/Connection.ts#L111)
+Defined in: [Connection.ts:111](https://github.com/phun-ky/connect-the-things/blob/main/src/Connection.ts#L111)
 
 #### Parameters
 
@@ -49,7 +45,7 @@ Defined in: [Connection.ts:111](https://github.com/phun-ky/connect-the-things/bl
 
 > `readonly` **element**: `SVGGElement`
 
-Defined in: [Connection.ts:91](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/Connection.ts#L91)
+Defined in: [Connection.ts:91](https://github.com/phun-ky/connect-the-things/blob/main/src/Connection.ts#L91)
 
 The `<g>` element holding everything this connection draws.
 
@@ -59,7 +55,7 @@ The `<g>` element holding everything this connection draws.
 
 > **geometry**: [`CTTGeometryType`](../type-aliases/CTTGeometryType.md) \| `null` = `null`
 
-Defined in: [Connection.ts:102](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/Connection.ts#L102)
+Defined in: [Connection.ts:102](https://github.com/phun-ky/connect-the-things/blob/main/src/Connection.ts#L102)
 
 The geometry from the last update, or `null` when the connection is
 hidden because one of its elements is not rendered.
@@ -70,7 +66,7 @@ hidden because one of its elements is not rendered.
 
 > `readonly` **id**: `string`
 
-Defined in: [Connection.ts:84](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/Connection.ts#L84)
+Defined in: [Connection.ts:84](https://github.com/phun-ky/connect-the-things/blob/main/src/Connection.ts#L84)
 
 ***
 
@@ -78,7 +74,7 @@ Defined in: [Connection.ts:84](https://github.com/phun-ky/connect-the-things/blo
 
 > `readonly` **path**: `SVGPathElement`
 
-Defined in: [Connection.ts:96](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/Connection.ts#L96)
+Defined in: [Connection.ts:96](https://github.com/phun-ky/connect-the-things/blob/main/src/Connection.ts#L96)
 
 The `<path>` element of the line.
 
@@ -88,7 +84,7 @@ The `<path>` element of the line.
 
 > `readonly` **startElement**: `Element`
 
-Defined in: [Connection.ts:85](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/Connection.ts#L85)
+Defined in: [Connection.ts:85](https://github.com/phun-ky/connect-the-things/blob/main/src/Connection.ts#L85)
 
 ***
 
@@ -96,7 +92,7 @@ Defined in: [Connection.ts:85](https://github.com/phun-ky/connect-the-things/blo
 
 > `readonly` **stopElement**: `Element`
 
-Defined in: [Connection.ts:86](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/Connection.ts#L86)
+Defined in: [Connection.ts:86](https://github.com/phun-ky/connect-the-things/blob/main/src/Connection.ts#L86)
 
 ## Accessors
 
@@ -106,7 +102,7 @@ Defined in: [Connection.ts:86](https://github.com/phun-ky/connect-the-things/blo
 
 > **get** **options**(): `Readonly`\<[`CTTResolvedConnectionOptionsType`](../type-aliases/CTTResolvedConnectionOptionsType.md)\>
 
-Defined in: [Connection.ts:140](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/Connection.ts#L140)
+Defined in: [Connection.ts:140](https://github.com/phun-ky/connect-the-things/blob/main/src/Connection.ts#L140)
 
 The connection's options merged with the instance defaults.
 
@@ -120,7 +116,7 @@ The connection's options merged with the instance defaults.
 
 > **remove**(): `void`
 
-Defined in: [Connection.ts:175](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/Connection.ts#L175)
+Defined in: [Connection.ts:175](https://github.com/phun-ky/connect-the-things/blob/main/src/Connection.ts#L175)
 
 Removes this connection.
 
@@ -134,7 +130,7 @@ Removes this connection.
 
 > **setOptions**(`options`): `this`
 
-Defined in: [Connection.ts:157](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/Connection.ts#L157)
+Defined in: [Connection.ts:157](https://github.com/phun-ky/connect-the-things/blob/main/src/Connection.ts#L157)
 
 Changes options and redraws.
 
@@ -160,7 +156,7 @@ connection.setOptions({ type: 'orthogonal', arrow: 'end' });
 
 > **update**(): `void`
 
-Defined in: [Connection.ts:168](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/Connection.ts#L168)
+Defined in: [Connection.ts:168](https://github.com/phun-ky/connect-the-things/blob/main/src/Connection.ts#L168)
 
 Redraws every connection of the owning instance.
 

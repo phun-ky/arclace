@@ -1,14 +1,10 @@
-[**@phun-ky/connect-the-things**](../README.md)
-
-***
-
-[@phun-ky/connect-the-things](../README.md) / CTTOptionsType
+[@phun-ky/connect-the-things](../index.md) / CTTOptionsType
 
 # Type Alias: CTTOptionsType
 
 > **CTTOptionsType** = `object`
 
-Defined in: [types.ts:161](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L161)
+Defined in: [types.ts:161](https://github.com/phun-ky/connect-the-things/blob/main/src/types.ts#L161)
 
 Options for a [ConnectTheThings](../classes/ConnectTheThings.md) instance.
 
@@ -18,7 +14,7 @@ Options for a [ConnectTheThings](../classes/ConnectTheThings.md) instance.
 
 > `optional` **autoUpdate?**: `boolean` \| `"frame"`
 
-Defined in: [types.ts:177](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L177)
+Defined in: [types.ts:177](https://github.com/phun-ky/connect-the-things/blob/main/src/types.ts#L177)
 
 Keep lines in sync with the page.
 
@@ -34,7 +30,7 @@ Keep lines in sync with the page.
 
 > `optional` **className?**: `string`
 
-Defined in: [types.ts:187](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L187)
+Defined in: [types.ts:187](https://github.com/phun-ky/connect-the-things/blob/main/src/types.ts#L187)
 
 Extra class names added to the SVG overlay.
 
@@ -44,7 +40,7 @@ Extra class names added to the SVG overlay.
 
 > `optional` **container?**: [`CTTElementTargetType`](CTTElementTargetType.md)
 
-Defined in: [types.ts:166](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L166)
+Defined in: [types.ts:166](https://github.com/phun-ky/connect-the-things/blob/main/src/types.ts#L166)
 
 The element the SVG overlay is added to. All connected elements should
 be inside it. Defaults to `document.body`.
@@ -55,6 +51,6 @@ be inside it. Defaults to `document.body`.
 
 > `optional` **defaults?**: [`CTTConnectionOptionsType`](CTTConnectionOptionsType.md)
 
-Defined in: [types.ts:182](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L182)
+Defined in: [types.ts:182](https://github.com/phun-ky/connect-the-things/blob/main/src/types.ts#L182)
 
 Default options for every connection made by this instance.

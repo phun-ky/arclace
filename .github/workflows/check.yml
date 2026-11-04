@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # The docs site's "Last updated" dates come from git
       # check:pack also runs the packed package on the oldest Node engines allows
       - name: Setup Node.js 22.12.0, the engines floor
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -42,6 +44,22 @@ jobs:
         run: npm run build
       - name: Check package # Packs, installs and imports the package from every entry point, on Node 24 and the engines floor
         run: npm run check:pack
+      - name: Check the API docs # Fails on any TypeDoc warning
+        run: npm run docs:check
+      - name: Check the API docs are up to date # docs/api is committed
+        run: |
+          npm run docs:gen
+          git diff --exit-code -- docs/api
+      # A broken site fails the pull request, not the deploy
+      - name: Build the docs site
+        run: npm run docs:build
+      # On main, the site that was just built and checked is what deploy publishes
+      - name: Upload the docs site
+        if:
+          github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: docs/.vitepress/dist
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
@@ -49,9 +67,30 @@ jobs:
           slug: phun-ky/connect-the-things
           files: coverage/cobertura-coverage.xml
 
+  # Deploys phun-ky.net/connect-the-things from main, after every check passed
+  deploy:
+    name: Deploy
+    needs: check
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    # One deployment at a time; a deployment in progress is never cancelled
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write # Deploy to GitHub Pages
+      id-token: write # Verify the deployment's origin
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
   notify:
     name: Notify failed check
-    needs: check
+    needs: [check, deploy]
     if: failure()
     runs-on: ubuntu-24.04
     # GITHUB_TOKEN, not GH_TOKEN: secrets are empty on Dependabot pull requests

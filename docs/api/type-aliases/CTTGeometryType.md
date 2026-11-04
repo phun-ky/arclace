@@ -1,14 +1,10 @@
-[**@phun-ky/connect-the-things**](../README.md)
-
-***
-
-[@phun-ky/connect-the-things](../README.md) / CTTGeometryType
+[@phun-ky/connect-the-things](../index.md) / CTTGeometryType
 
 # Type Alias: CTTGeometryType
 
 > **CTTGeometryType** = `object`
 
-Defined in: [types.ts:193](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L193)
+Defined in: [types.ts:193](https://github.com/phun-ky/connect-the-things/blob/main/src/types.ts#L193)
 
 The computed geometry of a connection after the last update.
 
@@ -18,7 +14,7 @@ The computed geometry of a connection after the last update.
 
 > **d**: `string`
 
-Defined in: [types.ts:199](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L199)
+Defined in: [types.ts:199](https://github.com/phun-ky/connect-the-things/blob/main/src/types.ts#L199)
 
 ***
 
@@ -26,7 +22,7 @@ Defined in: [types.ts:199](https://github.com/phun-ky/connect-the-things/blob/71
 
 > **labelPoint**: [`CTTPointInterface`](../interfaces/CTTPointInterface.md)
 
-Defined in: [types.ts:198](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L198)
+Defined in: [types.ts:198](https://github.com/phun-ky/connect-the-things/blob/main/src/types.ts#L198)
 
 ***
 
@@ -34,7 +30,7 @@ Defined in: [types.ts:198](https://github.com/phun-ky/connect-the-things/blob/71
 
 > **start**: [`CTTPointInterface`](../interfaces/CTTPointInterface.md)
 
-Defined in: [types.ts:194](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L194)
+Defined in: [types.ts:194](https://github.com/phun-ky/connect-the-things/blob/main/src/types.ts#L194)
 
 ***
 
@@ -42,7 +38,7 @@ Defined in: [types.ts:194](https://github.com/phun-ky/connect-the-things/blob/71
 
 > **startSide**: [`CTTSideType`](CTTSideType.md)
 
-Defined in: [types.ts:196](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L196)
+Defined in: [types.ts:196](https://github.com/phun-ky/connect-the-things/blob/main/src/types.ts#L196)
 
 ***
 
@@ -50,7 +46,7 @@ Defined in: [types.ts:196](https://github.com/phun-ky/connect-the-things/blob/71
 
 > **stop**: [`CTTPointInterface`](../interfaces/CTTPointInterface.md)
 
-Defined in: [types.ts:195](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L195)
+Defined in: [types.ts:195](https://github.com/phun-ky/connect-the-things/blob/main/src/types.ts#L195)
 
 ***
 
@@ -58,4 +54,4 @@ Defined in: [types.ts:195](https://github.com/phun-ky/connect-the-things/blob/71
 
 > **stopSide**: [`CTTSideType`](CTTSideType.md)
 
-Defined in: [types.ts:197](https://github.com/phun-ky/connect-the-things/blob/7184f61d9dad0abc53416d24c7ff878fbf2cb48d/src/types.ts#L197)
+Defined in: [types.ts:197](https://github.com/phun-ky/connect-the-things/blob/main/src/types.ts#L197)
