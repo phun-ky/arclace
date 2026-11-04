@@ -231,12 +231,17 @@ export const checkExamples = async ({ root, app, pkg }) => {
   const problems = [];
   const pages = new Map();
   const runs = new Map();
+  // Blocks before any markup in their file run on the README's
+  const readmeMarkup = blocksOf('README.md', root).find(
+    (block) =>
+      block.language === 'html' && !/<script\b|^\s*<g\b/.test(block.code)
+  ).code;
 
   let checks = 0;
 
   // One run per distinct example and markup; the guide repeats the README
   for (const file of new Set(files)) {
-    let markup = '';
+    let markup = readmeMarkup;
 
     for (const block of blocksOf(file, root)) {
       const where = `${block.file}:${block.line}`;
@@ -250,24 +255,17 @@ export const checkExamples = async ({ root, app, pkg }) => {
       if (!['ts', 'js', 'tsx', 'html', 'css'].includes(block.language))
         continue;
 
-      // Blocks before any markup in their file run on the README's
-      const key = `${block.language}\n${markup || '(readme)'}\n${block.code}`;
+      const key = `${block.language}\n${markup}\n${block.code}`;
 
       if (runs.has(key)) runs.get(key).where.push(where);
       else runs.set(key, { ...block, markup, where: [where] });
     }
   }
 
-  const readmeMarkup = blocksOf('README.md', root).find(
-    (block) =>
-      block.language === 'html' && !/<script\b|^\s*<g\b/.test(block.code)
-  ).code;
-
   for (const [index, run] of [...runs.values()].entries()) {
-    const markup = run.markup || readmeMarkup;
     const head = ['<meta charset="utf-8">', `<style>${FIXTURE_CSS}</style>`];
 
-    let body = markup;
+    let body = run.markup;
 
     if (run.language === 'css') {
       head.push(`<style id="example">${run.code}</style>`);
