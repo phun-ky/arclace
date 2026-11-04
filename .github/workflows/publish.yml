@@ -58,14 +58,15 @@ jobs:
       - name: Audit runtime dependencies # No release with a known high or critical vulnerability
         if: steps.guard.outputs.release == 'true'
         run: npm audit --omit=dev --audit-level=high
-      - name: Release # Builds, runs check:pack, then publishes
+      - name: Release # Builds, runs check:pack, then publishes; a Release-As footer picks the version
         if: steps.guard.outputs.release == 'true'
         run: |
           git config user.name "$ACTOR"
           git config user.email "$ACTOR@users.noreply.github.com"
-          npm run release
+          npm run release -- ${VERSION:+"$VERSION"}
         env: # npm authenticates with trusted publishing (id-token: write), no token needed
           ACTOR: ${{ github.actor }} # via env, never interpolated into the script
+          VERSION: ${{ steps.guard.outputs.version }} # X.Y.Z from a Release-As footer, checked by the guard
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_CONFIG_PROVENANCE: true
       - name: Attach SBOM to the release # CycloneDX; nothing is bundled, so npm's SBOM is complete

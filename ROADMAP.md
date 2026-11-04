@@ -10,11 +10,12 @@ milestones.
 
 ### 1.0
 
-Arclace is at `0.x`, so a minor release may still break the API; see the
-[security policy](SECURITY.md#supported-versions). The API was reviewed for 1.0
-in [#20](https://github.com/phun-ky/arclace/issues/20): options are validated,
-failures throw `ArclaceError`, and `stop` became `end`. The docs say how the
-lines work with assistive technology
+Arclace is at `0.x`. Up to 0.3, breaking changes were released as minor
+versions; from now on a breaking change releases a major, so the next one would
+be 1.0.0. See the [security policy](SECURITY.md#supported-versions). The API was
+reviewed for 1.0 in [#20](https://github.com/phun-ky/arclace/issues/20): options
+are validated, failures throw `ArclaceError`, and `stop` became `end`. The docs
+say how the lines work with assistive technology
 ([#60](https://github.com/phun-ky/arclace/issues/60)). Before 1.0:
 
 - **Release notes and policies for 1.0**: from then on, no breaking changes

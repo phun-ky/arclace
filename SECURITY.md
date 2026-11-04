@@ -13,9 +13,10 @@ chosen, tracked and kept clear of known vulnerabilities is described under
 
 - **Only the latest release gets fixes.** A fix is released as a new version; to
   get it, upgrade to the newest release.
-- **Before 1.0, a minor release may break your code.** While the version is
-  `0.x`, breaking changes bump the minor version (0.1 to 0.2) and fixes and
-  features bump the patch version. The release notes say what changed.
+- **Up to 0.3, a minor release could break your code.** While the version was
+  below 1.0, breaking changes bumped the minor version (0.2 to 0.3). From now
+  on, a breaking change releases the next major version, starting with 1.0.0.
+  The release notes say what changed.
 - **Security comes first.** If a vulnerability can't be fixed without changing
   an API, the fix changes it, and the advisory and the release notes say what
   changed and why.
