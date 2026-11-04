@@ -5,6 +5,11 @@ import { fileURLToPath } from 'node:url';
 import pkg from '../../package.json' with { type: 'json' };
 import typedocSidebar from '../api/typedoc-sidebar.json' with { type: 'json' };
 
+// The code themes of phun-ky's other docs sites, with light comments darkened
+// to meet 4.5:1 on the code background
+import darkTheme from './shiki/accessible-aa-dark-shiki.json' with { type: 'json' };
+import lightTheme from './shiki/accessible-aa-light-shiki.json' with { type: 'json' };
+
 const SITE = 'https://phun-ky.net/arclace/';
 const DESCRIPTION = 'Draw SVG lines between DOM elements.';
 const source = (path: string): string =>
@@ -31,6 +36,9 @@ export default defineConfig({
     ['meta', { property: 'og:description', content: DESCRIPTION }],
     ['meta', { property: 'og:locale', content: 'en_GB' }]
   ],
+  markdown: {
+    theme: { light: lightTheme, dark: darkTheme }
+  },
   cleanUrls: true,
   lastUpdated: true,
   sitemap: { hostname: SITE },
