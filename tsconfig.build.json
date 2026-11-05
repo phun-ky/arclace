@@ -6,6 +6,7 @@
     "declaration": true,
     "declarationMap": false,
     "sourceMap": false,
+    "rootDir": "./src",
     "declarationDir": "./dts",
     "stripInternal": true,
     "types": []
