@@ -105,7 +105,7 @@
     "typedoc": "^0.28.20",
     "typedoc-plugin-markdown": "^4.14.1",
     "typedoc-vitepress-theme": "^1.1.4",
-    "typescript": "~5.7.2",
+    "typescript": "~6.0.3",
     "vite": "^6.2.0",
     "vitepress": "^1.6.4"
   },

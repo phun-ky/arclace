@@ -196,7 +196,7 @@
   "updateable_reused_components_status": "Met",
   "updateable_reused_components_justification": "No third-party code is copied into the repository; all external components come from npm through package.json and the lockfile, the package has no runtime dependencies to bundle, and Dependabot opens update pull requests.",
   "interfaces_current_status": "Met",
-  "interfaces_current_justification": "The code uses current interfaces: ES modules with an exports map, ResizeObserver and MutationObserver for updates, Node 24 in CI, TypeScript 5.7 in strict mode, and current GitHub Actions pinned to commit SHAs.",
+  "interfaces_current_justification": "The code uses current interfaces: ES modules with an exports map, ResizeObserver and MutationObserver for updates, Node 24 in CI, TypeScript 6.0 in strict mode, and current GitHub Actions pinned to commit SHAs.",
   "automated_integration_testing_status": "Met",
   "automated_integration_testing_justification": "The Checks workflow lints, type-checks, tests with coverage, builds, packs and installs the package, loads it from every entry point, runs every README and docs example in headless Chrome, and checks the API docs and the docs site build, on every pull request and push to main, reporting results as GitHub checks with coverage uploaded to Codecov.",
   "regression_tests_added50_status": "Met",
