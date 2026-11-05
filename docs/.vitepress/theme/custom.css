@@ -114,10 +114,9 @@
   box-shadow: var(--vp-shadow-1);
 }
 
-/* Text never sits on a dot: the dots fade out behind the hero copy and the
-   not-found message, so the text keeps its contrast against the plain
-   background (the tagline would be 3.7:1 against a dot) */
-.VPHero .main,
+/* The dots fade out behind the not-found message, so the text keeps its
+   contrast against the plain background. The hero copy sits on the dots
+   without a backdrop. */
 .NotFound .code,
 .NotFound .title,
 .NotFound .quote {
