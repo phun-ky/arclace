@@ -187,6 +187,46 @@ export const assertColors = (value: unknown, name: string): string[] => {
   return value;
 };
 
+/**
+ * The numbers in a dash pattern, given as a string such as `'4, 2'` or as
+ * numbers.
+ */
+export const dashNumbers = (value: string | number[]): number[] =>
+  typeof value === 'string'
+    ? value
+        .split(/[\s,]+/)
+        .filter(Boolean)
+        .map(Number)
+    : value;
+
+/**
+ * Throws a `TypeError` unless `value` is a string or an array of numbers, and
+ * a `RangeError` unless it holds one or more numbers, all 0 or more.
+ */
+export const assertDashArray = (value: unknown, name: string): number[] => {
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => assertNumber(item, `${name}[${index}]`, 0));
+  } else if (typeof value !== 'string') {
+    throw new TypeError(
+      `arclace: ${name} must be a string or an array of numbers, not ${show(value)}`
+    );
+  }
+
+  const numbers = dashNumbers(value as string | number[]);
+
+  // Units and percentages are refused, so the pattern's length is known
+  if (
+    numbers.length === 0 ||
+    numbers.some((number) => !Number.isFinite(number) || number < 0)
+  ) {
+    throw new RangeError(
+      `arclace: ${name} must be numbers of 0 or more, separated by spaces or commas, not ${show(value)}`
+    );
+  }
+
+  return numbers;
+};
+
 // How each connection option is checked. Keys that aren't listed are ignored.
 const CONNECTION_OPTION_CHECKS: Readonly<
   Record<
@@ -205,6 +245,7 @@ const CONNECTION_OPTION_CHECKS: Readonly<
   className: assertString,
   strokeWidth: (value, name) => assertNumber(value, name, 0),
   dashed: assertBoolean,
+  dashArray: assertDashArray,
   animated: assertBoolean,
   anchors: assertBoolean,
   gap: (value, name) => assertNumber(value, name),

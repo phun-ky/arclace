@@ -4,7 +4,7 @@
 
 > **ArcOptionsType** = `object`
 
-Defined in: [src/types.ts:168](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L168)
+Defined in: [src/types.ts:175](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L175)
 
 Options for a [Arclace](../classes/Arclace.md) instance.
 
@@ -14,7 +14,7 @@ Options for a [Arclace](../classes/Arclace.md) instance.
 
 > `optional` **autoUpdate?**: `boolean` \| `"frame"`
 
-Defined in: [src/types.ts:184](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L184)
+Defined in: [src/types.ts:191](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L191)
 
 Keep lines in sync with the page.
 
@@ -30,7 +30,7 @@ Keep lines in sync with the page.
 
 > `optional` **className?**: `string`
 
-Defined in: [src/types.ts:194](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L194)
+Defined in: [src/types.ts:201](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L201)
 
 Extra class names added to the SVG overlay.
 
@@ -40,7 +40,7 @@ Extra class names added to the SVG overlay.
 
 > `optional` **container?**: [`ArcElementTargetType`](ArcElementTargetType.md)
 
-Defined in: [src/types.ts:173](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L173)
+Defined in: [src/types.ts:180](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L180)
 
 The element the SVG overlay is added to. All connected elements should
 be inside it. Defaults to `document.body`.
@@ -51,6 +51,6 @@ be inside it. Defaults to `document.body`.
 
 > `optional` **defaults?**: [`ArcConnectionOptionsType`](ArcConnectionOptionsType.md)
 
-Defined in: [src/types.ts:189](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L189)
+Defined in: [src/types.ts:196](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L196)
 
 Default options for every connection made by this instance.

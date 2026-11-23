@@ -55,6 +55,11 @@ describe('connection options', () => {
     ['a className number', { className: 42 }, 'TypeError'],
     ['a color number', { color: 42 }, 'TypeError'],
     ['a gradient string', { gradient: 'red' }, 'TypeError'],
+    ['a dashArray number', { dashArray: 4 }, 'TypeError'],
+    ['a dashArray with units', { dashArray: '4px 2px' }, 'RangeError'],
+    ['a dashArray with a negative dash', { dashArray: '4 -2' }, 'RangeError'],
+    ['an empty dashArray string', { dashArray: ' , ' }, 'RangeError'],
+    ['an empty dashArray', { dashArray: [] }, 'RangeError'],
     ['a gradient of one color', { gradient: ['red'] }, 'RangeError'],
     ['an id number', { id: 42 }, 'TypeError'],
     ['an empty id', { id: '' }, 'TypeError']
@@ -143,6 +148,14 @@ describe('connection options', () => {
           'arclace: options.gradient[1] must be a non-empty string, not 42'
       }
     );
+    assert.throws(() => arclace.connect(a, b, { dashArray: [4, -2] }), {
+      name: 'RangeError',
+      message: 'arclace: options.dashArray[1] must be 0 or more, not -2'
+    });
+    assert.throws(() => arclace.connect(a, b, loose({ dashArray: ['4'] })), {
+      name: 'TypeError',
+      message: 'arclace: options.dashArray[0] must be a finite number, not "4"'
+    });
   });
 
   it('checks setOptions and keeps the old options when it throws', () => {

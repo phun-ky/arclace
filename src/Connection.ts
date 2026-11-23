@@ -15,21 +15,21 @@ import {
   straightPath
 } from './utils/paths';
 import { createSVGElement, setAttributes } from './utils/svg';
-import { validateConnectionOptions } from './utils/validate';
+import { dashNumbers, validateConnectionOptions } from './utils/validate';
 
 /**
  * Connection options with every default filled in. `label`, `color`,
- * `gradient` and `className` have no default.
+ * `gradient`, `dashArray` and `className` have no default.
  */
 export type ArcResolvedConnectionOptionsType = Required<
   Omit<
     ArcConnectionOptionsType,
-    'id' | 'label' | 'color' | 'gradient' | 'className'
+    'id' | 'label' | 'color' | 'gradient' | 'dashArray' | 'className'
   >
 > &
   Pick<
     ArcConnectionOptionsType,
-    'label' | 'color' | 'gradient' | 'className'
+    'label' | 'color' | 'gradient' | 'dashArray' | 'className'
   > & {
     id: string;
   };
@@ -42,7 +42,7 @@ export const DEFAULT_CONNECTION_OPTIONS: Readonly<
   Required<
     Omit<
       ArcConnectionOptionsType,
-      'id' | 'label' | 'color' | 'gradient' | 'className'
+      'id' | 'label' | 'color' | 'gradient' | 'dashArray' | 'className'
     >
   >
 > = Object.freeze({
@@ -368,10 +368,12 @@ export class Connection {
       gradient,
       strokeWidth,
       dashed,
+      dashArray,
       animated,
       anchors,
       className
     } = this.options;
+    const dash = dashArray && dashNumbers(dashArray).join(' ');
     const classes = ['arc-connection', `arc-${type}`];
 
     if (dashed || animated) classes.push('arc-dashed');
@@ -389,8 +391,12 @@ export class Connection {
 
     setAttributes(this.path, {
       'stroke-width': strokeWidth,
-      'stroke-dasharray': dashed || animated ? '6 6' : null
+      'stroke-dasharray': dashed || animated ? (dash ?? '6 6') : null
     });
+
+    // Inline so it wins over --arc-dash from the page's CSS
+    if (dash) this.element.style.setProperty('--arc-dash', dash);
+    else this.element.style.removeProperty('--arc-dash');
 
     this.#applyGradient(gradient);
     this.#applyArrow(arrow, gradient);

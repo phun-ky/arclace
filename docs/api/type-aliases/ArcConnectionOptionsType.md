@@ -14,7 +14,7 @@ Options for a single connection.
 
 > `optional` **anchors?**: `boolean`
 
-Defined in: [src/types.ts:111](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L111)
+Defined in: [src/types.ts:118](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L118)
 
 Draw a dot where the line touches each element. Defaults to `false`.
 
@@ -24,7 +24,7 @@ Draw a dot where the line touches each element. Defaults to `false`.
 
 > `optional` **animated?**: `boolean`
 
-Defined in: [src/types.ts:106](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L106)
+Defined in: [src/types.ts:113](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L113)
 
 Animate the dashes from start to end. Implies `dashed`. Requires the
 stylesheet. Defaults to `false`.
@@ -45,7 +45,7 @@ Where to draw arrow heads. Defaults to `'none'`.
 
 > `optional` **className?**: `string`
 
-Defined in: [src/types.ts:116](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L116)
+Defined in: [src/types.ts:123](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L123)
 
 Extra class names added to the connection's `<g>` element.
 
@@ -66,10 +66,22 @@ or `--arc-color` when the stylesheet is loaded.
 
 > `optional` **curvature?**: `number`
 
-Defined in: [src/types.ts:141](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L141)
+Defined in: [src/types.ts:148](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L148)
 
 `bezier` only: multiplies how far the curve bulges out from the
 elements. Defaults to `1`.
+
+***
+
+### dashArray?
+
+> `optional` **dashArray?**: `string` \| `number`[]
+
+Defined in: [src/types.ts:107](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L107)
+
+The dash pattern of `dashed` and `animated` lines, in pixels: dash and
+gap lengths, as numbers or a string such as `'4 2'`. Without it, lines
+use `--arc-dash` when the stylesheet is loaded, or `'6 6'`.
 
 ***
 
@@ -97,7 +109,7 @@ The side of the end element the line arrives at. Defaults to `'auto'`.
 
 > `optional` **gap?**: `number`
 
-Defined in: [src/types.ts:122](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L122)
+Defined in: [src/types.ts:129](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L129)
 
 Distance in pixels between the element's edge and the line's end.
 Defaults to `0`.
@@ -140,7 +152,7 @@ Text drawn at the middle of the line.
 
 > `optional` **offset?**: `number`
 
-Defined in: [src/types.ts:153](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L153)
+Defined in: [src/types.ts:160](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L160)
 
 `orthogonal` only: how far in pixels the line travels straight out of an
 element before it turns. Defaults to `20`.
@@ -151,7 +163,7 @@ element before it turns. Defaults to `20`.
 
 > `optional` **radius?**: `number`
 
-Defined in: [src/types.ts:147](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L147)
+Defined in: [src/types.ts:154](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L154)
 
 `orthogonal` only: corner radius in pixels. Use `0` for sharp corners.
 Defaults to `8`.
@@ -162,7 +174,7 @@ Defaults to `8`.
 
 > `optional` **spacing?**: `number`
 
-Defined in: [src/types.ts:135](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L135)
+Defined in: [src/types.ts:142](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L142)
 
 Preferred distance in pixels between spread end points. Shrinks to fit
 the side. Defaults to `16`.
@@ -173,7 +185,7 @@ the side. Defaults to `16`.
 
 > `optional` **spread?**: `boolean`
 
-Defined in: [src/types.ts:129](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L129)
+Defined in: [src/types.ts:136](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L136)
 
 When several connections share the same side of an element, spread their
 end points along that side instead of stacking them in the middle.

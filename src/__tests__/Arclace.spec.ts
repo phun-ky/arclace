@@ -283,6 +283,45 @@ describe('Arclace', () => {
     assert.equal(connection.path.getAttribute('stroke-dasharray'), null);
   });
 
+  it('draws dashes in the dashArray pattern', () => {
+    const { a, b } = setup();
+    const arclace = new Arclace({
+      autoUpdate: false,
+      defaults: { dashArray: '4, 2' }
+    });
+    const connection = arclace.connect(a, b, { dashed: true });
+    const dash = () => [
+      connection.path.getAttribute('stroke-dasharray'),
+      connection.element.style.getPropertyValue('--arc-dash')
+    ];
+
+    // Inline, so it wins over --arc-dash from the page
+    assert.deepEqual(dash(), ['4 2', '4 2']);
+
+    connection.setOptions({ dashArray: [1, 3, 5] });
+    assert.deepEqual(dash(), ['1 3 5', '1 3 5']);
+
+    // The pattern only applies to dashed lines
+    connection.setOptions({ dashed: false });
+    assert.equal(dash()[0], null);
+
+    // Animated lines are dashed too
+    connection.setOptions({ animated: true });
+    assert.deepEqual(dash(), ['1 3 5', '1 3 5']);
+
+    // Unset, the instance default applies
+    connection.setOptions({ dashArray: undefined });
+    assert.deepEqual(dash(), ['4 2', '4 2']);
+
+    // With no pattern at all, 6 6, and --arc-dash is left to the page
+    const plain = new Arclace({ autoUpdate: false }).connect(a, b, {
+      dashed: true
+    });
+
+    assert.equal(plain.path.getAttribute('stroke-dasharray'), '6 6');
+    assert.equal(plain.element.style.getPropertyValue('--arc-dash'), '');
+  });
+
   it('sizes the label background to the text and padding', (t) => {
     // jsdom has no SVG layout: a 40 x 10 text box centred on its point
     const proto = SVGElement.prototype as unknown as Record<string, unknown>;

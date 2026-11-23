@@ -14,6 +14,8 @@
  *                        lengths (px, em, rem), not percentages
  *   --arc-label-size     label font size
  *   --arc-anchor-fill    inside of anchor dots
+ *   --arc-dash           dash pattern of dashed lines, such as 4 2; the
+ *                        dashArray option wins over it
  */
 
 .arc-connection {
@@ -23,6 +25,11 @@
 .arc-path {
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+/* No specificity, so any rule of yours for .arc-path wins */
+:where(.arc-dashed .arc-path) {
+  stroke-dasharray: var(--arc-dash, 6 6);
 }
 
 .arc-label {

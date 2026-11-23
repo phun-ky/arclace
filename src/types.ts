@@ -100,6 +100,13 @@ export type ArcConnectionOptionsType = {
   dashed?: boolean;
 
   /**
+   * The dash pattern of `dashed` and `animated` lines, in pixels: dash and
+   * gap lengths, as numbers or a string such as `'4 2'`. Without it, lines
+   * use `--arc-dash` when the stylesheet is loaded, or `'6 6'`.
+   */
+  dashArray?: string | number[];
+
+  /**
    * Animate the dashes from start to end. Implies `dashed`. Requires the
    * stylesheet. Defaults to `false`.
    */

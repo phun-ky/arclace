@@ -58,10 +58,14 @@ these custom properties:
 | `--arc-label-radius`  | `4px`                      |
 | `--arc-label-padding` | `3px 6px`                  |
 | `--arc-anchor-fill`   | `#fff`                     |
+| `--arc-dash`          | `6 6`                      |
 
 Set `--arc-label-bg` and `--arc-anchor-fill` to the background behind the lines,
 so labels and hollow anchors blend in. `--arc-label-halo` from earlier versions
 still works as the label background.
+
+`--arc-dash` sets the dash pattern of `dashed` and `animated` lines, such as
+`4 2`; the `dashArray` option wins over it.
 
 Without the stylesheet the label background is not painted. Style
 `.arc-label-bg` like any SVG shape, with `fill`, `stroke` and `rx`, and set its
@@ -145,6 +149,27 @@ arclace.connect('#theme', '#button', { arrow: 'end', strokeWidth: 3 });
 ```css
 .arc-path {
   stroke-dasharray: 0 8;
+}
+```
+
+### Dash pattern
+
+Set the dashes of one line with `dashArray`, or of many lines with `--arc-dash`
+on the container, or on a class you give them with `className`:
+
+<StyleDemo variant="dash" :options="{ dashed: true, dashArray: [12, 4, 2, 4] }" />
+
+```ts
+arclace.connect('#theme', '#button', {
+  arrow: 'end',
+  dashed: true,
+  dashArray: [12, 4, 2, 4]
+});
+```
+
+```css
+#diagram {
+  --arc-dash: 12 4 2 4;
 }
 ```
 

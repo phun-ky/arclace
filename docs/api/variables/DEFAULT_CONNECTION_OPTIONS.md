@@ -2,7 +2,7 @@
 
 # Variable: DEFAULT\_CONNECTION\_OPTIONS
 
-> `const` **DEFAULT\_CONNECTION\_OPTIONS**: `Readonly`\<`Required`\<`Omit`\<[`ArcConnectionOptionsType`](../type-aliases/ArcConnectionOptionsType.md), `"id"` \| `"label"` \| `"color"` \| `"gradient"` \| `"className"`\>\>\>
+> `const` **DEFAULT\_CONNECTION\_OPTIONS**: `Readonly`\<`Required`\<`Omit`\<[`ArcConnectionOptionsType`](../type-aliases/ArcConnectionOptionsType.md), `"id"` \| `"label"` \| `"color"` \| `"gradient"` \| `"dashArray"` \| `"className"`\>\>\>
 
 Defined in: [src/Connection.ts:41](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L41)
 
