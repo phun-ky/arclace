@@ -24,6 +24,7 @@
 - [ArcResolvedConnectionOptionsType](type-aliases/ArcResolvedConnectionOptionsType.md)
 - [ArcSideOptionType](type-aliases/ArcSideOptionType.md)
 - [ArcSideType](type-aliases/ArcSideType.md)
+- [ArcWaypointType](type-aliases/ArcWaypointType.md)
 
 ## Variables
 

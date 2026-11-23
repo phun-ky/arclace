@@ -3,8 +3,10 @@ import { describe, it } from 'node:test';
 
 import {
   bezierPath,
+  bezierPathVia,
   orthogonalPath,
   polylineMidpoint,
+  polylinePath,
   roundedPolyline,
   routeOrthogonal,
   simplifyPolyline,
@@ -17,6 +19,63 @@ describe('straightPath', () => {
 
     assert.equal(d, 'M 0 0 L 100 50');
     assert.deepEqual(labelPoint, { x: 50, y: 25 });
+  });
+});
+
+describe('polylinePath', () => {
+  it('draws straight lines through the points, labelled halfway along', () => {
+    const { d, labelPoint } = polylinePath([
+      { x: 0, y: 0 },
+      { x: 50, y: 50 },
+      { x: 100, y: 0 }
+    ]);
+
+    assert.equal(d, 'M 0 0 L 50 50 L 100 0');
+    assert.deepEqual(labelPoint, { x: 50, y: 50 });
+  });
+});
+
+describe('bezierPathVia', () => {
+  const curve = (via: { x: number; y: number }[]) =>
+    bezierPathVia({ x: 0, y: 0 }, 'right', { x: 200, y: 0 }, 'left', via);
+  const numbers = (d: string) => (d.match(/-?[\d.]+/g) ?? []).map(Number);
+
+  it('passes through each waypoint as one path', () => {
+    const { d } = curve([{ x: 100, y: 50 }]);
+
+    assert.match(d, /^M 0 0 C [^C]+, 100 50 C [^C]+, 200 0$/);
+  });
+
+  it('leaves and arrives along the sides, and is smooth at waypoints', () => {
+    // M x y C c1 c2 p C c1 c2 p
+    const [, , c1x, c1y, c2x, c2y, , , d1x, d1y, d2x, d2y] = numbers(
+      curve([{ x: 100, y: 50 }]).d
+    );
+
+    assert.ok(c1x > 0);
+    assert.equal(c1y, 0);
+    assert.ok(d2x < 200);
+    assert.equal(d2y, 0);
+    // Both handles at the waypoint are level with it, one on each side
+    assert.equal(c2y, 50);
+    assert.equal(d1y, 50);
+    assert.ok(c2x < 100 && d1x > 100);
+  });
+
+  it('puts the label halfway along the whole curve', () => {
+    const { labelPoint } = curve([{ x: 100, y: 50 }]);
+
+    assert.ok(Math.abs(labelPoint.x - 100) < 0.5);
+    assert.ok(Math.abs(labelPoint.y - 50) < 0.5);
+  });
+
+  it('copes with waypoints on top of each other', () => {
+    const { d } = curve([
+      { x: 0, y: 0 },
+      { x: 0, y: 0 }
+    ]);
+
+    assert.doesNotMatch(d, /NaN/);
   });
 });
 

@@ -33,6 +33,13 @@ export interface ArcPointInterface {
   y: number;
 }
 
+/**
+ * A point a line passes through: an element (or a selector for one), passed
+ * through at its center, or a point in the overlay's coordinates, the same
+ * as {@link ArcGeometryType}.
+ */
+export type ArcWaypointType = ArcElementTargetType | ArcPointInterface;
+
 export interface ArcRectInterface {
   left: number;
   top: number;
@@ -153,6 +160,15 @@ export type ArcConnectionOptionsType = {
    * elements. Defaults to `1`.
    */
   curvature?: number;
+
+  /**
+   * Elements or points the line passes through on its way from start to
+   * end, in order, as one path, so dashes stay in step. `bezier` and
+   * `straight` only; `orthogonal` lines ignore it. Selectors are looked up
+   * when the option is set. The line is hidden while one of the elements is
+   * not rendered.
+   */
+  via?: ArcWaypointType[];
 
   /**
    * `orthogonal` only: corner radius in pixels. Use `0` for sharp corners.

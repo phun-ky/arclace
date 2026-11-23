@@ -137,6 +137,107 @@ export const bezierPath = (
 };
 
 /**
+ * Straight lines through a list of points, for `straight` lines with
+ * waypoints.
+ */
+export const polylinePath = (
+  points: ArcPointInterface[]
+): ArcPathResultType => ({
+  d: roundedPolyline(points, 0),
+  labelPoint: polylineMidpoint(points)
+});
+
+// Points sampled on each curve to find the middle of a curve with waypoints
+const CURVE_SAMPLES = 16;
+/**
+ * The unit vector from one point towards another, or no vector when they
+ * are the same point.
+ */
+const direction = (
+  from: ArcPointInterface,
+  to: ArcPointInterface
+): ArcPointInterface => {
+  const length = distance(from, to);
+
+  return length > 0
+    ? { x: (to.x - from.x) / length, y: (to.y - from.y) / length }
+    : { x: 0, y: 0 };
+};
+/**
+ * The point at `t` on a cubic bezier curve.
+ */
+const cubicPoint = (
+  p0: ArcPointInterface,
+  c1: ArcPointInterface,
+  c2: ArcPointInterface,
+  p1: ArcPointInterface,
+  t: number
+): ArcPointInterface => {
+  const u = 1 - t;
+  const [a, b, c, d] = [u * u * u, 3 * u * u * t, 3 * u * t * t, t * t * t];
+
+  return {
+    x: a * p0.x + b * c1.x + c * c2.x + d * p1.x,
+    y: a * p0.y + b * c1.y + c * c2.y + d * p1.y
+  };
+};
+
+/**
+ * A smooth curve from `start` to `end` through waypoints, as one path of
+ * cubic curves. It leaves and arrives perpendicular to the sides, like
+ * {@link bezierPath}, with `curvature` setting the bulge at the two ends,
+ * and passes each waypoint in the direction from the point before it to the
+ * point after it.
+ */
+export const bezierPathVia = (
+  start: ArcPointInterface,
+  startSide: ArcSideType,
+  end: ArcPointInterface,
+  endSide: ArcSideType,
+  via: ArcPointInterface[],
+  curvature = 1
+): ArcPathResultType => {
+  const points = [start, ...via, end];
+  const last = points.length - 1;
+  const tangents = points.map((_point, i) => {
+    if (i === 0) return NORMALS[startSide];
+
+    if (i === last) return NORMALS[endSide];
+
+    return direction(points[i - 1], points[i + 1]);
+  });
+  const bulge = (length: number): number =>
+    (length / curveMultiplierFromDistance(length)) * curvature;
+  const segments: string[] = [];
+  const samples = [start];
+
+  for (let i = 0; i < last; i++) {
+    const from = points[i];
+    const to = points[i + 1];
+    const length = distance(from, to);
+    // The ends bulge like a single curve; waypoints get a third of the
+    // segment, which keeps the curve smooth without overshooting
+    const c1 = add(from, tangents[i], i === 0 ? bulge(length) : length / 3);
+    // The end's normal points back along the curve, a waypoint's forward
+    const c2 =
+      i + 1 === last
+        ? add(to, tangents[last], bulge(length))
+        : add(to, tangents[i + 1], -length / 3);
+
+    segments.push(`C ${fmt(c1)}, ${fmt(c2)}, ${fmt(to)}`);
+
+    for (let s = 1; s <= CURVE_SAMPLES; s++) {
+      samples.push(cubicPoint(from, c1, c2, to, s / CURVE_SAMPLES));
+    }
+  }
+
+  return {
+    d: `M ${fmt(start)} ${segments.join(' ')}`,
+    labelPoint: polylineMidpoint(samples)
+  };
+};
+
+/**
  * Removes repeated points and points in the middle of a straight segment.
  */
 export const simplifyPolyline = (

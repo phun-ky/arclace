@@ -687,6 +687,165 @@ describe('autoUpdate', () => {
   });
 });
 
+describe('waypoints', () => {
+  // A dot between a and b, lower down, centred on 200, 100
+  const withDot = () => ({
+    ...setup(),
+    dot: box('dot', { left: 190, top: 90, width: 20, height: 20 })
+  });
+  const through = 'M 100 25 L 200 100 L 300 25';
+
+  it('runs a straight line through points, elements and selectors', () => {
+    const { a, b, dot } = withDot();
+    const arclace = new Arclace({ autoUpdate: false });
+    // Not spread, so each line ends in the middle of its side
+    const d = (via: (Element | string | { x: number; y: number })[]) =>
+      arclace
+        .connect(a, b, { type: 'straight', spread: false, via })
+        .path.getAttribute('d');
+
+    // Each end faces its waypoint, so the sides stay right and left
+    assert.equal(d([{ x: 200, y: 100 }]), through);
+    assert.equal(d([dot]), through);
+    assert.equal(d(['#dot']), through);
+    assert.equal(d([]), 'M 100 25 L 300 25');
+  });
+
+  it('curves through waypoints as one path', () => {
+    const { a, b } = withDot();
+    const arclace = new Arclace({ autoUpdate: false });
+    const connection = arclace.connect(a, b, { via: ['#dot'] });
+
+    assert.match(
+      connection.path.getAttribute('d')!,
+      /^M 100 25 C [^C]+, 200 100 C [^C]+, 300 25$/
+    );
+  });
+
+  it('points arrows of straight lines from their waypoints', () => {
+    const { a, b } = withDot();
+    const arclace = new Arclace({ autoUpdate: false });
+    const connection = arclace.connect(a, b, {
+      type: 'straight',
+      via: ['#dot'],
+      arrow: 'end'
+    });
+
+    // 8px back from 300, 25 towards 200, 100
+    assert.equal(
+      connection.path.getAttribute('d'),
+      'M 100 25 L 200 100 L 293.6 29.8'
+    );
+  });
+
+  it('faces each end towards its waypoint', () => {
+    const { a, c } = withDot();
+    const arclace = new Arclace({ autoUpdate: false });
+    // Without the waypoint below a, the line would leave a on the right
+    const toC = arclace.connect(a, c, { via: [{ x: 50, y: 300 }] });
+
+    assert.equal(toC.geometry?.startSide, 'bottom');
+    assert.equal(toC.geometry?.endSide, 'left');
+  });
+
+  it('hides the line while a waypoint element is not rendered', () => {
+    const { a, b, dot } = withDot();
+    const arclace = new Arclace({ autoUpdate: false });
+    const connection = arclace.connect(a, b, { via: [dot] });
+
+    dot.getClientRects = () => [] as unknown as DOMRectList;
+    arclace.update();
+    assert.equal(connection.geometry, null);
+
+    place(dot, { left: 190, top: 90, width: 20, height: 20 });
+    arclace.update();
+    assert.ok(connection.geometry);
+  });
+
+  it('leaves orthogonal lines as they are', () => {
+    const { a, b, dot } = withDot();
+    const arclace = new Arclace({ autoUpdate: false });
+    const plain = arclace.connect(a, b, { type: 'orthogonal', spread: false });
+    const via = arclace.connect(a, b, {
+      type: 'orthogonal',
+      spread: false,
+      via: [dot]
+    });
+
+    assert.equal(via.path.getAttribute('d'), plain.path.getAttribute('d'));
+
+    // Even a hidden waypoint doesn't hide them
+    dot.getClientRects = () => [] as unknown as DOMRectList;
+    arclace.update();
+    assert.ok(via.geometry);
+  });
+
+  it('looks selectors up when they are set, and adds nothing when one fails', () => {
+    const { a, b } = withDot();
+    const arclace = new Arclace({ autoUpdate: false });
+    const missing = (error: Error) =>
+      error.name === 'ArclaceError' &&
+      /no (options|definitions\[1\])\.via\[0\] matches "#missing"/.test(
+        error.message
+      );
+
+    assert.throws(() => arclace.connect(a, b, { via: ['#missing'] }), missing);
+    assert.throws(
+      () =>
+        arclace.connectAll([
+          { startElement: a, endElement: b },
+          { startElement: a, endElement: b, via: ['#missing'] }
+        ]),
+      missing
+    );
+    assert.equal(arclace.connections.length, 0);
+
+    const connection = arclace.connect(a, b, { via: ['#dot'] });
+
+    assert.throws(() => connection.setOptions({ via: ['#missing'] }), missing);
+    assert.deepEqual(connection.options.via, ['#dot']);
+    assert.throws(
+      () => new Arclace({ autoUpdate: false, defaults: { via: ['#missing'] } }),
+      /no options\.defaults\.via\[0\] matches/
+    );
+  });
+
+  it('observes waypoint elements while they are in use', (t) => {
+    const observed = new Set<Element>();
+
+    class FakeResizeObserver {
+      observe(el: Element) {
+        observed.add(el);
+      }
+      unobserve(el: Element) {
+        observed.delete(el);
+      }
+      disconnect() {}
+    }
+
+    globalThis.ResizeObserver =
+      FakeResizeObserver as unknown as typeof ResizeObserver;
+    t.after(() => {
+      delete (globalThis as { ResizeObserver?: unknown }).ResizeObserver;
+    });
+
+    const { a, b, c, dot } = withDot();
+    const arclace = new Arclace();
+
+    t.after(() => arclace.destroy());
+
+    const connection = arclace.connect(a, b, { via: [dot] });
+
+    assert.ok(observed.has(dot));
+
+    connection.setOptions({ via: [dot, c] });
+    assert.ok(observed.has(c));
+
+    connection.remove();
+    assert.deepEqual(observed, new Set([document.body]));
+  });
+});
+
 describe('createConnections', () => {
   it('creates an instance with the given connections', () => {
     setup();

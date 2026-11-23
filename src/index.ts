@@ -19,7 +19,8 @@ export type {
   ArcPointInterface,
   ArcRectInterface,
   ArcSideOptionType,
-  ArcSideType
+  ArcSideType,
+  ArcWaypointType
 } from './types';
 
 export {

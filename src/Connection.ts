@@ -6,30 +6,34 @@ import type {
   ArcPointInterface,
   ArcSideType
 } from './types';
-import { add, distance, NORMALS } from './utils/geometry';
+import { add, center, distance, NORMALS } from './utils/geometry';
 import { uniqueID } from './utils/id';
+import { type ArcOriginType, getLocalRect, isRendered } from './utils/measure';
 import {
   bezierPath,
+  bezierPathVia,
   type ArcPathResultType,
   orthogonalPath,
+  polylinePath,
   straightPath
 } from './utils/paths';
+import { resolveWaypoints } from './utils/resolve-element';
 import { createSVGElement, setAttributes } from './utils/svg';
 import { dashNumbers, validateConnectionOptions } from './utils/validate';
 
 /**
  * Connection options with every default filled in. `label`, `color`,
- * `gradient`, `dashArray` and `className` have no default.
+ * `gradient`, `dashArray`, `via` and `className` have no default.
  */
 export type ArcResolvedConnectionOptionsType = Required<
   Omit<
     ArcConnectionOptionsType,
-    'id' | 'label' | 'color' | 'gradient' | 'dashArray' | 'className'
+    'id' | 'label' | 'color' | 'gradient' | 'dashArray' | 'via' | 'className'
   >
 > &
   Pick<
     ArcConnectionOptionsType,
-    'label' | 'color' | 'gradient' | 'dashArray' | 'className'
+    'label' | 'color' | 'gradient' | 'dashArray' | 'via' | 'className'
   > & {
     id: string;
   };
@@ -42,7 +46,7 @@ export const DEFAULT_CONNECTION_OPTIONS: Readonly<
   Required<
     Omit<
       ArcConnectionOptionsType,
-      'id' | 'label' | 'color' | 'gradient' | 'dashArray' | 'className'
+      'id' | 'label' | 'color' | 'gradient' | 'dashArray' | 'via' | 'className'
     >
   >
 > = Object.freeze({
@@ -137,6 +141,8 @@ export class Connection {
   #labelBox: { x: number; y: number; width: number; height: number } | null =
     null;
   #anchors: [SVGCircleElement, SVGCircleElement] | null = null;
+  // The waypoints, with selectors resolved to elements
+  #via: (Element | ArcPointInterface)[] = [];
 
   private constructor(params: ArcConnectionParamsType) {
     const {
@@ -215,8 +221,14 @@ export class Connection {
       throw new TypeError('arclace: setOptions() cannot change the id');
     }
 
+    // Looked up first, so a selector that fails leaves the options as they were
+    if (options.via) resolveWaypoints(options.via, 'options.via');
+
     this.#options = { ...this.#options, ...options };
     this.#applyOptions();
+
+    if (options.via) this.#owner._observe(this);
+
     this.#owner.update();
 
     return this;
@@ -237,7 +249,47 @@ export class Connection {
   }
 
   /**
-   * Draws the connection between two attachment points.
+   * The elements this connection depends on: its ends and the elements it
+   * passes through.
+   *
+   * @internal
+   */
+  _elements(): Element[] {
+    return [
+      this.startElement,
+      this.endElement,
+      ...this.#via.filter((waypoint) => waypoint instanceof Element)
+    ];
+  }
+
+  /**
+   * Measures the points the line passes through, or returns `null` when one
+   * of the elements is not rendered.
+   *
+   * @internal
+   */
+  _waypoints(origin: ArcOriginType): ArcPointInterface[] | null {
+    // Orthogonal lines don't pass through waypoints
+    if (this.options.type === 'orthogonal') return [];
+
+    const points: ArcPointInterface[] = [];
+
+    for (const waypoint of this.#via) {
+      if (!(waypoint instanceof Element)) {
+        points.push({ x: waypoint.x, y: waypoint.y });
+      } else if (isRendered(waypoint)) {
+        points.push(center(getLocalRect(waypoint, origin)));
+      } else {
+        return null;
+      }
+    }
+
+    return points;
+  }
+
+  /**
+   * Draws the connection between two attachment points, through the
+   * waypoints.
    *
    * @internal
    */
@@ -245,7 +297,8 @@ export class Connection {
     start: ArcPointInterface,
     startSide: ArcSideType,
     end: ArcPointInterface,
-    endSide: ArcSideType
+    endSide: ArcSideType,
+    via: ArcPointInterface[] = []
   ): void {
     const { arrow, strokeWidth } = this.options;
     const arrowLength = ARROW_SIZE * strokeWidth;
@@ -253,17 +306,23 @@ export class Connection {
     // elements
     const pathStart =
       arrow === 'start' || arrow === 'both'
-        ? this.#pullBack(start, startSide, end, arrowLength)
+        ? this.#pullBack(start, startSide, via[0] ?? end, arrowLength)
         : start;
     const pathEnd =
       arrow === 'end' || arrow === 'both'
-        ? this.#pullBack(end, endSide, start, arrowLength)
+        ? this.#pullBack(
+            end,
+            endSide,
+            via[via.length - 1] ?? start,
+            arrowLength
+          )
         : end;
     const { d, labelPoint } = this.#buildPath(
       pathStart,
       startSide,
       pathEnd,
-      endSide
+      endSide,
+      via
     );
 
     this.#geometry = Object.freeze({
@@ -323,17 +382,26 @@ export class Connection {
     start: ArcPointInterface,
     startSide: ArcSideType,
     end: ArcPointInterface,
-    endSide: ArcSideType
+    endSide: ArcSideType,
+    via: ArcPointInterface[]
   ): ArcPathResultType {
     const { type, curvature, radius, offset } = this.options;
 
-    if (type === 'straight') return straightPath(start, end);
+    if (type === 'straight') {
+      return via.length > 0
+        ? polylinePath([start, ...via, end])
+        : straightPath(start, end);
+    }
 
     if (type === 'orthogonal') {
       return orthogonalPath(start, startSide, end, endSide, {
         radius,
         offset
       });
+    }
+
+    if (via.length > 0) {
+      return bezierPathVia(start, startSide, end, endSide, via, curvature);
     }
 
     return bezierPath(start, startSide, end, endSide, curvature);
@@ -373,6 +441,7 @@ export class Connection {
       animated,
       glow,
       anchors,
+      via,
       className
     } = this.options;
     const numbers = dashArray ? dashNumbers(dashArray) : undefined;
@@ -383,6 +452,8 @@ export class Connection {
       numbers.reduce((sum, number) => sum + number, 0) *
         (numbers.length % 2 ? 2 : 1);
     const classes = ['arc-connection', `arc-${type}`];
+
+    this.#via = resolveWaypoints(via ?? [], 'options.via');
 
     if (dashed || animated) classes.push('arc-dashed');
 

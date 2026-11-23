@@ -57,6 +57,7 @@ describe('connection options', () => {
     ['a gradient string', { gradient: 'red' }, 'TypeError'],
     ['a dashArray number', { dashArray: 4 }, 'TypeError'],
     ['a glow string', { glow: '4px' }, 'TypeError'],
+    ['a via selector that is not in an array', { via: '#a' }, 'TypeError'],
     ['a NaN glow', { glow: NaN }, 'TypeError'],
     ['a negative glow', { glow: -4 }, 'RangeError'],
     ['a dashArray with units', { dashArray: '4px 2px' }, 'RangeError'],
@@ -151,6 +152,20 @@ describe('connection options', () => {
           'arclace: options.gradient[1] must be a non-empty string, not 42'
       }
     );
+    assert.throws(() => arclace.connect(a, b, loose({ via: [42] })), {
+      name: 'TypeError',
+      message:
+        'arclace: options.via[0] must be an element, a selector or a point, not 42'
+    });
+    assert.throws(() => arclace.connect(a, b, loose({ via: [{ x: 1 }] })), {
+      name: 'TypeError',
+      message:
+        'arclace: options.via[0].y must be a finite number, not undefined'
+    });
+    assert.throws(() => arclace.connect(a, b, { via: [''] }), {
+      name: 'TypeError',
+      message: 'arclace: options.via[0] must be a non-empty string, not ""'
+    });
     assert.throws(() => arclace.connect(a, b, { dashArray: [4, -2] }), {
       name: 'RangeError',
       message: 'arclace: options.dashArray[1] must be 0 or more, not -2'

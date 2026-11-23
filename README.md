@@ -194,8 +194,22 @@ and shown again when it comes back.
 | `spread`      | `boolean`                                          | `true`     | Spread lines that share a side of an element.                                               |
 | `spacing`     | `number`                                           | `16`       | Distance between spread lines, `0` or more. Shrinks to fit the side.                        |
 | `curvature`   | `number`                                           | `1`        | `bezier`: how far the curve bulges out. Negative bulges the other way.                      |
+| `via`         | `(Element \| string \| { x, y })[]`                |            | `bezier` and `straight`: elements, selectors or points to pass through, in order.           |
 | `radius`      | `number`                                           | `8`        | `orthogonal`: corner radius, `0` or more. `0` for sharp corners.                            |
 | `offset`      | `number`                                           | `20`       | `orthogonal`: how far the line goes straight out of an element before turning, `0` or more. |
+
+`via` runs one line through other elements or points on its way, so a dashed
+line keeps its dashes in step through them:
+
+```ts
+arclace.connect('#a', '#b', { dashed: true, via: [{ x: 200, y: 120 }] });
+```
+
+An element (or selector) is passed through at its center; a point is in the
+overlay's coordinates, the same as `geometry`. Each end faces its nearest
+waypoint, `curvature` shapes the curve at the two ends, and the line is hidden
+while an element it passes through is hidden. `find()` and `disconnect()` only
+match the elements a line starts and ends at. `orthogonal` lines ignore `via`.
 
 The path builders `bezierPath`, `straightPath` and `orthogonalPath` are also
 exported if you want to draw lines between points yourself.

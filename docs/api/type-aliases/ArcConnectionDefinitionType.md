@@ -4,7 +4,7 @@
 
 > **ArcConnectionDefinitionType** = [`ArcConnectionOptionsType`](ArcConnectionOptionsType.md) & `object`
 
-Defined in: [src/types.ts:174](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L174)
+Defined in: [src/types.ts:190](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L190)
 
 A connection between two elements, used with
 [Arclace.connectAll](../classes/Arclace.md#connectall) and [createConnections](../functions/createConnections.md).

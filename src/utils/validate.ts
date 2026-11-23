@@ -5,7 +5,8 @@ import type {
   ArcPathType,
   ArcPointInterface,
   ArcSideOptionType,
-  ArcSideType
+  ArcSideType,
+  ArcWaypointType
 } from '../types';
 
 export const SIDES: readonly ArcSideType[] = Object.freeze([
@@ -246,6 +247,36 @@ export const assertBooleanOrLength = (
   return assertNumber(value, name, 0);
 };
 
+/**
+ * Throws a `TypeError` unless `value` is an array of elements, non-empty
+ * strings and points.
+ */
+export const assertWaypoints = (
+  value: unknown,
+  name: string
+): ArcWaypointType[] => {
+  if (!Array.isArray(value)) {
+    throw new TypeError(
+      `arclace: ${name} must be an array of elements, selectors or points, not ${show(value)}`
+    );
+  }
+
+  value.forEach((waypoint, index) => {
+    const item = `${name}[${index}]`;
+
+    if (typeof waypoint === 'string') assertString(waypoint, item, true);
+    else if (typeof waypoint === 'object' && waypoint !== null) {
+      if (!(waypoint instanceof Element)) assertPoint(waypoint, item);
+    } else {
+      throw new TypeError(
+        `arclace: ${item} must be an element, a selector or a point, not ${show(waypoint)}`
+      );
+    }
+  });
+
+  return value;
+};
+
 // How each connection option is checked. Keys that aren't listed are ignored.
 const CONNECTION_OPTION_CHECKS: Readonly<
   Record<
@@ -272,6 +303,7 @@ const CONNECTION_OPTION_CHECKS: Readonly<
   spread: assertBoolean,
   spacing: (value, name) => assertNumber(value, name, 0),
   curvature: (value, name) => assertNumber(value, name),
+  via: assertWaypoints,
   radius: (value, name) => assertNumber(value, name, 0),
   offset: (value, name) => assertNumber(value, name, 0)
 });

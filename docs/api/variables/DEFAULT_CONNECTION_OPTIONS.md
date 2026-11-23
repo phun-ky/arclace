@@ -2,9 +2,9 @@
 
 # Variable: DEFAULT\_CONNECTION\_OPTIONS
 
-> `const` **DEFAULT\_CONNECTION\_OPTIONS**: `Readonly`\<`Required`\<`Omit`\<[`ArcConnectionOptionsType`](../type-aliases/ArcConnectionOptionsType.md), `"id"` \| `"label"` \| `"color"` \| `"gradient"` \| `"dashArray"` \| `"className"`\>\>\>
+> `const` **DEFAULT\_CONNECTION\_OPTIONS**: `Readonly`\<`Required`\<`Omit`\<[`ArcConnectionOptionsType`](../type-aliases/ArcConnectionOptionsType.md), `"id"` \| `"label"` \| `"color"` \| `"gradient"` \| `"dashArray"` \| `"via"` \| `"className"`\>\>\>
 
-Defined in: [src/Connection.ts:41](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L41)
+Defined in: [src/Connection.ts:45](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L45)
 
 Options every connection falls back to. Frozen: set your own defaults with
 the `defaults` option of [Arclace](../classes/Arclace.md) instead.

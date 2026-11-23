@@ -1,4 +1,5 @@
 import { ArclaceError } from '../errors';
+import type { ArcPointInterface, ArcWaypointType } from '../types';
 
 /**
  * Runs `document.querySelector`, turning an invalid selector into an
@@ -44,3 +45,18 @@ export const resolveElement = (target: unknown, name = 'element'): Element => {
 
   return target;
 };
+
+/**
+ * Resolves the selectors among waypoints to elements.
+ *
+ * @throws {ArclaceError} When a selector is invalid or matches nothing.
+ */
+export const resolveWaypoints = (
+  via: readonly ArcWaypointType[],
+  name: string
+): (Element | ArcPointInterface)[] =>
+  via.map((waypoint, index) =>
+    typeof waypoint === 'string'
+      ? resolveElement(waypoint, `${name}[${index}]`)
+      : waypoint
+  );
