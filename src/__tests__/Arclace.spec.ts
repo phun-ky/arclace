@@ -196,6 +196,86 @@ describe('Arclace', () => {
     assert.equal(connection.path.getAttribute('stroke-dasharray'), null);
   });
 
+  it('sizes the label background to the text and padding', (t) => {
+    // jsdom has no SVG layout: a 40 x 10 text box centred on its point
+    const proto = SVGElement.prototype as unknown as Record<string, unknown>;
+
+    proto.getBBox = function (this: SVGElement) {
+      const x = Number(this.getAttribute('x'));
+      const y = Number(this.getAttribute('y'));
+
+      return { x: x - 20, y: y - 5, width: 40, height: 10 };
+    };
+    t.after(() => delete proto.getBBox);
+
+    const { a, b } = setup();
+    const arclace = new Arclace({ autoUpdate: false });
+    const style = document.createElement('style');
+
+    // What style.css does
+    style.textContent = '.arc-label-bg { padding: 3px 6px; }';
+    document.head.append(style);
+    t.after(() => style.remove());
+
+    const connection = arclace.connect(a, b, {
+      type: 'straight',
+      label: 'hello'
+    });
+    const bg = connection.element.querySelector('.arc-label-bg')!;
+    const label = connection.element.querySelector('.arc-label')!;
+
+    assert.equal(bg.nextElementSibling, label);
+    assert.equal(bg.getAttribute('fill'), 'none');
+    assert.equal(bg.getAttribute('width'), '52');
+    assert.equal(bg.getAttribute('height'), '16');
+    assert.equal(
+      Number(bg.getAttribute('x')) + 26,
+      Number(label.getAttribute('x'))
+    );
+    assert.equal(
+      Number(bg.getAttribute('y')) + 8,
+      Number(label.getAttribute('y'))
+    );
+
+    // Each label is sized from its own padding: here one connection's class
+    style.textContent += ' .roomy .arc-label-bg { padding: 1px 2px 5px 10px; }';
+
+    const roomy = arclace.connect(a, b, {
+      type: 'straight',
+      label: 'roomy',
+      className: 'roomy'
+    });
+    const roomyBg = roomy.element.querySelector('.arc-label-bg')!;
+    const roomyLabel = roomy.element.querySelector('.arc-label')!;
+
+    assert.equal(roomyBg.getAttribute('width'), '52');
+    assert.equal(roomyBg.getAttribute('height'), '16');
+    assert.equal(
+      Number(roomyBg.getAttribute('x')) + 30,
+      Number(roomyLabel.getAttribute('x'))
+    );
+    assert.equal(
+      Number(roomyBg.getAttribute('y')) + 6,
+      Number(roomyLabel.getAttribute('y'))
+    );
+
+    // Changing the class through setOptions measures again
+    connection.setOptions({ label: 'changed', className: 'roomy' });
+    assert.equal(
+      connection.element.querySelectorAll('.arc-label-bg').length,
+      1
+    );
+    assert.equal(
+      Number(
+        connection.element.querySelector('.arc-label-bg')!.getAttribute('x')
+      ) + 30,
+      Number(label.getAttribute('x'))
+    );
+
+    connection.setOptions({ label: undefined });
+    assert.equal(connection.element.querySelector('.arc-label-bg'), null);
+  });
+
   it('hides connections to elements that are not rendered', () => {
     const { a, b } = setup();
     const arclace = new Arclace({ autoUpdate: false });

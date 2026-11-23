@@ -29,7 +29,7 @@ script tags (see [Without a bundler](#without-a-bundler)).
 
 ```ts
 import { Arclace } from '@phun-ky/arclace';
-// Optional: label halo, hollow anchors and the dash animation
+// Optional: label backgrounds, hollow anchors and the dash animation
 import '@phun-ky/arclace/style.css';
 
 const arclace = new Arclace({ container: '#diagram' });

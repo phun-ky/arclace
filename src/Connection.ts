@@ -85,7 +85,8 @@ type ArcConnectionParamsType = {
  * <g class="arc-connection arc-bezier">
  *   <marker class="arc-marker">…</marker>  <!-- when `arrow` is set -->
  *   <path class="arc-path" />
- *   <text class="arc-label">…</text>       <!-- when `label` is set -->
+ *   <rect class="arc-label-bg" />          <!-- when `label` is set -->
+ *   <text class="arc-label">…</text>
  *   <circle class="arc-anchor arc-anchor-start" />  <!-- when `anchors` is set -->
  *   <circle class="arc-anchor arc-anchor-end" />
  * </g>
@@ -116,6 +117,11 @@ export class Connection {
   #defaults: ArcConnectionOptionsType;
   #marker: SVGMarkerElement | null = null;
   #label: SVGTextElement | null = null;
+  #labelBg: SVGRectElement | null = null;
+  // The background's box relative to the label's anchor point, measured once
+  // per label
+  #labelBox: { x: number; y: number; width: number; height: number } | null =
+    null;
   #anchors: [SVGCircleElement, SVGCircleElement] | null = null;
 
   private constructor(params: ArcConnectionParamsType) {
@@ -262,7 +268,7 @@ export class Connection {
     });
     this.path.setAttribute('d', d);
 
-    if (this.#label) setAttributes(this.#label, { ...labelPoint });
+    if (this.#label) this.#placeLabel(labelPoint);
 
     if (this.#anchors) {
       setAttributes(this.#anchors[0], { cx: start.x, cy: start.y });
@@ -408,10 +414,50 @@ export class Connection {
     });
   }
 
+  #placeLabel(point: ArcPointInterface): void {
+    setAttributes(this.#label!, { ...point });
+
+    // shortcut: measured once per label change, so a font or padding change
+    // from CSS alone needs a setOptions() call to resize the background
+    // getBBox is missing where there is no layout, such as jsdom
+    if (!this.#labelBox?.width && typeof this.#label!.getBBox === 'function') {
+      const { x, y, width, height } = this.#label!.getBBox();
+      // CSS padding doesn't apply to SVG, but its computed value is in px,
+      // so the stylesheet sets it on the background and it is read here
+      const style = getComputedStyle(this.#labelBg!);
+      const [top, right, bottom, left] = [
+        style.paddingTop,
+        style.paddingRight,
+        style.paddingBottom,
+        style.paddingLeft
+      ].map((value) => parseFloat(value) || 0);
+
+      this.#labelBox = {
+        x: x - point.x - left,
+        y: y - point.y - top,
+        width: width + left + right,
+        height: height + top + bottom
+      };
+    }
+
+    if (!this.#labelBox) return;
+
+    setAttributes(this.#labelBg!, {
+      x: point.x + this.#labelBox.x,
+      y: point.y + this.#labelBox.y,
+      width: this.#labelBox.width,
+      height: this.#labelBox.height
+    });
+  }
+
   #applyLabel(label: string | undefined): void {
+    this.#labelBox = null;
+
     if (!label) {
       this.#label?.remove();
+      this.#labelBg?.remove();
       this.#label = null;
+      this.#labelBg = null;
 
       return;
     }
@@ -423,13 +469,18 @@ export class Connection {
         'text-anchor': 'middle',
         'dominant-baseline': 'central'
       });
-      this.path.after(this.#label);
-
-      if (this.#geometry)
-        setAttributes(this.#label, { ...this.#geometry.labelPoint });
+      // Invisible without the stylesheet, which fills it
+      this.#labelBg = createSVGElement('rect', {
+        class: 'arc-label-bg',
+        fill: 'none',
+        rx: 4
+      });
+      this.path.after(this.#labelBg, this.#label);
     }
 
     this.#label.textContent = label;
+
+    if (this.#geometry) this.#placeLabel(this.#geometry.labelPoint);
   }
 
   #applyAnchors(anchors: boolean, strokeWidth: number): void {
