@@ -147,6 +147,36 @@ describe('orthogonalPathVia', () => {
     );
   });
 
+  it('runs between waypoints without stepping out of them', () => {
+    // The middle leg is 10px across: a stub out of either waypoint would
+    // make it double back
+    assert.equal(
+      route({ x: 300, y: 0 }, 'left', [
+        { x: 100, y: 50 },
+        { x: 110, y: 60 }
+      ]),
+      'M 0 0 L 50 0 L 50 50 L 105 50 L 105 60 L 205 60 L 205 0 L 300 0'
+    );
+  });
+
+  it('copes with waypoints on top of each other and of the ends', () => {
+    const { d } = orthogonalPathVia(
+      { x: 0, y: 0 },
+      'right',
+      { x: 100, y: 0 },
+      'left',
+      [
+        { x: 0, y: 0 },
+        { x: 50, y: 0 },
+        { x: 50, y: 0 }
+      ],
+      { radius: 8, offset: 20 }
+    );
+
+    assert.doesNotMatch(d, /NaN/);
+    assert.match(d, /^M 0 0 .* 100 0$/);
+  });
+
   it('never steps back past a waypoint that is close', () => {
     const xs = route({ x: 60, y: 10 }, 'left', [{ x: 30, y: 5 }])
       .match(/-?[\d.]+ -?[\d.]+/g)!
@@ -210,6 +240,29 @@ describe('bezierPath', () => {
 });
 
 describe('routeOrthogonal', () => {
+  it('steps endOffset out of the end from a vertical side too', () => {
+    // The horizontal case below, with x and y swapped
+    const start = { x: 0, y: 0 };
+    const end = { x: 50, y: -50 };
+
+    assert.deepEqual(routeOrthogonal(start, 'bottom', end, 'top'), [
+      start,
+      { x: 0, y: 20 },
+      { x: 25, y: 20 },
+      { x: 25, y: -70 },
+      { x: 50, y: -70 },
+      end
+    ]);
+    assert.deepEqual(routeOrthogonal(start, 'bottom', end, 'top', 20, 0), [
+      start,
+      { x: 0, y: 20 },
+      { x: 25, y: 20 },
+      { x: 25, y: -50 },
+      end,
+      end
+    ]);
+  });
+
   it('steps endOffset out of the end, offset by default', () => {
     const start = { x: 0, y: 0 };
     const end = { x: -50, y: 50 };

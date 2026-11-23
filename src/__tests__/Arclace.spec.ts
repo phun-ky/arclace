@@ -806,6 +806,40 @@ describe('waypoints', () => {
     assert.equal(connection.geometry, null);
   });
 
+  it('labels orthogonal lines halfway and points arrows into the end', () => {
+    const { a, b, dot } = withDot();
+    const arclace = new Arclace({ autoUpdate: false });
+    const connection = arclace.connect(a, b, {
+      type: 'orthogonal',
+      radius: 0,
+      via: [dot],
+      arrow: 'end'
+    });
+
+    // The end is 8px short of b, and the last leg still arrives level
+    assert.equal(
+      connection.path.getAttribute('d'),
+      'M 100 25 L 150 25 L 150 100 L 246 100 L 246 25 L 292 25'
+    );
+
+    connection.setOptions({ arrow: 'none' });
+    // Halfway along 350px of line is the dot
+    assert.deepEqual(connection.geometry?.labelPoint, { x: 200, y: 100 });
+  });
+
+  it('faces the ends of orthogonal lines towards their waypoints', () => {
+    const { a, c } = withDot();
+    const arclace = new Arclace({ autoUpdate: false });
+    const connection = arclace.connect(a, c, {
+      type: 'orthogonal',
+      via: [{ x: 50, y: 300 }]
+    });
+
+    // Without the waypoint below a, the line would leave a on the right
+    assert.equal(connection.geometry?.startSide, 'bottom');
+    assert.equal(connection.geometry?.endSide, 'left');
+  });
+
   it('looks selectors up when they are set, and adds nothing when one fails', () => {
     const { a, b } = withDot();
     const arclace = new Arclace({ autoUpdate: false });
