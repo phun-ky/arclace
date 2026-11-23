@@ -364,7 +364,8 @@ const swap = (point: ArcPointInterface): ArcPointInterface => ({
 /**
  * Routes a line from `start` to `end` using only horizontal and vertical
  * segments. The line leaves and arrives perpendicular to the given sides,
- * travelling at least `offset` pixels straight out before turning back.
+ * travelling at least `offset` pixels straight out before turning back, or
+ * `endOffset` pixels at the end.
  *
  * @returns The corner points of the route, including `start` and `end`.
  */
@@ -373,7 +374,8 @@ export const routeOrthogonal = (
   startSide: ArcSideType,
   end: ArcPointInterface,
   endSide: ArcSideType,
-  offset = 20
+  offset = 20,
+  endOffset = offset
 ): ArcPointInterface[] => {
   if (!isHorizontalSide(startSide)) {
     return routeOrthogonal(
@@ -381,14 +383,15 @@ export const routeOrthogonal = (
       SWAPPED_SIDE[startSide],
       swap(end),
       SWAPPED_SIDE[endSide],
-      offset
+      offset,
+      endOffset
     ).map(swap);
   }
 
   const n1 = NORMALS[startSide];
   const n2 = NORMALS[endSide];
   const s1 = add(start, n1, offset);
-  const s2 = add(end, n2, offset);
+  const s2 = add(end, n2, endOffset);
 
   if (isHorizontalSide(endSide)) {
     if (endSide === OPPOSITE[startSide]) {
@@ -454,5 +457,65 @@ export const orthogonalPath = (
   return {
     d: roundedPolyline(points, radius),
     labelPoint: polylineMidpoint(points)
+  };
+};
+
+/**
+ * The side of a point that faces another point: horizontal when they are
+ * further apart across than down.
+ */
+const heading = (
+  from: ArcPointInterface,
+  to: ArcPointInterface
+): ArcSideType => {
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+
+  if (Math.abs(dx) >= Math.abs(dy)) return dx >= 0 ? 'right' : 'left';
+
+  return dy >= 0 ? 'bottom' : 'top';
+};
+
+/**
+ * An orthogonal line from `start` to `end` through waypoints. Each leg
+ * leaves a point and arrives at the next along the direction between them,
+ * so it runs straight or in one Z, and the line turns at a waypoint when the
+ * legs on either side of it run different ways. Only the ends step `offset`
+ * pixels out of their elements before turning.
+ */
+export const orthogonalPathVia = (
+  start: ArcPointInterface,
+  startSide: ArcSideType,
+  end: ArcPointInterface,
+  endSide: ArcSideType,
+  via: ArcPointInterface[],
+  { radius, offset }: { radius: number; offset: number }
+): ArcPathResultType => {
+  const points = [start, ...via, end];
+  const last = points.length - 1;
+  const route = [start];
+
+  for (let i = 0; i < last; i++) {
+    const from = points[i];
+    const to = points[i + 1];
+    const way = heading(from, to);
+
+    route.push(
+      ...routeOrthogonal(
+        from,
+        i === 0 ? startSide : way,
+        to,
+        i + 1 === last ? endSide : OPPOSITE[way],
+        i === 0 ? offset : 0,
+        i + 1 === last ? offset : 0
+      ).slice(1)
+    );
+  }
+
+  const simplified = simplifyPolyline(route);
+
+  return {
+    d: roundedPolyline(simplified, radius),
+    labelPoint: polylineMidpoint(simplified)
   };
 };

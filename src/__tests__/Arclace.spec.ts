@@ -786,22 +786,24 @@ describe('waypoints', () => {
     assert.ok(connection.geometry);
   });
 
-  it('leaves orthogonal lines as they are', () => {
+  it('routes orthogonal lines through waypoints', () => {
     const { a, b, dot } = withDot();
     const arclace = new Arclace({ autoUpdate: false });
-    const plain = arclace.connect(a, b, { type: 'orthogonal', spread: false });
-    const via = arclace.connect(a, b, {
+    const connection = arclace.connect(a, b, {
       type: 'orthogonal',
-      spread: false,
+      radius: 0,
       via: [dot]
     });
 
-    assert.equal(via.path.getAttribute('d'), plain.path.getAttribute('d'));
+    // Out of a, a Z to the dot, through it, and a Z into b
+    assert.equal(
+      connection.path.getAttribute('d'),
+      'M 100 25 L 150 25 L 150 100 L 250 100 L 250 25 L 300 25'
+    );
 
-    // Even a hidden waypoint doesn't hide them
     dot.getClientRects = () => [] as unknown as DOMRectList;
     arclace.update();
-    assert.ok(via.geometry);
+    assert.equal(connection.geometry, null);
   });
 
   it('looks selectors up when they are set, and adds nothing when one fails', () => {

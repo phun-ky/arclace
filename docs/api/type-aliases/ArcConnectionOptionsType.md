@@ -175,7 +175,7 @@ Text drawn at the middle of the line.
 
 > `optional` **offset?**: `number`
 
-Defined in: [src/types.ts:195](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L195)
+Defined in: [src/types.ts:196](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L196)
 
 `orthogonal` only: how far in pixels the line travels straight out of an
 element before it turns. Defaults to `20`.
@@ -186,7 +186,7 @@ element before it turns. Defaults to `20`.
 
 > `optional` **radius?**: `number`
 
-Defined in: [src/types.ts:189](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L189)
+Defined in: [src/types.ts:190](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L190)
 
 `orthogonal` only: corner radius in pixels. Use `0` for sharp corners.
 Defaults to `8`.
@@ -261,10 +261,11 @@ How the line is drawn. Defaults to `'bezier'`.
 
 > `optional` **via?**: [`ArcWaypointType`](ArcWaypointType.md)[]
 
-Defined in: [src/types.ts:183](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L183)
+Defined in: [src/types.ts:184](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L184)
 
 Elements or points the line passes through on its way from start to
-end, in order, as one path, so dashes stay in step. `bezier` and
-`straight` only; `orthogonal` lines ignore it. Selectors are looked up
-when the option is set. The line is hidden while one of the elements is
+end, in order, as one path, so dashes stay in step. An `orthogonal`
+line runs straight through a waypoint, or turns at it when the legs on
+either side run different ways. Selectors are looked up when the option
+is set. The line is hidden while one of the elements is
 not rendered.
