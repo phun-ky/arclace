@@ -252,7 +252,9 @@ watch([type, arrow, labels, anchors, animated], apply);
   transform-origin: 50% 50%;
   --arc-color: var(--vp-c-text-2);
   --arc-label-color: var(--vp-c-text-1);
-  --arc-label-halo: var(--arc-canvas-bg);
+  --arc-label-bg: var(--arc-canvas-bg);
+  --arc-label-border: var(--vp-c-divider);
+  --arc-label-radius: 10px;
   --arc-anchor-fill: var(--arc-canvas-bg);
 }
 

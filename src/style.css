@@ -1,12 +1,17 @@
 /**
  * Optional styles for @phun-ky/arclace.
  *
- * Lines work without this file. It adds the label halo, hollow anchors and
+ * Lines work without this file. It adds label backgrounds, hollow anchors and
  * the dash animation, and exposes custom properties for theming:
  *
  *   --arc-color          line, arrow and anchor color
  *   --arc-label-color    label text color
- *   --arc-label-halo     outline drawn behind labels so they stay readable
+ *   --arc-label-bg       background behind labels, so lines don't cross them
+ *                        (defaults to --arc-label-halo, then #fff)
+ *   --arc-label-border   outline of the label background
+ *   --arc-label-radius   corner radius of the label background
+ *   --arc-label-padding  space around the text inside the background, in
+ *                        lengths (px, em, rem), not percentages
  *   --arc-label-size     label font size
  *   --arc-anchor-fill    inside of anchor dots
  */
@@ -23,10 +28,17 @@
 .arc-label {
   fill: var(--arc-label-color, currentColor);
   font-size: var(--arc-label-size, 12px);
-  paint-order: stroke;
-  stroke: var(--arc-label-halo, #fff);
-  stroke-width: 4px;
-  stroke-linejoin: round;
+}
+
+.arc-label-bg {
+  fill: var(--arc-label-bg, var(--arc-label-halo, #fff));
+  stroke: var(--arc-label-border, none);
+  stroke-width: 1px;
+  rx: var(--arc-label-radius, 4px);
+  /* Read by Arclace to size the background; SVG itself ignores padding */
+  padding: var(--arc-label-padding, 3px 6px);
+  /* So em padding is relative to the label's text */
+  font-size: var(--arc-label-size, 12px);
 }
 
 .arc-anchor {

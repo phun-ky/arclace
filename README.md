@@ -55,7 +55,7 @@ script tags (see [Without a bundler](#without-a-bundler)).
 
 ```ts
 import { Arclace } from '@phun-ky/arclace';
-// Optional: label halo, hollow anchors and the dash animation
+// Optional: label backgrounds, hollow anchors and the dash animation
 import '@phun-ky/arclace/style.css';
 
 const arclace = new Arclace({ container: '#diagram' });
@@ -232,17 +232,24 @@ colors all of them:
 }
 ```
 
-`style.css` is optional. It adds a halo behind labels, hollow anchors and the
-`animated` dash animation (turned off with `prefers-reduced-motion`), and these
-custom properties:
+`style.css` is optional. It adds a background behind labels, hollow anchors and
+the `animated` dash animation (turned off with `prefers-reduced-motion`), and
+these custom properties:
 
-| Property            | Default        |
-| ------------------- | -------------- |
-| `--arc-color`       | `currentColor` |
-| `--arc-label-color` | `currentColor` |
-| `--arc-label-halo`  | `#fff`         |
-| `--arc-label-size`  | `12px`         |
-| `--arc-anchor-fill` | `#fff`         |
+| Property              | Default                    |
+| --------------------- | -------------------------- |
+| `--arc-color`         | `currentColor`             |
+| `--arc-label-color`   | `currentColor`             |
+| `--arc-label-size`    | `12px`                     |
+| `--arc-label-bg`      | `--arc-label-halo`, `#fff` |
+| `--arc-label-border`  | `none`                     |
+| `--arc-label-radius`  | `4px`                      |
+| `--arc-label-padding` | `3px 6px`                  |
+| `--arc-anchor-fill`   | `#fff`                     |
+
+Set `--arc-label-bg` and `--arc-anchor-fill` to the background behind the lines,
+so labels and hollow anchors blend in. `--arc-label-halo` from earlier versions
+still works as the label background.
 
 ### Clickable lines
 

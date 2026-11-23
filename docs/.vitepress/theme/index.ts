@@ -3,6 +3,7 @@ import type { Theme } from 'vitepress';
 import DefaultTheme from 'vitepress/theme-without-fonts';
 
 import Playground from './components/Playground.vue';
+import StyleDemo from './components/StyleDemo.vue';
 import './custom.css';
 
 export default {
@@ -11,5 +12,6 @@ export default {
     // Keep the default theme's global components (such as <Badge>)
     DefaultTheme.enhanceApp?.(ctx);
     ctx.app.component('Playground', Playground);
+    ctx.app.component('StyleDemo', StyleDemo);
   }
 } satisfies Theme;
