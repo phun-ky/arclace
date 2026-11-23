@@ -113,6 +113,13 @@ export type ArcConnectionOptionsType = {
   animated?: boolean;
 
   /**
+   * A soft glow around the line, in its color: `true` for the stylesheet's
+   * `--arc-glow` or 4px, or a blur radius in pixels. Requires the
+   * stylesheet. Defaults to `false`.
+   */
+  glow?: boolean | number;
+
+  /**
    * Draw a dot where the line touches each element. Defaults to `false`.
    */
   anchors?: boolean;

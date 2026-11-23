@@ -343,6 +343,29 @@ describe('Arclace', () => {
     assert.equal(period(), '');
   });
 
+  it('marks glowing lines and sets their blur radius', () => {
+    const { a, b } = setup();
+    const arclace = new Arclace({ autoUpdate: false });
+    const connection = arclace.connect(a, b);
+    const glow = () => [
+      connection.element.classList.contains('arc-glow'),
+      connection.element.style.getPropertyValue('--arc-glow')
+    ];
+
+    assert.equal(connection.options.glow, false);
+    assert.deepEqual(glow(), [false, '']);
+
+    // The stylesheet's radius, or the page's --arc-glow
+    connection.setOptions({ glow: true });
+    assert.deepEqual(glow(), [true, '']);
+
+    connection.setOptions({ glow: 6 });
+    assert.deepEqual(glow(), [true, '6px']);
+
+    connection.setOptions({ glow: 0 });
+    assert.deepEqual(glow(), [false, '']);
+  });
+
   it('sizes the label background to the text and padding', (t) => {
     // jsdom has no SVG layout: a 40 x 10 text box centred on its point
     const proto = SVGElement.prototype as unknown as Record<string, unknown>;

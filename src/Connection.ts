@@ -53,6 +53,7 @@ export const DEFAULT_CONNECTION_OPTIONS: Readonly<
   strokeWidth: 2,
   dashed: false,
   animated: false,
+  glow: false,
   anchors: false,
   gap: 0,
   spread: true,
@@ -370,6 +371,7 @@ export class Connection {
       dashed,
       dashArray,
       animated,
+      glow,
       anchors,
       className
     } = this.options;
@@ -385,6 +387,8 @@ export class Connection {
     if (dashed || animated) classes.push('arc-dashed');
 
     if (animated) classes.push('arc-animated');
+
+    if (glow) classes.push('arc-glow');
 
     if (className) classes.push(...className.split(/\s+/).filter(Boolean));
 
@@ -408,6 +412,12 @@ export class Connection {
     } else {
       this.element.style.removeProperty('--arc-dash');
       this.element.style.removeProperty('--arc-dash-period');
+    }
+
+    if (typeof glow === 'number' && glow > 0) {
+      this.element.style.setProperty('--arc-glow', `${glow}px`);
+    } else {
+      this.element.style.removeProperty('--arc-glow');
     }
 
     this.#applyGradient(gradient);

@@ -181,6 +181,7 @@ and shown again when it comes back.
 | `dashed`      | `boolean`                                          | `false`    | Dashed line.                                                                                |
 | `dashArray`   | `string \| number[]`                               |            | Dash pattern in pixels, such as `'4 2'`. Without it, `--arc-dash` or `6 6`.                 |
 | `animated`    | `boolean`                                          | `false`    | Dashes flowing from start to end. Needs `style.css`.                                        |
+| `glow`        | `boolean \| number`                                | `false`    | A glow in the line's color: `true` for 4px, or a blur radius. Needs `style.css`.            |
 | `anchors`     | `boolean`                                          | `false`    | Dots where the line meets the elements.                                                     |
 | `className`   | `string`                                           |            | Extra classes for the connection's `<g>`.                                                   |
 | `gap`         | `number`                                           | `0`        | Space between the element edge and the line end. Negative moves the end into the element.   |
@@ -273,6 +274,7 @@ these custom properties:
 | `--arc-dash`          | `6 6`                      |
 | `--arc-dash-period`   | `12`                       |
 | `--arc-dash-speed`    | `0.6s`                     |
+| `--arc-glow`          | none                       |
 
 Set `--arc-label-bg` and `--arc-anchor-fill` to the background behind the lines,
 so labels and hollow anchors blend in. `--arc-label-halo` from earlier versions
@@ -294,6 +296,12 @@ so the animation loops without a jump:
   --arc-dash-speed: 1s;
 }
 ```
+
+Set `--arc-glow` to a blur radius, such as `4px`, to make lines glow without the
+`glow` option; with `glow: true` it sets the radius. The glow is a CSS
+`drop-shadow` in `currentColor`, so a `gradient` line glows in its `color`, not
+its gradient. Each glowing line is filtered on its own: on a page with hundreds
+of lines, keep the glow for the few that matter.
 
 ### Clickable lines
 

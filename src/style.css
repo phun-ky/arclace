@@ -20,6 +20,8 @@
  *                        animation loops smoothly; set by dashArray, and
  *                        yours to set along with --arc-dash
  *   --arc-dash-speed     time the animation takes to move one period
+ *   --arc-glow           blur radius of a glow around lines; set it to make
+ *                        lines glow, or use the glow option
  */
 
 .arc-connection {
@@ -34,6 +36,18 @@
 /* No specificity, so any rule of yours for .arc-path wins */
 :where(.arc-dashed .arc-path) {
   stroke-dasharray: var(--arc-dash, 6 6);
+}
+
+/*
+ * Without --arc-glow the filter is invalid, so it computes to none and costs
+ * nothing. Each glowing line is filtered on its own.
+ */
+:where(.arc-path) {
+  filter: drop-shadow(0 0 var(--arc-glow) currentColor);
+}
+
+:where(.arc-glow .arc-path) {
+  filter: drop-shadow(0 0 var(--arc-glow, 4px) currentColor);
 }
 
 .arc-label {

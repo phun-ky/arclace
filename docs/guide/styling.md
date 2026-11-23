@@ -61,6 +61,7 @@ these custom properties:
 | `--arc-dash`          | `6 6`                      |
 | `--arc-dash-period`   | `12`                       |
 | `--arc-dash-speed`    | `0.6s`                     |
+| `--arc-glow`          | none                       |
 
 Set `--arc-label-bg` and `--arc-anchor-fill` to the background behind the lines,
 so labels and hollow anchors blend in. `--arc-label-halo` from earlier versions
@@ -82,6 +83,12 @@ so the animation loops without a jump:
   --arc-dash-speed: 1s;
 }
 ```
+
+Set `--arc-glow` to a blur radius, such as `4px`, to make lines glow without the
+`glow` option; with `glow: true` it sets the radius. The glow is a CSS
+`drop-shadow` in `currentColor`, so a `gradient` line glows in its `color`, not
+its gradient. Each glowing line is filtered on its own: on a page with hundreds
+of lines, keep the glow for the few that matter.
 
 Without the stylesheet the label background is not painted. Style
 `.arc-label-bg` like any SVG shape, with `fill`, `stroke` and `rx`, and set its
@@ -187,6 +194,20 @@ arclace.connect('#theme', '#button', {
 #diagram {
   --arc-dash: 12 4 2 4;
 }
+```
+
+### Glow
+
+Make a line glow in its own color with `glow`, as a blur radius in pixels or
+`true` for 4px:
+
+<StyleDemo variant="glow" :options="{ glow: 6 }" />
+
+```ts
+arclace.connect('#theme', '#button', {
+  arrow: 'end',
+  glow: 6
+});
 ```
 
 ### Label typography

@@ -227,6 +227,25 @@ export const assertDashArray = (value: unknown, name: string): number[] => {
   return numbers;
 };
 
+/**
+ * Throws a `TypeError` unless `value` is a boolean or a finite number, and a
+ * `RangeError` when it is a number below 0.
+ */
+export const assertBooleanOrLength = (
+  value: unknown,
+  name: string
+): boolean | number => {
+  if (typeof value === 'boolean') return value;
+
+  if (typeof value !== 'number') {
+    throw new TypeError(
+      `arclace: ${name} must be true, false or a number, not ${show(value)}`
+    );
+  }
+
+  return assertNumber(value, name, 0);
+};
+
 // How each connection option is checked. Keys that aren't listed are ignored.
 const CONNECTION_OPTION_CHECKS: Readonly<
   Record<
@@ -247,6 +266,7 @@ const CONNECTION_OPTION_CHECKS: Readonly<
   dashed: assertBoolean,
   dashArray: assertDashArray,
   animated: assertBoolean,
+  glow: assertBooleanOrLength,
   anchors: assertBoolean,
   gap: (value, name) => assertNumber(value, name),
   spread: assertBoolean,
