@@ -23,17 +23,33 @@ import { dashNumbers, validateConnectionOptions } from './utils/validate';
 
 /**
  * Connection options with every default filled in. `label`, `color`,
- * `gradient`, `dashArray`, `via` and `className` have no default.
+ * `gradient`, `dashArray`, `via`, `startCurvature`, `endCurvature` and
+ * `className` have no default.
  */
 export type ArcResolvedConnectionOptionsType = Required<
   Omit<
     ArcConnectionOptionsType,
-    'id' | 'label' | 'color' | 'gradient' | 'dashArray' | 'via' | 'className'
+    | 'id'
+    | 'label'
+    | 'color'
+    | 'gradient'
+    | 'dashArray'
+    | 'via'
+    | 'startCurvature'
+    | 'endCurvature'
+    | 'className'
   >
 > &
   Pick<
     ArcConnectionOptionsType,
-    'label' | 'color' | 'gradient' | 'dashArray' | 'via' | 'className'
+    | 'label'
+    | 'color'
+    | 'gradient'
+    | 'dashArray'
+    | 'via'
+    | 'startCurvature'
+    | 'endCurvature'
+    | 'className'
   > & {
     id: string;
   };
@@ -46,7 +62,15 @@ export const DEFAULT_CONNECTION_OPTIONS: Readonly<
   Required<
     Omit<
       ArcConnectionOptionsType,
-      'id' | 'label' | 'color' | 'gradient' | 'dashArray' | 'via' | 'className'
+      | 'id'
+      | 'label'
+      | 'color'
+      | 'gradient'
+      | 'dashArray'
+      | 'via'
+      | 'startCurvature'
+      | 'endCurvature'
+      | 'className'
     >
   >
 > = Object.freeze({
@@ -385,7 +409,14 @@ export class Connection {
     endSide: ArcSideType,
     via: ArcPointInterface[]
   ): ArcPathResultType {
-    const { type, curvature, radius, offset } = this.options;
+    const {
+      type,
+      curvature,
+      startCurvature = curvature,
+      endCurvature = curvature,
+      radius,
+      offset
+    } = this.options;
 
     if (type === 'straight') {
       return via.length > 0
@@ -401,10 +432,25 @@ export class Connection {
     }
 
     if (via.length > 0) {
-      return bezierPathVia(start, startSide, end, endSide, via, curvature);
+      return bezierPathVia(
+        start,
+        startSide,
+        end,
+        endSide,
+        via,
+        startCurvature,
+        endCurvature
+      );
     }
 
-    return bezierPath(start, startSide, end, endSide, curvature);
+    return bezierPath(
+      start,
+      startSide,
+      end,
+      endSide,
+      startCurvature,
+      endCurvature
+    );
   }
 
   #pullBack(

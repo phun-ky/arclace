@@ -4,7 +4,7 @@
 
 > **orthogonalPath**(`start`, `startSide`, `end`, `endSide`, `__namedParameters?`): [`ArcPathResultType`](../type-aliases/ArcPathResultType.md)
 
-Defined in: [src/utils/paths.ts:427](https://github.com/phun-ky/arclace/blob/main/src/utils/paths.ts#L427)
+Defined in: [src/utils/paths.ts:439](https://github.com/phun-ky/arclace/blob/main/src/utils/paths.ts#L439)
 
 An orthogonal line with rounded corners.
 

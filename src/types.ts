@@ -162,6 +162,18 @@ export type ArcConnectionOptionsType = {
   curvature?: number;
 
   /**
+   * `bezier` only: `curvature` at the start of the line, so the two ends can
+   * bulge differently and lean the curve. Defaults to `curvature`.
+   */
+  startCurvature?: number;
+
+  /**
+   * `bezier` only: `curvature` at the end of the line. Defaults to
+   * `curvature`.
+   */
+  endCurvature?: number;
+
+  /**
    * Elements or points the line passes through on its way from start to
    * end, in order, as one path, so dashes stay in step. `bezier` and
    * `straight` only; `orthogonal` lines ignore it. Selectors are looked up

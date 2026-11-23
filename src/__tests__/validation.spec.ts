@@ -42,6 +42,8 @@ describe('connection options', () => {
     ['a NaN strokeWidth', { strokeWidth: NaN }, 'TypeError'],
     ['a strokeWidth string', { strokeWidth: '3' }, 'TypeError'],
     ['an infinite curvature', { curvature: Infinity }, 'TypeError'],
+    ['a startCurvature string', { startCurvature: '1' }, 'TypeError'],
+    ['an infinite endCurvature', { endCurvature: Infinity }, 'TypeError'],
     ['a NaN offset', { offset: NaN }, 'TypeError'],
     ['a negative radius', { radius: -5 }, 'RangeError'],
     ['a negative offset', { offset: -20 }, 'RangeError'],
@@ -454,6 +456,10 @@ describe('path builders', () => {
     });
     assert.throws(() => straightPath(p, loose(null)), TypeError);
     assert.throws(() => bezierPath(p, 'right', q, 'left', NaN), TypeError);
+    assert.throws(() => bezierPath(p, 'right', q, 'left', 1, NaN), {
+      name: 'TypeError',
+      message: 'arclace: endCurvature must be a finite number, not NaN'
+    });
     assert.throws(
       () => orthogonalPath(p, 'right', q, 'left', { radius: -5 }),
       RangeError

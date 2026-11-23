@@ -104,7 +104,12 @@ export const straightPath = (
  * A cubic bezier curve that leaves `start` and arrives at `end`
  * perpendicular to their sides.
  *
- * @throws {TypeError} When a point or `curvature` isn't finite.
+ * @param curvature - How far the curve bulges out at the start, and at the
+ *   end unless `endCurvature` is given.
+ * @param endCurvature - How far the curve bulges out at the end. Different
+ *   values at each end lean the curve.
+ * @throws {TypeError} When a point, `curvature` or `endCurvature` isn't
+ *   finite.
  * @throws {RangeError} When a side isn't `top`, `right`, `bottom` or `left`.
  * @example
  * ```ts
@@ -116,15 +121,17 @@ export const bezierPath = (
   startSide: ArcSideType,
   end: ArcPointInterface,
   endSide: ArcSideType,
-  curvature = 1
+  curvature = 1,
+  endCurvature = curvature
 ): ArcPathResultType => {
   checkEnds(start, startSide, end, endSide);
   assertNumber(curvature, 'curvature');
+  assertNumber(endCurvature, 'endCurvature');
 
   const length = distance(start, end);
-  const bulge = (length / curveMultiplierFromDistance(length)) * curvature;
-  const c1 = add(start, NORMALS[startSide], bulge);
-  const c2 = add(end, NORMALS[endSide], bulge);
+  const reach = length / curveMultiplierFromDistance(length);
+  const c1 = add(start, NORMALS[startSide], reach * curvature);
+  const c2 = add(end, NORMALS[endSide], reach * endCurvature);
 
   return {
     d: `M ${fmt(start)} C ${fmt(c1)}, ${fmt(c2)}, ${fmt(end)}`,
@@ -185,9 +192,9 @@ const cubicPoint = (
 /**
  * A smooth curve from `start` to `end` through waypoints, as one path of
  * cubic curves. It leaves and arrives perpendicular to the sides, like
- * {@link bezierPath}, with `curvature` setting the bulge at the two ends,
- * and passes each waypoint in the direction from the point before it to the
- * point after it.
+ * {@link bezierPath}, with `curvature` and `endCurvature` setting the bulge
+ * at the two ends, and passes each waypoint in the direction from the point
+ * before it to the point after it.
  */
 export const bezierPathVia = (
   start: ArcPointInterface,
@@ -195,7 +202,8 @@ export const bezierPathVia = (
   end: ArcPointInterface,
   endSide: ArcSideType,
   via: ArcPointInterface[],
-  curvature = 1
+  curvature = 1,
+  endCurvature = curvature
 ): ArcPathResultType => {
   const points = [start, ...via, end];
   const last = points.length - 1;
@@ -206,8 +214,8 @@ export const bezierPathVia = (
 
     return direction(points[i - 1], points[i + 1]);
   });
-  const bulge = (length: number): number =>
-    (length / curveMultiplierFromDistance(length)) * curvature;
+  const bulge = (length: number, factor: number): number =>
+    (length / curveMultiplierFromDistance(length)) * factor;
   const segments: string[] = [];
   const samples = [start];
 
@@ -217,11 +225,15 @@ export const bezierPathVia = (
     const length = distance(from, to);
     // The ends bulge like a single curve; waypoints get a third of the
     // segment, which keeps the curve smooth without overshooting
-    const c1 = add(from, tangents[i], i === 0 ? bulge(length) : length / 3);
+    const c1 = add(
+      from,
+      tangents[i],
+      i === 0 ? bulge(length, curvature) : length / 3
+    );
     // The end's normal points back along the curve, a waypoint's forward
     const c2 =
       i + 1 === last
-        ? add(to, tangents[last], bulge(length))
+        ? add(to, tangents[last], bulge(length, endCurvature))
         : add(to, tangents[i + 1], -length / 3);
 
     segments.push(`C ${fmt(c1)}, ${fmt(c2)}, ${fmt(to)}`);

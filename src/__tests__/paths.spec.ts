@@ -69,6 +69,21 @@ describe('bezierPathVia', () => {
     assert.ok(Math.abs(labelPoint.y - 50) < 0.5);
   });
 
+  it('bulges each end by its own curvature', () => {
+    const { d } = bezierPathVia(
+      { x: 0, y: 0 },
+      'right',
+      { x: 200, y: 0 },
+      'left',
+      [{ x: 100, y: 50 }],
+      1,
+      0
+    );
+
+    // No bulge at the end: the last handle sits on the end point
+    assert.match(d, /, 200 0, 200 0$/);
+  });
+
   it('copes with waypoints on top of each other', () => {
     const { d } = curve([
       { x: 0, y: 0 },
@@ -80,6 +95,19 @@ describe('bezierPathVia', () => {
 });
 
 describe('bezierPath', () => {
+  it('bulges each end by its own curvature', () => {
+    const start = { x: 0, y: 0 };
+    const end = { x: 100, y: 0 };
+    const handle = (d: string) => Number(d.match(/^M 0 0 C ([\d.-]+) 0,/)![1]);
+    const even = bezierPath(start, 'right', end, 'left', 1).d;
+    const lean = bezierPath(start, 'right', end, 'left', 2, 0).d;
+
+    // endCurvature defaults to curvature
+    assert.equal(bezierPath(start, 'right', end, 'left', 1, 1).d, even);
+    assert.ok(Math.abs(handle(lean) - 2 * handle(even)) < 0.02);
+    assert.match(lean, /, 100 0, 100 0$/);
+  });
+
   it('places control points along the side normals', () => {
     const { d } = bezierPath({ x: 0, y: 0 }, 'right', { x: 100, y: 0 }, 'left');
     const [, c1x, c1y, c2x, c2y] = d

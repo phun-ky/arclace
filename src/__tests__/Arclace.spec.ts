@@ -3,6 +3,7 @@ import { afterEach, describe, it } from 'node:test';
 
 import { Connection } from '../Connection';
 import { Arclace, createConnections } from '../Arclace';
+import { bezierPath } from '../utils/paths';
 
 import { box, place } from './helpers';
 
@@ -118,6 +119,29 @@ describe('Arclace', () => {
 
     assert.deepEqual(one.geometry?.start, { x: 100, y: 25 });
     assert.deepEqual(two.geometry?.start, { x: 100, y: 25 });
+  });
+
+  it('bulges each end of a curve by its own curvature', () => {
+    const { a, b } = setup();
+    const arclace = new Arclace({
+      autoUpdate: false,
+      defaults: { curvature: 0.5 }
+    });
+    const start = { x: 100, y: 25 };
+    const end = { x: 300, y: 25 };
+    const connection = arclace.connect(a, b, { startCurvature: 2 });
+
+    // The end falls back to curvature
+    assert.equal(
+      connection.path.getAttribute('d'),
+      bezierPath(start, 'right', end, 'left', 2, 0.5).d
+    );
+
+    connection.setOptions({ startCurvature: undefined, endCurvature: 0 });
+    assert.equal(
+      connection.path.getAttribute('d'),
+      bezierPath(start, 'right', end, 'left', 0.5, 0).d
+    );
   });
 
   it('applies gap', () => {

@@ -2,12 +2,13 @@
 
 # Type Alias: ArcResolvedConnectionOptionsType
 
-> **ArcResolvedConnectionOptionsType** = `Required`\<`Omit`\<[`ArcConnectionOptionsType`](ArcConnectionOptionsType.md), `"id"` \| `"label"` \| `"color"` \| `"gradient"` \| `"dashArray"` \| `"via"` \| `"className"`\>\> & `Pick`\<[`ArcConnectionOptionsType`](ArcConnectionOptionsType.md), `"label"` \| `"color"` \| `"gradient"` \| `"dashArray"` \| `"via"` \| `"className"`\> & `object`
+> **ArcResolvedConnectionOptionsType** = `Required`\<`Omit`\<[`ArcConnectionOptionsType`](ArcConnectionOptionsType.md), `"id"` \| `"label"` \| `"color"` \| `"gradient"` \| `"dashArray"` \| `"via"` \| `"startCurvature"` \| `"endCurvature"` \| `"className"`\>\> & `Pick`\<[`ArcConnectionOptionsType`](ArcConnectionOptionsType.md), `"label"` \| `"color"` \| `"gradient"` \| `"dashArray"` \| `"via"` \| `"startCurvature"` \| `"endCurvature"` \| `"className"`\> & `object`
 
-Defined in: [src/Connection.ts:28](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L28)
+Defined in: [src/Connection.ts:29](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L29)
 
 Connection options with every default filled in. `label`, `color`,
-`gradient`, `dashArray`, `via` and `className` have no default.
+`gradient`, `dashArray`, `via`, `startCurvature`, `endCurvature` and
+`className` have no default.
 
 ## Type Declaration
 

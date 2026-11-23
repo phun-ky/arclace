@@ -303,6 +303,8 @@ const CONNECTION_OPTION_CHECKS: Readonly<
   spread: assertBoolean,
   spacing: (value, name) => assertNumber(value, name, 0),
   curvature: (value, name) => assertNumber(value, name),
+  startCurvature: (value, name) => assertNumber(value, name),
+  endCurvature: (value, name) => assertNumber(value, name),
   via: assertWaypoints,
   radius: (value, name) => assertNumber(value, name, 0),
   offset: (value, name) => assertNumber(value, name, 0)

@@ -95,6 +95,17 @@ Draw a dashed line. Defaults to `false`.
 
 ***
 
+### endCurvature?
+
+> `optional` **endCurvature?**: `number`
+
+Defined in: [src/types.ts:174](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L174)
+
+`bezier` only: `curvature` at the end of the line. Defaults to
+`curvature`.
+
+***
+
 ### endSide?
 
 > `optional` **endSide?**: [`ArcSideOptionType`](ArcSideOptionType.md)
@@ -164,7 +175,7 @@ Text drawn at the middle of the line.
 
 > `optional` **offset?**: `number`
 
-Defined in: [src/types.ts:183](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L183)
+Defined in: [src/types.ts:195](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L195)
 
 `orthogonal` only: how far in pixels the line travels straight out of an
 element before it turns. Defaults to `20`.
@@ -175,7 +186,7 @@ element before it turns. Defaults to `20`.
 
 > `optional` **radius?**: `number`
 
-Defined in: [src/types.ts:177](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L177)
+Defined in: [src/types.ts:189](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L189)
 
 `orthogonal` only: corner radius in pixels. Use `0` for sharp corners.
 Defaults to `8`.
@@ -202,6 +213,17 @@ Defined in: [src/types.ts:150](https://github.com/phun-ky/arclace/blob/main/src/
 When several connections share the same side of an element, spread their
 end points along that side instead of stacking them in the middle.
 Defaults to `true`.
+
+***
+
+### startCurvature?
+
+> `optional` **startCurvature?**: `number`
+
+Defined in: [src/types.ts:168](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L168)
+
+`bezier` only: `curvature` at the start of the line, so the two ends can
+bulge differently and lean the curve. Defaults to `curvature`.
 
 ***
 
@@ -239,7 +261,7 @@ How the line is drawn. Defaults to `'bezier'`.
 
 > `optional` **via?**: [`ArcWaypointType`](ArcWaypointType.md)[]
 
-Defined in: [src/types.ts:171](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L171)
+Defined in: [src/types.ts:183](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L183)
 
 Elements or points the line passes through on its way from start to
 end, in order, as one path, so dashes stay in step. `bezier` and
