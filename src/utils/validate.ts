@@ -307,7 +307,7 @@ export const validateConnectionOptions = (
 export const validateOptions = (options: unknown): ArcOptionsType => {
   assertObject(options, 'options');
 
-  const { autoUpdate, className, defaults } = options as Record<
+  const { autoUpdate, className, defaults, zIndex } = options as Record<
     string,
     unknown
   >;
@@ -323,6 +323,15 @@ export const validateOptions = (options: unknown): ArcOptionsType => {
   }
 
   if (className !== undefined) assertString(className, 'options.className');
+
+  if (
+    zIndex !== undefined &&
+    !Number.isInteger(assertNumber(zIndex, 'options.zIndex'))
+  ) {
+    throw new RangeError(
+      `arclace: options.zIndex must be a whole number, not ${show(zIndex)}`
+    );
+  }
 
   if (defaults !== undefined) {
     validateConnectionOptions(defaults, 'options.defaults');

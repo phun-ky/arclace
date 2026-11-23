@@ -206,6 +206,13 @@ export type ArcOptionsType = {
    * Extra class names added to the SVG overlay.
    */
   className?: string;
+
+  /**
+   * The overlay's `z-index`. Without it, the overlay is painted below
+   * positioned elements that come after it in the container; a `zIndex`
+   * above theirs paints the lines on top.
+   */
+  zIndex?: number;
 };
 
 /**

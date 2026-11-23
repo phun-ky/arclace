@@ -127,7 +127,8 @@ export class Arclace {
       width: '100%',
       height: '100%',
       overflow: 'visible',
-      pointerEvents: 'none'
+      pointerEvents: 'none',
+      zIndex: options.zIndex ?? ''
     });
     this.container.prepend(this.svg);
     this.#startAutoUpdate();

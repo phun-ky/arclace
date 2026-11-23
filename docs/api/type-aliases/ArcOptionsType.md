@@ -54,3 +54,15 @@ be inside it. Defaults to `document.body`.
 Defined in: [src/types.ts:203](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L203)
 
 Default options for every connection made by this instance.
+
+***
+
+### zIndex?
+
+> `optional` **zIndex?**: `number`
+
+Defined in: [src/types.ts:215](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L215)
+
+The overlay's `z-index`. Without it, the overlay is painted below
+positioned elements that come after it in the container; a `zIndex`
+above theirs paints the lines on top.

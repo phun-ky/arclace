@@ -78,7 +78,7 @@ The SVG overlay all lines are drawn in.
 
 > **get** **connections**(): [`Connection`](Connection.md)[]
 
-Defined in: [src/Arclace.ts:139](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L139)
+Defined in: [src/Arclace.ts:140](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L140)
 
 All current connections, in the order they were made.
 
@@ -92,7 +92,7 @@ All current connections, in the order they were made.
 
 > **clear**(): `void`
 
-Defined in: [src/Arclace.ts:298](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L298)
+Defined in: [src/Arclace.ts:299](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L299)
 
 Removes every connection.
 
@@ -106,7 +106,7 @@ Removes every connection.
 
 > **connect**(`startElement`, `endElement`, `options?`): [`Connection`](Connection.md)
 
-Defined in: [src/Arclace.ts:158](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L158)
+Defined in: [src/Arclace.ts:159](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L159)
 
 Connects two elements and draws the line right away.
 
@@ -159,7 +159,7 @@ const connection = arclace.connect(a, b, { type: 'orthogonal', arrow: 'end' });
 
 > **connectAll**(`definitions`): [`Connection`](Connection.md)[]
 
-Defined in: [src/Arclace.ts:189](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L189)
+Defined in: [src/Arclace.ts:190](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L190)
 
 Connects many pairs of elements and draws them in one go. Every
 definition is checked first, so either all of them are added or none.
@@ -203,7 +203,7 @@ arclace.connectAll([
 
 > **destroy**(): `void`
 
-Defined in: [src/Arclace.ts:406](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L406)
+Defined in: [src/Arclace.ts:407](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L407)
 
 Removes every connection and the overlay, and stops listening for
 changes. The instance can't be used afterwards.
@@ -218,7 +218,7 @@ changes. The instance can't be used afterwards.
 
 > **disconnect**(`target`): `void`
 
-Defined in: [src/Arclace.ts:266](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L266)
+Defined in: [src/Arclace.ts:267](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L267)
 
 Removes connections.
 
@@ -259,7 +259,7 @@ arclace.disconnect(document.querySelector('#a'));
 
 > **find**(`target`): [`Connection`](Connection.md)[]
 
-Defined in: [src/Arclace.ts:236](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L236)
+Defined in: [src/Arclace.ts:237](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L237)
 
 Returns every connection that starts or ends at an element. A selector
 that matches nothing returns an empty array.
@@ -288,7 +288,7 @@ When the selector is invalid.
 
 > **get**(`id`): [`Connection`](Connection.md) \| `undefined`
 
-Defined in: [src/Arclace.ts:225](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L225)
+Defined in: [src/Arclace.ts:226](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L226)
 
 Returns the connection with the given id.
 
@@ -308,7 +308,7 @@ Returns the connection with the given id.
 
 > **update**(): `void`
 
-Defined in: [src/Arclace.ts:314](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L314)
+Defined in: [src/Arclace.ts:315](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L315)
 
 Remeasures every element and redraws every connection. Called
 automatically when `autoUpdate` is on; call it yourself after moving

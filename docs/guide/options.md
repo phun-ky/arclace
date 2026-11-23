@@ -10,6 +10,7 @@ The full reference, with every type, is in the [API](/api/).
 | `autoUpdate` | `boolean \| 'frame'`                      | `true`          | `true` redraws on window resize, scroll, element resize and DOM/style changes in the container. `'frame'` redraws every animation frame. `false` only redraws when you call `update()`. |
 | `defaults`   | [Connection options](#connection-options) | `{}`            | Defaults for every connection made by this instance.                                                                                                                                    |
 | `className`  | `string`                                  |                 | Extra classes for the overlay.                                                                                                                                                          |
+| `zIndex`     | `number`                                  |                 | The overlay's `z-index`, a whole number. Set it above that of positioned elements in the container to draw the lines over them; see [How it works](/guide/how-it-works).                |
 
 | Member                          | Description                                                                                                   |
 | ------------------------------- | ------------------------------------------------------------------------------------------------------------- |

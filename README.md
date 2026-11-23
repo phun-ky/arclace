@@ -124,7 +124,12 @@ assistive technology (`aria-hidden`); see [Accessibility](#accessibility).
   in scrolled containers and when the container is scaled with CSS transforms
   (for example by a pan/zoom library).
 - The overlay is the container's first child, so it is painted below positioned
-  elements that come after it. Set `z-index` on `.arc-svg` to change that.
+  elements that come after it, such as a semi-transparent panel. To draw the
+  lines over them, give the overlay a higher `z-index` with the `zIndex` option,
+  or with CSS on `.arc-svg`. The lines then cross anything in their way, and
+  labels cover what is under them; the overlay still lets clicks through. The
+  overlay stays the first child, because moving it to the end wouldn't last:
+  elements added later, by you or a framework, would come after it again.
 
 ## API
 
@@ -136,6 +141,7 @@ assistive technology (`aria-hidden`); see [Accessibility](#accessibility).
 | `autoUpdate` | `boolean \| 'frame'`                      | `true`          | `true` redraws on window resize, scroll, element resize and DOM/style changes in the container. `'frame'` redraws every animation frame. `false` only redraws when you call `update()`. |
 | `defaults`   | [Connection options](#connection-options) | `{}`            | Defaults for every connection made by this instance.                                                                                                                                    |
 | `className`  | `string`                                  |                 | Extra classes for the overlay.                                                                                                                                                          |
+| `zIndex`     | `number`                                  |                 | The overlay's `z-index`, a whole number. Set it above that of positioned elements in the container to draw the lines over them; see [How it works](#how-it-works).                      |
 
 | Member                          | Description                                                                                                   |
 | ------------------------------- | ------------------------------------------------------------------------------------------------------------- |

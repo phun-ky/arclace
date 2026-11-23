@@ -25,6 +25,15 @@ describe('Arclace', () => {
     assert.equal(document.body.firstElementChild, arclace.svg);
     assert.equal(arclace.svg.getAttribute('class'), 'arc-svg mine');
     assert.equal(arclace.svg.style.position, 'absolute');
+    assert.equal(arclace.svg.style.zIndex, '');
+  });
+
+  it('sets the overlay z-index', () => {
+    const arclace = new Arclace({ autoUpdate: false, zIndex: 2 });
+
+    assert.equal(arclace.svg.style.zIndex, '2');
+    // Still the first child: only z-index changes the stacking
+    assert.equal(document.body.firstElementChild, arclace.svg);
   });
 
   it('makes a static container relative and restores it on destroy', () => {

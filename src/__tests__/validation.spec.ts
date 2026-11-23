@@ -205,6 +205,8 @@ describe('instance options', () => {
     ['options that are not an object', null, 'TypeError'],
     ['an unknown autoUpdate', { autoUpdate: 'yes' }, 'RangeError'],
     ['a className number', { className: 42 }, 'TypeError'],
+    ['a zIndex string', { zIndex: '1' }, 'TypeError'],
+    ['a fractional zIndex', { zIndex: 1.5 }, 'RangeError'],
     ['a container that is not an element', { container: 42 }, 'TypeError'],
     ['bad defaults', { defaults: { type: 'wavy' } }, 'RangeError'],
     ['an id in the defaults', { defaults: { id: 'x' } }, 'TypeError']
