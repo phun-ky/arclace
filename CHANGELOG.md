@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.1.0](https://github.com/phun-ky/arclace/compare/1.0.0...1.1.0) (2026-11-23)
+
+### Tasks
+
+* 🤖 bump rollup from 4.67.4 to 4.67.5 in the minor-and-patch group ([e896761](https://github.com/phun-ky/arclace/commit/e896761322a7b50bb28307bf7347e110b18a7a4a))
+* 🤖 ignore unfixable dev-dependency advisories in osv-scanner ([2121472](https://github.com/phun-ky/arclace/commit/2121472ccb0424aa1927531e7d917cf6aa37750c))
+* 🤖 only ignore advisories present in the lockfile ([0e57eb9](https://github.com/phun-ky/arclace/commit/0e57eb948439e737bda2279fcc9f8fee152250c0))
+* 🤖 update typescript to 6.0 ([ce09299](https://github.com/phun-ky/arclace/commit/ce09299d87349c239040bdd2c54fe6d232e3e10a))
+
+### Documentation
+
+* ✏️ give the styling examples their markup ([90e5174](https://github.com/phun-ky/arclace/commit/90e5174498cbec917c322607e61d7b9880866449))
+* ✏️ remove the backdrop behind the hero copy ([bf3eaae](https://github.com/phun-ky/arclace/commit/bf3eaae49010e88d8ec5c5109da61fa631ddf814))
+* ✏️ zoom the playground from the centre ([e32e930](https://github.com/phun-ky/arclace/commit/e32e9304b2c82d2706ab6b8d98f8658b32f60ce1)), closes [#78](https://github.com/phun-ky/arclace/issues/78)
+
+### Feature
+
+* 🎸 draw a styleable background behind labels ([92ad7d3](https://github.com/phun-ky/arclace/commit/92ad7d3a4bdcc2c6fc60a6a8696df3740caaa11f))
+
 ## [1.0.0](https://github.com/phun-ky/arclace/compare/0.3.0...1.0.0) (2026-11-04)
 
 ### Documentation
