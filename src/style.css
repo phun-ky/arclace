@@ -16,6 +16,10 @@
  *   --arc-anchor-fill    inside of anchor dots
  *   --arc-dash           dash pattern of dashed lines, such as 4 2; the
  *                        dashArray option wins over it
+ *   --arc-dash-period    length of the dash pattern, without a unit, so the
+ *                        animation loops smoothly; set by dashArray, and
+ *                        yours to set along with --arc-dash
+ *   --arc-dash-speed     time the animation takes to move one period
  */
 
 .arc-connection {
@@ -55,12 +59,13 @@
 }
 
 .arc-animated .arc-path {
-  animation: arc-dash 0.6s linear infinite;
+  animation: arc-dash var(--arc-dash-speed, 0.6s) linear infinite;
 }
 
 @keyframes arc-dash {
   to {
-    stroke-dashoffset: -12;
+    /* Resolved on each path, so every line moves by its own pattern */
+    stroke-dashoffset: calc(-1px * var(--arc-dash-period, 12));
   }
 }
 

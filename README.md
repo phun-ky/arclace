@@ -271,6 +271,8 @@ these custom properties:
 | `--arc-label-padding` | `3px 6px`                  |
 | `--arc-anchor-fill`   | `#fff`                     |
 | `--arc-dash`          | `6 6`                      |
+| `--arc-dash-period`   | `12`                       |
+| `--arc-dash-speed`    | `0.6s`                     |
 
 Set `--arc-label-bg` and `--arc-anchor-fill` to the background behind the lines,
 so labels and hollow anchors blend in. `--arc-label-halo` from earlier versions
@@ -278,6 +280,20 @@ still works as the label background.
 
 `--arc-dash` sets the dash pattern of `dashed` and `animated` lines, such as
 `4 2`; the `dashArray` option wins over it.
+
+`animated` dashes move by one pattern length, `--arc-dash-period`, every
+`--arc-dash-speed`. `dashArray` sets the period for you. When you set
+`--arc-dash` yourself, set `--arc-dash-period` next to it, as a number without a
+unit: the sum of the numbers, or twice that when there is an odd count of them,
+so the animation loops without a jump:
+
+```css
+#diagram {
+  --arc-dash: 10 4;
+  --arc-dash-period: 14;
+  --arc-dash-speed: 1s;
+}
+```
 
 ### Clickable lines
 

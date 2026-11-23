@@ -373,7 +373,13 @@ export class Connection {
       anchors,
       className
     } = this.options;
-    const dash = dashArray && dashNumbers(dashArray).join(' ');
+    const numbers = dashArray ? dashNumbers(dashArray) : undefined;
+    const dash = numbers?.join(' ');
+    // SVG repeats a pattern with an odd count of numbers to make it even
+    const period =
+      numbers &&
+      numbers.reduce((sum, number) => sum + number, 0) *
+        (numbers.length % 2 ? 2 : 1);
     const classes = ['arc-connection', `arc-${type}`];
 
     if (dashed || animated) classes.push('arc-dashed');
@@ -394,9 +400,15 @@ export class Connection {
       'stroke-dasharray': dashed || animated ? (dash ?? '6 6') : null
     });
 
-    // Inline so it wins over --arc-dash from the page's CSS
-    if (dash) this.element.style.setProperty('--arc-dash', dash);
-    else this.element.style.removeProperty('--arc-dash');
+    // Inline so they win over the page's CSS. The period is how far the
+    // animation moves the dashes, so they loop without a jump.
+    if (dash) {
+      this.element.style.setProperty('--arc-dash', dash);
+      this.element.style.setProperty('--arc-dash-period', String(period));
+    } else {
+      this.element.style.removeProperty('--arc-dash');
+      this.element.style.removeProperty('--arc-dash-period');
+    }
 
     this.#applyGradient(gradient);
     this.#applyArrow(arrow, gradient);

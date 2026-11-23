@@ -322,6 +322,27 @@ describe('Arclace', () => {
     assert.equal(plain.element.style.getPropertyValue('--arc-dash'), '');
   });
 
+  it('sets the dash period for the animation from dashArray', () => {
+    const { a, b } = setup();
+    const arclace = new Arclace({ autoUpdate: false });
+    const connection = arclace.connect(a, b, {
+      animated: true,
+      dashArray: '4 2'
+    });
+    const period = () =>
+      connection.element.style.getPropertyValue('--arc-dash-period');
+
+    assert.equal(period(), '6');
+
+    // SVG doubles a pattern with an odd count of numbers
+    connection.setOptions({ dashArray: [1, 3, 5] });
+    assert.equal(period(), '18');
+
+    // Without a pattern, the stylesheet's 12 or the page's own period
+    connection.setOptions({ dashArray: undefined });
+    assert.equal(period(), '');
+  });
+
   it('sizes the label background to the text and padding', (t) => {
     // jsdom has no SVG layout: a 40 x 10 text box centred on its point
     const proto = SVGElement.prototype as unknown as Record<string, unknown>;
