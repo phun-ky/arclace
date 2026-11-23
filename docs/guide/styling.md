@@ -11,6 +11,8 @@ Each connection is rendered as:
 >
   <marker class="arc-marker">…</marker>
   <!-- arrow -->
+  <linearGradient class="arc-gradient">…</linearGradient>
+  <!-- gradient -->
   <path class="arc-path" />
   <rect class="arc-label-bg" />
   <!-- label -->
@@ -38,6 +40,10 @@ colors all of them:
 }
 ```
 
+A `gradient` line is stroked with its own `<linearGradient>`, which runs from
+the line's start to its end and follows them on every redraw. The arrow and
+anchor at each end take the color at that end; labels keep `currentColor`.
+
 `style.css` is optional. It adds a background behind labels, hollow anchors and
 the `animated` dash animation (turned off with `prefers-reduced-motion`), and
 these custom properties:
@@ -52,10 +58,37 @@ these custom properties:
 | `--arc-label-radius`  | `4px`                      |
 | `--arc-label-padding` | `3px 6px`                  |
 | `--arc-anchor-fill`   | `#fff`                     |
+| `--arc-dash`          | `6 6`                      |
+| `--arc-dash-period`   | `12`                       |
+| `--arc-dash-speed`    | `0.6s`                     |
+| `--arc-glow`          | none                       |
 
 Set `--arc-label-bg` and `--arc-anchor-fill` to the background behind the lines,
 so labels and hollow anchors blend in. `--arc-label-halo` from earlier versions
 still works as the label background.
+
+`--arc-dash` sets the dash pattern of `dashed` and `animated` lines, such as
+`4 2`; the `dashArray` option wins over it.
+
+`animated` dashes move by one pattern length, `--arc-dash-period`, every
+`--arc-dash-speed`. `dashArray` sets the period for you. When you set
+`--arc-dash` yourself, set `--arc-dash-period` next to it, as a number without a
+unit: the sum of the numbers, or twice that when there is an odd count of them,
+so the animation loops without a jump:
+
+```css
+#diagram {
+  --arc-dash: 10 4;
+  --arc-dash-period: 14;
+  --arc-dash-speed: 1s;
+}
+```
+
+Set `--arc-glow` to a blur radius, such as `4px`, to make lines glow without the
+`glow` option; with `glow: true` it sets the radius. The glow is a CSS
+`drop-shadow` in `currentColor`, so a `gradient` line glows in its `color`, not
+its gradient. Each glowing line is filtered on its own: on a page with hundreds
+of lines, keep the glow for the few that matter.
 
 Without the stylesheet the label background is not painted. Style
 `.arc-label-bg` like any SVG shape, with `fill`, `stroke` and `rx`, and set its
@@ -110,6 +143,21 @@ arclace.connect('#theme', '#button', {
 
 For a single connection, the `color` option does the same without CSS.
 
+### Gradient line
+
+Fade the line from one color to another with `gradient`. The arrow takes the
+color at its end:
+
+<StyleDemo variant="gradient" :options="{ gradient: ['#0054f0', '#c2410c'], anchors: true }" />
+
+```ts
+arclace.connect('#theme', '#button', {
+  arrow: 'end',
+  anchors: true,
+  gradient: ['#0054f0', '#c2410c']
+});
+```
+
 ### Dotted line
 
 Round line caps turn zero-length dashes into dots. Set the width with
@@ -125,6 +173,41 @@ arclace.connect('#theme', '#button', { arrow: 'end', strokeWidth: 3 });
 .arc-path {
   stroke-dasharray: 0 8;
 }
+```
+
+### Dash pattern
+
+Set the dashes of one line with `dashArray`, or of many lines with `--arc-dash`
+on the container, or on a class you give them with `className`:
+
+<StyleDemo variant="dash" :options="{ dashed: true, dashArray: [12, 4, 2, 4] }" />
+
+```ts
+arclace.connect('#theme', '#button', {
+  arrow: 'end',
+  dashed: true,
+  dashArray: [12, 4, 2, 4]
+});
+```
+
+```css
+#diagram {
+  --arc-dash: 12 4 2 4;
+}
+```
+
+### Glow
+
+Make a line glow in its own color with `glow`, as a blur radius in pixels or
+`true` for 4px:
+
+<StyleDemo variant="glow" :options="{ glow: 6 }" />
+
+```ts
+arclace.connect('#theme', '#button', {
+  arrow: 'end',
+  glow: 6
+});
 ```
 
 ### Label typography

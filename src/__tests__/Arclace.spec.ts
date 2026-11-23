@@ -3,6 +3,7 @@ import { afterEach, describe, it } from 'node:test';
 
 import { Connection } from '../Connection';
 import { Arclace, createConnections } from '../Arclace';
+import { bezierPath } from '../utils/paths';
 
 import { box, place } from './helpers';
 
@@ -25,6 +26,15 @@ describe('Arclace', () => {
     assert.equal(document.body.firstElementChild, arclace.svg);
     assert.equal(arclace.svg.getAttribute('class'), 'arc-svg mine');
     assert.equal(arclace.svg.style.position, 'absolute');
+    assert.equal(arclace.svg.style.zIndex, '');
+  });
+
+  it('sets the overlay z-index', () => {
+    const arclace = new Arclace({ autoUpdate: false, zIndex: 2 });
+
+    assert.equal(arclace.svg.style.zIndex, '2');
+    // Still the first child: only z-index changes the stacking
+    assert.equal(document.body.firstElementChild, arclace.svg);
   });
 
   it('makes a static container relative and restores it on destroy', () => {
@@ -111,6 +121,29 @@ describe('Arclace', () => {
     assert.deepEqual(two.geometry?.start, { x: 100, y: 25 });
   });
 
+  it('bulges each end of a curve by its own curvature', () => {
+    const { a, b } = setup();
+    const arclace = new Arclace({
+      autoUpdate: false,
+      defaults: { curvature: 0.5 }
+    });
+    const start = { x: 100, y: 25 };
+    const end = { x: 300, y: 25 };
+    const connection = arclace.connect(a, b, { startCurvature: 2 });
+
+    // The end falls back to curvature
+    assert.equal(
+      connection.path.getAttribute('d'),
+      bezierPath(start, 'right', end, 'left', 2, 0.5).d
+    );
+
+    connection.setOptions({ startCurvature: undefined, endCurvature: 0 });
+    assert.equal(
+      connection.path.getAttribute('d'),
+      bezierPath(start, 'right', end, 'left', 0.5, 0).d
+    );
+  });
+
   it('applies gap', () => {
     const { a, b } = setup();
     const arclace = new Arclace({ autoUpdate: false });
@@ -158,6 +191,93 @@ describe('Arclace', () => {
     assert.equal(connection.path.getAttribute('marker-end'), null);
   });
 
+  it('draws a gradient between the ends, with arrows and anchors to match', () => {
+    const { a, b } = setup();
+    const arclace = new Arclace({ autoUpdate: false });
+    const connection = arclace.connect(a, b, {
+      type: 'straight',
+      gradient: ['red', 'green', 'blue'],
+      arrow: 'both',
+      anchors: true
+    });
+    const gradient = connection.element.querySelector('linearGradient')!;
+    const ends = () =>
+      ['x1', 'y1', 'x2', 'y2'].map((name) => gradient.getAttribute(name));
+    const markers = () => [...connection.element.querySelectorAll('marker')];
+    const anchors = [
+      ...connection.element.querySelectorAll<SVGElement>('.arc-anchor')
+    ];
+
+    assert.equal(gradient.getAttribute('gradientUnits'), 'userSpaceOnUse');
+    assert.equal(
+      connection.path.getAttribute('stroke'),
+      `url(#${gradient.id})`
+    );
+    assert.deepEqual(
+      [...gradient.querySelectorAll('stop')].map((stop) => [
+        stop.getAttribute('offset'),
+        stop.getAttribute('stop-color')
+      ]),
+      [
+        ['0', 'red'],
+        ['0.5', 'green'],
+        ['1', 'blue']
+      ]
+    );
+    // A horizontal line, from the element edges rather than the arrow tips
+    assert.deepEqual(ends(), ['100', '25', '300', '25']);
+
+    const [startMarker, endMarker] = markers();
+
+    assert.equal(
+      connection.path.getAttribute('marker-start'),
+      `url(#${startMarker.id})`
+    );
+    assert.equal(
+      connection.path.getAttribute('marker-end'),
+      `url(#${endMarker.id})`
+    );
+    assert.equal(startMarker.style.color, 'red');
+    assert.equal(endMarker.style.color, 'blue');
+    assert.equal(anchors[0].style.color, 'red');
+    assert.equal(anchors[1].style.color, 'blue');
+
+    // The ends follow the elements on every redraw
+    place(b, { left: 300, top: 200, width: 100, height: 50 });
+    arclace.update();
+    assert.deepEqual(ends(), ['100', '25', '300', '225']);
+
+    // A single arrow is one marker, in its own end's color
+    connection.setOptions({ arrow: 'end' });
+    assert.equal(markers().length, 1);
+    assert.equal(markers()[0].style.color, 'blue');
+    assert.equal(
+      connection.path.getAttribute('marker-end'),
+      `url(#${markers()[0].id})`
+    );
+
+    connection.setOptions({ arrow: 'start' });
+    assert.equal(markers()[0].style.color, 'red');
+
+    connection.setOptions({ gradient: undefined });
+    assert.equal(connection.element.querySelector('linearGradient'), null);
+    assert.equal(connection.path.getAttribute('stroke'), 'currentColor');
+    assert.equal(markers()[0].style.color, '');
+    assert.equal(anchors[0].style.color, '');
+  });
+
+  it('removes gradients with their connections', () => {
+    const { a, b } = setup();
+    const arclace = new Arclace({ autoUpdate: false });
+
+    arclace.connect(a, b, { gradient: ['red', 'blue'] }).remove();
+    assert.equal(arclace.svg.querySelector('linearGradient'), null);
+
+    arclace.connect(a, b, { gradient: ['red', 'blue'], arrow: 'both' });
+    arclace.destroy();
+    assert.equal(document.querySelector('linearGradient, marker'), null);
+  });
+
   it('adds and removes labels, anchors and styles', () => {
     const { a, b } = setup();
     const arclace = new Arclace({ autoUpdate: false });
@@ -194,6 +314,89 @@ describe('Arclace', () => {
     assert.equal(connection.element.querySelector('.arc-anchor'), null);
     assert.equal(connection.element.style.color, '');
     assert.equal(connection.path.getAttribute('stroke-dasharray'), null);
+  });
+
+  it('draws dashes in the dashArray pattern', () => {
+    const { a, b } = setup();
+    const arclace = new Arclace({
+      autoUpdate: false,
+      defaults: { dashArray: '4, 2' }
+    });
+    const connection = arclace.connect(a, b, { dashed: true });
+    const dash = () => [
+      connection.path.getAttribute('stroke-dasharray'),
+      connection.element.style.getPropertyValue('--arc-dash')
+    ];
+
+    // Inline, so it wins over --arc-dash from the page
+    assert.deepEqual(dash(), ['4 2', '4 2']);
+
+    connection.setOptions({ dashArray: [1, 3, 5] });
+    assert.deepEqual(dash(), ['1 3 5', '1 3 5']);
+
+    // The pattern only applies to dashed lines
+    connection.setOptions({ dashed: false });
+    assert.equal(dash()[0], null);
+
+    // Animated lines are dashed too
+    connection.setOptions({ animated: true });
+    assert.deepEqual(dash(), ['1 3 5', '1 3 5']);
+
+    // Unset, the instance default applies
+    connection.setOptions({ dashArray: undefined });
+    assert.deepEqual(dash(), ['4 2', '4 2']);
+
+    // With no pattern at all, 6 6, and --arc-dash is left to the page
+    const plain = new Arclace({ autoUpdate: false }).connect(a, b, {
+      dashed: true
+    });
+
+    assert.equal(plain.path.getAttribute('stroke-dasharray'), '6 6');
+    assert.equal(plain.element.style.getPropertyValue('--arc-dash'), '');
+  });
+
+  it('sets the dash period for the animation from dashArray', () => {
+    const { a, b } = setup();
+    const arclace = new Arclace({ autoUpdate: false });
+    const connection = arclace.connect(a, b, {
+      animated: true,
+      dashArray: '4 2'
+    });
+    const period = () =>
+      connection.element.style.getPropertyValue('--arc-dash-period');
+
+    assert.equal(period(), '6');
+
+    // SVG doubles a pattern with an odd count of numbers
+    connection.setOptions({ dashArray: [1, 3, 5] });
+    assert.equal(period(), '18');
+
+    // Without a pattern, the stylesheet's 12 or the page's own period
+    connection.setOptions({ dashArray: undefined });
+    assert.equal(period(), '');
+  });
+
+  it('marks glowing lines and sets their blur radius', () => {
+    const { a, b } = setup();
+    const arclace = new Arclace({ autoUpdate: false });
+    const connection = arclace.connect(a, b);
+    const glow = () => [
+      connection.element.classList.contains('arc-glow'),
+      connection.element.style.getPropertyValue('--arc-glow')
+    ];
+
+    assert.equal(connection.options.glow, false);
+    assert.deepEqual(glow(), [false, '']);
+
+    // The stylesheet's radius, or the page's --arc-glow
+    connection.setOptions({ glow: true });
+    assert.deepEqual(glow(), [true, '']);
+
+    connection.setOptions({ glow: 6 });
+    assert.deepEqual(glow(), [true, '6px']);
+
+    connection.setOptions({ glow: 0 });
+    assert.deepEqual(glow(), [false, '']);
   });
 
   it('sizes the label background to the text and padding', (t) => {
@@ -505,6 +708,165 @@ describe('autoUpdate', () => {
 
     arclace.destroy();
     assert.equal(disconnected, true);
+  });
+});
+
+describe('waypoints', () => {
+  // A dot between a and b, lower down, centred on 200, 100
+  const withDot = () => ({
+    ...setup(),
+    dot: box('dot', { left: 190, top: 90, width: 20, height: 20 })
+  });
+  const through = 'M 100 25 L 200 100 L 300 25';
+
+  it('runs a straight line through points, elements and selectors', () => {
+    const { a, b, dot } = withDot();
+    const arclace = new Arclace({ autoUpdate: false });
+    // Not spread, so each line ends in the middle of its side
+    const d = (via: (Element | string | { x: number; y: number })[]) =>
+      arclace
+        .connect(a, b, { type: 'straight', spread: false, via })
+        .path.getAttribute('d');
+
+    // Each end faces its waypoint, so the sides stay right and left
+    assert.equal(d([{ x: 200, y: 100 }]), through);
+    assert.equal(d([dot]), through);
+    assert.equal(d(['#dot']), through);
+    assert.equal(d([]), 'M 100 25 L 300 25');
+  });
+
+  it('curves through waypoints as one path', () => {
+    const { a, b } = withDot();
+    const arclace = new Arclace({ autoUpdate: false });
+    const connection = arclace.connect(a, b, { via: ['#dot'] });
+
+    assert.match(
+      connection.path.getAttribute('d')!,
+      /^M 100 25 C [^C]+, 200 100 C [^C]+, 300 25$/
+    );
+  });
+
+  it('points arrows of straight lines from their waypoints', () => {
+    const { a, b } = withDot();
+    const arclace = new Arclace({ autoUpdate: false });
+    const connection = arclace.connect(a, b, {
+      type: 'straight',
+      via: ['#dot'],
+      arrow: 'end'
+    });
+
+    // 8px back from 300, 25 towards 200, 100
+    assert.equal(
+      connection.path.getAttribute('d'),
+      'M 100 25 L 200 100 L 293.6 29.8'
+    );
+  });
+
+  it('faces each end towards its waypoint', () => {
+    const { a, c } = withDot();
+    const arclace = new Arclace({ autoUpdate: false });
+    // Without the waypoint below a, the line would leave a on the right
+    const toC = arclace.connect(a, c, { via: [{ x: 50, y: 300 }] });
+
+    assert.equal(toC.geometry?.startSide, 'bottom');
+    assert.equal(toC.geometry?.endSide, 'left');
+  });
+
+  it('hides the line while a waypoint element is not rendered', () => {
+    const { a, b, dot } = withDot();
+    const arclace = new Arclace({ autoUpdate: false });
+    const connection = arclace.connect(a, b, { via: [dot] });
+
+    dot.getClientRects = () => [] as unknown as DOMRectList;
+    arclace.update();
+    assert.equal(connection.geometry, null);
+
+    place(dot, { left: 190, top: 90, width: 20, height: 20 });
+    arclace.update();
+    assert.ok(connection.geometry);
+  });
+
+  it('leaves orthogonal lines as they are', () => {
+    const { a, b, dot } = withDot();
+    const arclace = new Arclace({ autoUpdate: false });
+    const plain = arclace.connect(a, b, { type: 'orthogonal', spread: false });
+    const via = arclace.connect(a, b, {
+      type: 'orthogonal',
+      spread: false,
+      via: [dot]
+    });
+
+    assert.equal(via.path.getAttribute('d'), plain.path.getAttribute('d'));
+
+    // Even a hidden waypoint doesn't hide them
+    dot.getClientRects = () => [] as unknown as DOMRectList;
+    arclace.update();
+    assert.ok(via.geometry);
+  });
+
+  it('looks selectors up when they are set, and adds nothing when one fails', () => {
+    const { a, b } = withDot();
+    const arclace = new Arclace({ autoUpdate: false });
+    const missing = (error: Error) =>
+      error.name === 'ArclaceError' &&
+      /no (options|definitions\[1\])\.via\[0\] matches "#missing"/.test(
+        error.message
+      );
+
+    assert.throws(() => arclace.connect(a, b, { via: ['#missing'] }), missing);
+    assert.throws(
+      () =>
+        arclace.connectAll([
+          { startElement: a, endElement: b },
+          { startElement: a, endElement: b, via: ['#missing'] }
+        ]),
+      missing
+    );
+    assert.equal(arclace.connections.length, 0);
+
+    const connection = arclace.connect(a, b, { via: ['#dot'] });
+
+    assert.throws(() => connection.setOptions({ via: ['#missing'] }), missing);
+    assert.deepEqual(connection.options.via, ['#dot']);
+    assert.throws(
+      () => new Arclace({ autoUpdate: false, defaults: { via: ['#missing'] } }),
+      /no options\.defaults\.via\[0\] matches/
+    );
+  });
+
+  it('observes waypoint elements while they are in use', (t) => {
+    const observed = new Set<Element>();
+
+    class FakeResizeObserver {
+      observe(el: Element) {
+        observed.add(el);
+      }
+      unobserve(el: Element) {
+        observed.delete(el);
+      }
+      disconnect() {}
+    }
+
+    globalThis.ResizeObserver =
+      FakeResizeObserver as unknown as typeof ResizeObserver;
+    t.after(() => {
+      delete (globalThis as { ResizeObserver?: unknown }).ResizeObserver;
+    });
+
+    const { a, b, c, dot } = withDot();
+    const arclace = new Arclace();
+
+    t.after(() => arclace.destroy());
+
+    const connection = arclace.connect(a, b, { via: [dot] });
+
+    assert.ok(observed.has(dot));
+
+    connection.setOptions({ via: [dot, c] });
+    assert.ok(observed.has(c));
+
+    connection.remove();
+    assert.deepEqual(observed, new Set([document.body]));
   });
 });
 

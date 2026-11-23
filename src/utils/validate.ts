@@ -5,7 +5,8 @@ import type {
   ArcPathType,
   ArcPointInterface,
   ArcSideOptionType,
-  ArcSideType
+  ArcSideType,
+  ArcWaypointType
 } from '../types';
 
 export const SIDES: readonly ArcSideType[] = Object.freeze([
@@ -163,6 +164,119 @@ export const assertPoint = (
   return value as ArcPointInterface;
 };
 
+/**
+ * Throws a `TypeError` unless `value` is an array of non-empty strings, and a
+ * `RangeError` when it has fewer than two.
+ */
+export const assertColors = (value: unknown, name: string): string[] => {
+  if (!Array.isArray(value)) {
+    throw new TypeError(
+      `arclace: ${name} must be an array of colors, not ${show(value)}`
+    );
+  }
+
+  value.forEach((color, index) =>
+    assertString(color, `${name}[${index}]`, true)
+  );
+
+  if (value.length < 2) {
+    throw new RangeError(
+      `arclace: ${name} must have 2 colors or more, not ${value.length}`
+    );
+  }
+
+  return value;
+};
+
+/**
+ * The numbers in a dash pattern, given as a string such as `'4, 2'` or as
+ * numbers.
+ */
+export const dashNumbers = (value: string | number[]): number[] =>
+  typeof value === 'string'
+    ? value
+        .split(/[\s,]+/)
+        .filter(Boolean)
+        .map(Number)
+    : value;
+
+/**
+ * Throws a `TypeError` unless `value` is a string or an array of numbers, and
+ * a `RangeError` unless it holds one or more numbers, all 0 or more.
+ */
+export const assertDashArray = (value: unknown, name: string): number[] => {
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => assertNumber(item, `${name}[${index}]`, 0));
+  } else if (typeof value !== 'string') {
+    throw new TypeError(
+      `arclace: ${name} must be a string or an array of numbers, not ${show(value)}`
+    );
+  }
+
+  const numbers = dashNumbers(value as string | number[]);
+
+  // Units and percentages are refused, so the pattern's length is known
+  if (
+    numbers.length === 0 ||
+    numbers.some((number) => !Number.isFinite(number) || number < 0)
+  ) {
+    throw new RangeError(
+      `arclace: ${name} must be numbers of 0 or more, separated by spaces or commas, not ${show(value)}`
+    );
+  }
+
+  return numbers;
+};
+
+/**
+ * Throws a `TypeError` unless `value` is a boolean or a finite number, and a
+ * `RangeError` when it is a number below 0.
+ */
+export const assertBooleanOrLength = (
+  value: unknown,
+  name: string
+): boolean | number => {
+  if (typeof value === 'boolean') return value;
+
+  if (typeof value !== 'number') {
+    throw new TypeError(
+      `arclace: ${name} must be true, false or a number, not ${show(value)}`
+    );
+  }
+
+  return assertNumber(value, name, 0);
+};
+
+/**
+ * Throws a `TypeError` unless `value` is an array of elements, non-empty
+ * strings and points.
+ */
+export const assertWaypoints = (
+  value: unknown,
+  name: string
+): ArcWaypointType[] => {
+  if (!Array.isArray(value)) {
+    throw new TypeError(
+      `arclace: ${name} must be an array of elements, selectors or points, not ${show(value)}`
+    );
+  }
+
+  value.forEach((waypoint, index) => {
+    const item = `${name}[${index}]`;
+
+    if (typeof waypoint === 'string') assertString(waypoint, item, true);
+    else if (typeof waypoint === 'object' && waypoint !== null) {
+      if (!(waypoint instanceof Element)) assertPoint(waypoint, item);
+    } else {
+      throw new TypeError(
+        `arclace: ${item} must be an element, a selector or a point, not ${show(waypoint)}`
+      );
+    }
+  });
+
+  return value;
+};
+
 // How each connection option is checked. Keys that aren't listed are ignored.
 const CONNECTION_OPTION_CHECKS: Readonly<
   Record<
@@ -177,15 +291,21 @@ const CONNECTION_OPTION_CHECKS: Readonly<
   arrow: (value, name) => assertOneOf(value, ARROWS, name),
   label: assertString,
   color: assertString,
+  gradient: assertColors,
   className: assertString,
   strokeWidth: (value, name) => assertNumber(value, name, 0),
   dashed: assertBoolean,
+  dashArray: assertDashArray,
   animated: assertBoolean,
+  glow: assertBooleanOrLength,
   anchors: assertBoolean,
   gap: (value, name) => assertNumber(value, name),
   spread: assertBoolean,
   spacing: (value, name) => assertNumber(value, name, 0),
   curvature: (value, name) => assertNumber(value, name),
+  startCurvature: (value, name) => assertNumber(value, name),
+  endCurvature: (value, name) => assertNumber(value, name),
+  via: assertWaypoints,
   radius: (value, name) => assertNumber(value, name, 0),
   offset: (value, name) => assertNumber(value, name, 0)
 });
@@ -221,7 +341,7 @@ export const validateConnectionOptions = (
 export const validateOptions = (options: unknown): ArcOptionsType => {
   assertObject(options, 'options');
 
-  const { autoUpdate, className, defaults } = options as Record<
+  const { autoUpdate, className, defaults, zIndex } = options as Record<
     string,
     unknown
   >;
@@ -237,6 +357,15 @@ export const validateOptions = (options: unknown): ArcOptionsType => {
   }
 
   if (className !== undefined) assertString(className, 'options.className');
+
+  if (
+    zIndex !== undefined &&
+    !Number.isInteger(assertNumber(zIndex, 'options.zIndex'))
+  ) {
+    throw new RangeError(
+      `arclace: options.zIndex must be a whole number, not ${show(zIndex)}`
+    );
+  }
 
   if (defaults !== undefined) {
     validateConnectionOptions(defaults, 'options.defaults');

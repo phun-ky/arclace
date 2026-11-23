@@ -4,7 +4,7 @@
 
 > **createConnections**(`definitions`, `options?`): [`Arclace`](../classes/Arclace.md)
 
-Defined in: [src/Arclace.ts:563](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L563)
+Defined in: [src/Arclace.ts:609](https://github.com/phun-ky/arclace/blob/main/src/Arclace.ts#L609)
 
 Creates a [Arclace](../classes/Arclace.md) instance and connects the given pairs.
 

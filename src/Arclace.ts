@@ -5,13 +5,18 @@ import type {
   ArcConnectionOptionsType,
   ArcElementTargetType,
   ArcOptionsType,
+  ArcPointInterface,
   ArcRectInterface,
   ArcSideType
 } from './types';
 import { center, isHorizontalSide } from './utils/geometry';
 import { uniqueID } from './utils/id';
 import { getLocalRect, getOrigin, isRendered } from './utils/measure';
-import { querySelector, resolveElement } from './utils/resolve-element';
+import {
+  querySelector,
+  resolveElement,
+  resolveWaypoints
+} from './utils/resolve-element';
 import { getAnchorPoint, resolveSides } from './utils/sides';
 import { createSVGElement } from './utils/svg';
 import {
@@ -24,6 +29,7 @@ type ArcLayoutItemType = {
   connection: Connection;
   startRect: ArcRectInterface;
   endRect: ArcRectInterface;
+  via: ArcPointInterface[];
   startSide: ArcSideType;
   endSide: ArcSideType;
   startSlot: { index: number; count: number };
@@ -44,6 +50,15 @@ type ArcSlotEntryType = {
   key: number;
 };
 
+// A box with no size at a point, so a waypoint can be faced like an element
+const pointRect = ({ x, y }: ArcPointInterface): ArcRectInterface => ({
+  left: x,
+  right: x,
+  top: y,
+  bottom: y,
+  width: 0,
+  height: 0
+});
 const nextFrame = (callback: () => void): number =>
   typeof requestAnimationFrame === 'function'
     ? requestAnimationFrame(callback)
@@ -100,6 +115,11 @@ export class Arclace {
     }
 
     this.#options = validateOptions(options);
+
+    if (this.#options.defaults?.via) {
+      resolveWaypoints(this.#options.defaults.via, 'options.defaults.via');
+    }
+
     this.container = (
       options.container
         ? resolveElement(options.container, 'container')
@@ -127,7 +147,8 @@ export class Arclace {
       width: '100%',
       height: '100%',
       overflow: 'visible',
-      pointerEvents: 'none'
+      pointerEvents: 'none',
+      zIndex: options.zIndex ?? ''
     });
     this.container.prepend(this.svg);
     this.#startAutoUpdate();
@@ -285,8 +306,7 @@ export class Arclace {
 
       this.#connections.delete(connection.id);
       connection._dispose();
-      this.#unobserve(connection.startElement);
-      this.#unobserve(connection.endElement);
+      connection._elements().forEach((el) => this.#unobserve(el));
     }
 
     if (removed.length > 0) this.update();
@@ -345,8 +365,12 @@ export class Arclace {
 
     for (const connection of this.#connections.values()) {
       const { startElement, endElement } = connection;
+      const via =
+        isRendered(startElement) && isRendered(endElement)
+          ? connection._waypoints(origin)
+          : null;
 
-      if (!isRendered(startElement) || !isRendered(endElement)) {
+      if (!via) {
         connection._hide();
         continue;
       }
@@ -354,19 +378,28 @@ export class Arclace {
       const { spread, startSide, endSide } = connection.options;
       const startRect = getLocalRect(startElement, origin);
       const endRect = getLocalRect(endElement, origin);
-      const sides = resolveSides(startRect, endRect, startSide, endSide);
+      // Each end faces its nearest waypoint, or the other end
+      const beforeEnd =
+        via.length > 0 ? pointRect(via[via.length - 1]) : startRect;
+      const afterStart = via.length > 0 ? pointRect(via[0]) : endRect;
+      const sides = {
+        startSide: resolveSides(startRect, afterStart, startSide, endSide)
+          .startSide,
+        endSide: resolveSides(beforeEnd, endRect, startSide, endSide).endSide
+      };
       const solo = { index: 0, count: 1 };
 
       items.push({
         connection,
         startRect,
         endRect,
+        via,
         ...sides,
         startSlot: spread
-          ? addToSlot(startElement, sides.startSide, endRect)
+          ? addToSlot(startElement, sides.startSide, afterStart)
           : solo,
         endSlot: spread
-          ? addToSlot(endElement, sides.endSide, startRect)
+          ? addToSlot(endElement, sides.endSide, beforeEnd)
           : { ...solo }
       });
     }
@@ -383,7 +416,7 @@ export class Arclace {
     }
 
     for (const item of items) {
-      const { connection, startRect, endRect, startSide, endSide } = item;
+      const { connection, startRect, endRect, via, startSide, endSide } = item;
       const { spacing, gap } = connection.options;
 
       connection._draw(
@@ -394,7 +427,8 @@ export class Arclace {
         }),
         startSide,
         getAnchorPoint(endRect, endSide, { ...item.endSlot, spacing, gap }),
-        endSide
+        endSide,
+        via
       );
     }
   }
@@ -445,6 +479,9 @@ export class Arclace {
     const startElement = resolveElement(startTarget, 'startElement');
     const endElement = resolveElement(endTarget, 'endElement');
     const valid = options as ArcConnectionOptionsType;
+
+    if (valid.via) resolveWaypoints(valid.via, `${name}.via`);
+
     const id = valid.id ?? `arc-${uniqueID()}`;
 
     if (this.#connections.has(id)) {
@@ -471,18 +508,27 @@ export class Arclace {
 
     this.#connections.set(id, connection);
     this.svg.appendChild(connection.element);
-    this.#resizeObserver?.observe(startElement);
-    this.#resizeObserver?.observe(endElement);
+    this._observe(connection);
 
     return connection;
+  }
+
+  /**
+   * Watches the size of every element a connection depends on.
+   *
+   * @internal
+   */
+  _observe(connection: Connection): void {
+    // shortcut: waypoint elements a setOptions() call drops stay observed
+    // until the connection is removed, which only costs an extra redraw
+    for (const el of connection._elements()) this.#resizeObserver?.observe(el);
   }
 
   #unobserve(el: Element): void {
     if (!this.#resizeObserver || el === this.container) return;
 
-    const inUse = this.connections.some(
-      (connection) =>
-        connection.startElement === el || connection.endElement === el
+    const inUse = this.connections.some((connection) =>
+      connection._elements().includes(el)
     );
 
     if (!inUse) this.#resizeObserver.unobserve(el);

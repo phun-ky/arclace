@@ -40,8 +40,8 @@
   "main": "./dist/arclace.js",
   "module": "./dist/arclace.js",
   "types": "./dist/arclace.d.ts",
-  "unpkg": "./dist/arclace.umd.cjs",
-  "jsdelivr": "./dist/arclace.umd.cjs",
+  "unpkg": "./dist/arclace.umd.js",
+  "jsdelivr": "./dist/arclace.umd.js",
   "files": [
     "dist",
     "src",

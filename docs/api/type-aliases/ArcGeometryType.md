@@ -4,7 +4,7 @@
 
 > **ArcGeometryType** = `object`
 
-Defined in: [src/types.ts:193](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L193)
+Defined in: [src/types.ts:249](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L249)
 
 The computed geometry of a connection after the last update.
 
@@ -14,7 +14,7 @@ The computed geometry of a connection after the last update.
 
 > **d**: `string`
 
-Defined in: [src/types.ts:199](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L199)
+Defined in: [src/types.ts:255](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L255)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/types.ts:199](https://github.com/phun-ky/arclace/blob/main/src/
 
 > **end**: [`ArcPointInterface`](../interfaces/ArcPointInterface.md)
 
-Defined in: [src/types.ts:195](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L195)
+Defined in: [src/types.ts:251](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L251)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/types.ts:195](https://github.com/phun-ky/arclace/blob/main/src/
 
 > **endSide**: [`ArcSideType`](ArcSideType.md)
 
-Defined in: [src/types.ts:197](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L197)
+Defined in: [src/types.ts:253](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L253)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/types.ts:197](https://github.com/phun-ky/arclace/blob/main/src/
 
 > **labelPoint**: [`ArcPointInterface`](../interfaces/ArcPointInterface.md)
 
-Defined in: [src/types.ts:198](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L198)
+Defined in: [src/types.ts:254](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L254)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/types.ts:198](https://github.com/phun-ky/arclace/blob/main/src/
 
 > **start**: [`ArcPointInterface`](../interfaces/ArcPointInterface.md)
 
-Defined in: [src/types.ts:194](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L194)
+Defined in: [src/types.ts:250](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L250)
 
 ***
 
@@ -54,4 +54,4 @@ Defined in: [src/types.ts:194](https://github.com/phun-ky/arclace/blob/main/src/
 
 > **startSide**: [`ArcSideType`](ArcSideType.md)
 
-Defined in: [src/types.ts:196](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L196)
+Defined in: [src/types.ts:252](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L252)

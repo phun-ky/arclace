@@ -83,11 +83,27 @@ const arclace = createConnections(
 ```html
 <link
   rel="stylesheet"
-  href="https://unpkg.com/@phun-ky/arclace/dist/style.css"
+  href="https://unpkg.com/@phun-ky/arclace@1/dist/style.css"
 />
-<script src="https://unpkg.com/@phun-ky/arclace"></script>
+<script src="https://unpkg.com/@phun-ky/arclace@1/dist/arclace.umd.js"></script>
 <script>
   const arclace = new Arclace.Arclace();
+
+  arclace.connect('#a', '#b');
+</script>
+```
+
+Or as an ES module, without a global:
+
+```html
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/@phun-ky/arclace@1/dist/style.css"
+/>
+<script type="module">
+  import { Arclace } from 'https://unpkg.com/@phun-ky/arclace@1/dist/arclace.js';
+
+  const arclace = new Arclace();
 
   arclace.connect('#a', '#b');
 </script>
@@ -108,7 +124,12 @@ assistive technology (`aria-hidden`); see [Accessibility](#accessibility).
   in scrolled containers and when the container is scaled with CSS transforms
   (for example by a pan/zoom library).
 - The overlay is the container's first child, so it is painted below positioned
-  elements that come after it. Set `z-index` on `.arc-svg` to change that.
+  elements that come after it, such as a semi-transparent panel. To draw the
+  lines over them, give the overlay a higher `z-index` with the `zIndex` option,
+  or with CSS on `.arc-svg`. The lines then cross anything in their way, and
+  labels cover what is under them; the overlay still lets clicks through. The
+  overlay stays the first child, because moving it to the end wouldn't last:
+  elements added later, by you or a framework, would come after it again.
 
 ## API
 
@@ -120,6 +141,7 @@ assistive technology (`aria-hidden`); see [Accessibility](#accessibility).
 | `autoUpdate` | `boolean \| 'frame'`                      | `true`          | `true` redraws on window resize, scroll, element resize and DOM/style changes in the container. `'frame'` redraws every animation frame. `false` only redraws when you call `update()`. |
 | `defaults`   | [Connection options](#connection-options) | `{}`            | Defaults for every connection made by this instance.                                                                                                                                    |
 | `className`  | `string`                                  |                 | Extra classes for the overlay.                                                                                                                                                          |
+| `zIndex`     | `number`                                  |                 | The overlay's `z-index`, a whole number. Set it above that of positioned elements in the container to draw the lines over them; see [How it works](#how-it-works).                      |
 
 | Member                          | Description                                                                                                   |
 | ------------------------------- | ------------------------------------------------------------------------------------------------------------- |
@@ -151,26 +173,53 @@ and shown again when it comes back.
 
 ### Connection options
 
-| Option        | Type                                               | Default    | Description                                                                                 |
-| ------------- | -------------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------- |
-| `id`          | `string`                                           | generated  | Unique id, for `get()` and `disconnect()`.                                                  |
-| `type`        | `'bezier' \| 'straight' \| 'orthogonal'`           | `'bezier'` | How the line is drawn.                                                                      |
-| `startSide`   | `'auto' \| 'top' \| 'right' \| 'bottom' \| 'left'` | `'auto'`   | Side of the start element. `auto` picks the side facing the other element.                  |
-| `endSide`     | same as `startSide`                                | `'auto'`   | Side of the end element.                                                                    |
-| `arrow`       | `'none' \| 'start' \| 'end' \| 'both'`             | `'none'`   | Arrow heads.                                                                                |
-| `label`       | `string`                                           |            | Text in the middle of the line.                                                             |
-| `color`       | `string`                                           |            | Line color. Without it, lines use `--arc-color` or the container's text color.              |
-| `strokeWidth` | `number`                                           | `2`        | Line width in pixels, `0` or more. Arrows and anchors scale with it.                        |
-| `dashed`      | `boolean`                                          | `false`    | Dashed line.                                                                                |
-| `animated`    | `boolean`                                          | `false`    | Dashes flowing from start to end. Needs `style.css`.                                        |
-| `anchors`     | `boolean`                                          | `false`    | Dots where the line meets the elements.                                                     |
-| `className`   | `string`                                           |            | Extra classes for the connection's `<g>`.                                                   |
-| `gap`         | `number`                                           | `0`        | Space between the element edge and the line end. Negative moves the end into the element.   |
-| `spread`      | `boolean`                                          | `true`     | Spread lines that share a side of an element.                                               |
-| `spacing`     | `number`                                           | `16`       | Distance between spread lines, `0` or more. Shrinks to fit the side.                        |
-| `curvature`   | `number`                                           | `1`        | `bezier`: how far the curve bulges out. Negative bulges the other way.                      |
-| `radius`      | `number`                                           | `8`        | `orthogonal`: corner radius, `0` or more. `0` for sharp corners.                            |
-| `offset`      | `number`                                           | `20`       | `orthogonal`: how far the line goes straight out of an element before turning, `0` or more. |
+| Option           | Type                                               | Default     | Description                                                                                 |
+| ---------------- | -------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------- |
+| `id`             | `string`                                           | generated   | Unique id, for `get()` and `disconnect()`.                                                  |
+| `type`           | `'bezier' \| 'straight' \| 'orthogonal'`           | `'bezier'`  | How the line is drawn.                                                                      |
+| `startSide`      | `'auto' \| 'top' \| 'right' \| 'bottom' \| 'left'` | `'auto'`    | Side of the start element. `auto` picks the side facing the other element.                  |
+| `endSide`        | same as `startSide`                                | `'auto'`    | Side of the end element.                                                                    |
+| `arrow`          | `'none' \| 'start' \| 'end' \| 'both'`             | `'none'`    | Arrow heads.                                                                                |
+| `label`          | `string`                                           |             | Text in the middle of the line.                                                             |
+| `color`          | `string`                                           |             | Line color. Without it, lines use `--arc-color` or the container's text color.              |
+| `gradient`       | `string[]`                                         |             | 2 or more colors the line fades through, start to end. Overrides `color`.                   |
+| `strokeWidth`    | `number`                                           | `2`         | Line width in pixels, `0` or more. Arrows and anchors scale with it.                        |
+| `dashed`         | `boolean`                                          | `false`     | Dashed line.                                                                                |
+| `dashArray`      | `string \| number[]`                               |             | Dash pattern in pixels, such as `'4 2'`. Without it, `--arc-dash` or `6 6`.                 |
+| `animated`       | `boolean`                                          | `false`     | Dashes flowing from start to end. Needs `style.css`.                                        |
+| `glow`           | `boolean \| number`                                | `false`     | A glow in the line's color: `true` for 4px, or a blur radius. Needs `style.css`.            |
+| `anchors`        | `boolean`                                          | `false`     | Dots where the line meets the elements.                                                     |
+| `className`      | `string`                                           |             | Extra classes for the connection's `<g>`.                                                   |
+| `gap`            | `number`                                           | `0`         | Space between the element edge and the line end. Negative moves the end into the element.   |
+| `spread`         | `boolean`                                          | `true`      | Spread lines that share a side of an element.                                               |
+| `spacing`        | `number`                                           | `16`        | Distance between spread lines, `0` or more. Shrinks to fit the side.                        |
+| `curvature`      | `number`                                           | `1`         | `bezier`: how far the curve bulges out. Negative bulges the other way.                      |
+| `startCurvature` | `number`                                           | `curvature` | `bezier`: `curvature` at the start. Different values at each end lean the curve.            |
+| `endCurvature`   | `number`                                           | `curvature` | `bezier`: `curvature` at the end.                                                           |
+| `via`            | `(Element \| string \| { x, y })[]`                |             | `bezier` and `straight`: elements, selectors or points to pass through, in order.           |
+| `radius`         | `number`                                           | `8`         | `orthogonal`: corner radius, `0` or more. `0` for sharp corners.                            |
+| `offset`         | `number`                                           | `20`        | `orthogonal`: how far the line goes straight out of an element before turning, `0` or more. |
+
+`startCurvature` and `endCurvature` bulge each end of a curve on its own, for an
+S-curve that leans one way:
+
+```ts
+arclace.connect('#a', '#b', { startCurvature: 1.6, endCurvature: 0.4 });
+```
+
+`via` runs one line through other elements or points on its way, so a dashed
+line keeps its dashes in step through them:
+
+```ts
+arclace.connect('#a', '#b', { dashed: true, via: [{ x: 200, y: 120 }] });
+```
+
+An element (or selector) is passed through at its center; a point is in the
+overlay's coordinates, the same as `geometry`. Each end faces its nearest
+waypoint, the curvature options shape the curve at the two ends, and the line is
+hidden while an element it passes through is hidden. `find()` and `disconnect()`
+only match the elements a line starts and ends at. `orthogonal` lines ignore
+`via`.
 
 The path builders `bezierPath`, `straightPath` and `orthogonalPath` are also
 exported if you want to draw lines between points yourself.
@@ -206,6 +255,8 @@ Each connection is rendered as:
 >
   <marker class="arc-marker">…</marker>
   <!-- arrow -->
+  <linearGradient class="arc-gradient">…</linearGradient>
+  <!-- gradient -->
   <path class="arc-path" />
   <text class="arc-label">…</text>
   <!-- label -->
@@ -232,6 +283,10 @@ colors all of them:
 }
 ```
 
+A `gradient` line is stroked with its own `<linearGradient>`, which runs from
+the line's start to its end and follows them on every redraw. The arrow and
+anchor at each end take the color at that end; labels keep `currentColor`.
+
 `style.css` is optional. It adds a background behind labels, hollow anchors and
 the `animated` dash animation (turned off with `prefers-reduced-motion`), and
 these custom properties:
@@ -246,10 +301,37 @@ these custom properties:
 | `--arc-label-radius`  | `4px`                      |
 | `--arc-label-padding` | `3px 6px`                  |
 | `--arc-anchor-fill`   | `#fff`                     |
+| `--arc-dash`          | `6 6`                      |
+| `--arc-dash-period`   | `12`                       |
+| `--arc-dash-speed`    | `0.6s`                     |
+| `--arc-glow`          | none                       |
 
 Set `--arc-label-bg` and `--arc-anchor-fill` to the background behind the lines,
 so labels and hollow anchors blend in. `--arc-label-halo` from earlier versions
 still works as the label background.
+
+`--arc-dash` sets the dash pattern of `dashed` and `animated` lines, such as
+`4 2`; the `dashArray` option wins over it.
+
+`animated` dashes move by one pattern length, `--arc-dash-period`, every
+`--arc-dash-speed`. `dashArray` sets the period for you. When you set
+`--arc-dash` yourself, set `--arc-dash-period` next to it, as a number without a
+unit: the sum of the numbers, or twice that when there is an odd count of them,
+so the animation loops without a jump:
+
+```css
+#diagram {
+  --arc-dash: 10 4;
+  --arc-dash-period: 14;
+  --arc-dash-speed: 1s;
+}
+```
+
+Set `--arc-glow` to a blur radius, such as `4px`, to make lines glow without the
+`glow` option; with `glow: true` it sets the radius. The glow is a CSS
+`drop-shadow` in `currentColor`, so a `gradient` line glows in its `color`, not
+its gradient. Each glowing line is filtered on its own: on a page with hundreds
+of lines, keep the glow for the few that matter.
 
 ### Clickable lines
 

@@ -2,9 +2,9 @@
 
 # Function: bezierPath()
 
-> **bezierPath**(`start`, `startSide`, `end`, `endSide`, `curvature?`): [`ArcPathResultType`](../type-aliases/ArcPathResultType.md)
+> **bezierPath**(`start`, `startSide`, `end`, `endSide`, `curvature?`, `endCurvature?`): [`ArcPathResultType`](../type-aliases/ArcPathResultType.md)
 
-Defined in: [src/utils/paths.ts:114](https://github.com/phun-ky/arclace/blob/main/src/utils/paths.ts#L114)
+Defined in: [src/utils/paths.ts:119](https://github.com/phun-ky/arclace/blob/main/src/utils/paths.ts#L119)
 
 A cubic bezier curve that leaves `start` and arrives at `end`
 perpendicular to their sides.
@@ -31,13 +31,24 @@ perpendicular to their sides.
 
 `number` = `1`
 
+How far the curve bulges out at the start, and at the
+  end unless `endCurvature` is given.
+
+### endCurvature?
+
+`number` = `curvature`
+
+How far the curve bulges out at the end. Different
+  values at each end lean the curve.
+
 ## Returns
 
 [`ArcPathResultType`](../type-aliases/ArcPathResultType.md)
 
 ## Throws
 
-When a point or `curvature` isn't finite.
+When a point, `curvature` or `endCurvature` isn't
+  finite.
 
 ## Throws
 

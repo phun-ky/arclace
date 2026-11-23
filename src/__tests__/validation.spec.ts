@@ -42,6 +42,8 @@ describe('connection options', () => {
     ['a NaN strokeWidth', { strokeWidth: NaN }, 'TypeError'],
     ['a strokeWidth string', { strokeWidth: '3' }, 'TypeError'],
     ['an infinite curvature', { curvature: Infinity }, 'TypeError'],
+    ['a startCurvature string', { startCurvature: '1' }, 'TypeError'],
+    ['an infinite endCurvature', { endCurvature: Infinity }, 'TypeError'],
     ['a NaN offset', { offset: NaN }, 'TypeError'],
     ['a negative radius', { radius: -5 }, 'RangeError'],
     ['a negative offset', { offset: -20 }, 'RangeError'],
@@ -54,6 +56,17 @@ describe('connection options', () => {
     ['a label object', { label: {} }, 'TypeError'],
     ['a className number', { className: 42 }, 'TypeError'],
     ['a color number', { color: 42 }, 'TypeError'],
+    ['a gradient string', { gradient: 'red' }, 'TypeError'],
+    ['a dashArray number', { dashArray: 4 }, 'TypeError'],
+    ['a glow string', { glow: '4px' }, 'TypeError'],
+    ['a via selector that is not in an array', { via: '#a' }, 'TypeError'],
+    ['a NaN glow', { glow: NaN }, 'TypeError'],
+    ['a negative glow', { glow: -4 }, 'RangeError'],
+    ['a dashArray with units', { dashArray: '4px 2px' }, 'RangeError'],
+    ['a dashArray with a negative dash', { dashArray: '4 -2' }, 'RangeError'],
+    ['an empty dashArray string', { dashArray: ' , ' }, 'RangeError'],
+    ['an empty dashArray', { dashArray: [] }, 'RangeError'],
+    ['a gradient of one color', { gradient: ['red'] }, 'RangeError'],
     ['an id number', { id: 42 }, 'TypeError'],
     ['an empty id', { id: '' }, 'TypeError']
   ];
@@ -133,6 +146,36 @@ describe('connection options', () => {
       name: 'TypeError',
       message: 'arclace: options.label must be a string, not a function'
     });
+    assert.throws(
+      () => arclace.connect(a, b, loose({ gradient: ['red', 42] })),
+      {
+        name: 'TypeError',
+        message:
+          'arclace: options.gradient[1] must be a non-empty string, not 42'
+      }
+    );
+    assert.throws(() => arclace.connect(a, b, loose({ via: [42] })), {
+      name: 'TypeError',
+      message:
+        'arclace: options.via[0] must be an element, a selector or a point, not 42'
+    });
+    assert.throws(() => arclace.connect(a, b, loose({ via: [{ x: 1 }] })), {
+      name: 'TypeError',
+      message:
+        'arclace: options.via[0].y must be a finite number, not undefined'
+    });
+    assert.throws(() => arclace.connect(a, b, { via: [''] }), {
+      name: 'TypeError',
+      message: 'arclace: options.via[0] must be a non-empty string, not ""'
+    });
+    assert.throws(() => arclace.connect(a, b, { dashArray: [4, -2] }), {
+      name: 'RangeError',
+      message: 'arclace: options.dashArray[1] must be 0 or more, not -2'
+    });
+    assert.throws(() => arclace.connect(a, b, loose({ dashArray: ['4'] })), {
+      name: 'TypeError',
+      message: 'arclace: options.dashArray[0] must be a finite number, not "4"'
+    });
   });
 
   it('checks setOptions and keeps the old options when it throws', () => {
@@ -179,6 +222,8 @@ describe('instance options', () => {
     ['options that are not an object', null, 'TypeError'],
     ['an unknown autoUpdate', { autoUpdate: 'yes' }, 'RangeError'],
     ['a className number', { className: 42 }, 'TypeError'],
+    ['a zIndex string', { zIndex: '1' }, 'TypeError'],
+    ['a fractional zIndex', { zIndex: 1.5 }, 'RangeError'],
     ['a container that is not an element', { container: 42 }, 'TypeError'],
     ['bad defaults', { defaults: { type: 'wavy' } }, 'RangeError'],
     ['an id in the defaults', { defaults: { id: 'x' } }, 'TypeError']
@@ -411,6 +456,10 @@ describe('path builders', () => {
     });
     assert.throws(() => straightPath(p, loose(null)), TypeError);
     assert.throws(() => bezierPath(p, 'right', q, 'left', NaN), TypeError);
+    assert.throws(() => bezierPath(p, 'right', q, 'left', 1, NaN), {
+      name: 'TypeError',
+      message: 'arclace: endCurvature must be a finite number, not NaN'
+    });
     assert.throws(
       () => orthogonalPath(p, 'right', q, 'left', { radius: -5 }),
       RangeError

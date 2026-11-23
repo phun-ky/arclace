@@ -6,25 +6,51 @@ import type {
   ArcPointInterface,
   ArcSideType
 } from './types';
-import { add, distance, NORMALS } from './utils/geometry';
+import { add, center, distance, NORMALS } from './utils/geometry';
 import { uniqueID } from './utils/id';
+import { type ArcOriginType, getLocalRect, isRendered } from './utils/measure';
 import {
   bezierPath,
+  bezierPathVia,
   type ArcPathResultType,
   orthogonalPath,
+  polylinePath,
   straightPath
 } from './utils/paths';
+import { resolveWaypoints } from './utils/resolve-element';
 import { createSVGElement, setAttributes } from './utils/svg';
-import { validateConnectionOptions } from './utils/validate';
+import { dashNumbers, validateConnectionOptions } from './utils/validate';
 
 /**
- * Connection options with every default filled in. `label`, `color` and
+ * Connection options with every default filled in. `label`, `color`,
+ * `gradient`, `dashArray`, `via`, `startCurvature`, `endCurvature` and
  * `className` have no default.
  */
 export type ArcResolvedConnectionOptionsType = Required<
-  Omit<ArcConnectionOptionsType, 'id' | 'label' | 'color' | 'className'>
+  Omit<
+    ArcConnectionOptionsType,
+    | 'id'
+    | 'label'
+    | 'color'
+    | 'gradient'
+    | 'dashArray'
+    | 'via'
+    | 'startCurvature'
+    | 'endCurvature'
+    | 'className'
+  >
 > &
-  Pick<ArcConnectionOptionsType, 'label' | 'color' | 'className'> & {
+  Pick<
+    ArcConnectionOptionsType,
+    | 'label'
+    | 'color'
+    | 'gradient'
+    | 'dashArray'
+    | 'via'
+    | 'startCurvature'
+    | 'endCurvature'
+    | 'className'
+  > & {
     id: string;
   };
 
@@ -34,7 +60,18 @@ export type ArcResolvedConnectionOptionsType = Required<
  */
 export const DEFAULT_CONNECTION_OPTIONS: Readonly<
   Required<
-    Omit<ArcConnectionOptionsType, 'id' | 'label' | 'color' | 'className'>
+    Omit<
+      ArcConnectionOptionsType,
+      | 'id'
+      | 'label'
+      | 'color'
+      | 'gradient'
+      | 'dashArray'
+      | 'via'
+      | 'startCurvature'
+      | 'endCurvature'
+      | 'className'
+    >
   >
 > = Object.freeze({
   type: 'bezier',
@@ -44,6 +81,7 @@ export const DEFAULT_CONNECTION_OPTIONS: Readonly<
   strokeWidth: 2,
   dashed: false,
   animated: false,
+  glow: false,
   anchors: false,
   gap: 0,
   spread: true,
@@ -84,6 +122,7 @@ type ArcConnectionParamsType = {
  * ```html
  * <g class="arc-connection arc-bezier">
  *   <marker class="arc-marker">…</marker>  <!-- when `arrow` is set -->
+ *   <linearGradient class="arc-gradient">…</linearGradient>  <!-- when `gradient` is set -->
  *   <path class="arc-path" />
  *   <rect class="arc-label-bg" />          <!-- when `label` is set -->
  *   <text class="arc-label">…</text>
@@ -116,6 +155,9 @@ export class Connection {
   #options: ArcConnectionOptionsType;
   #defaults: ArcConnectionOptionsType;
   #marker: SVGMarkerElement | null = null;
+  // A second arrow, only for a gradient line with arrows at both ends
+  #endMarker: SVGMarkerElement | null = null;
+  #gradient: SVGLinearGradientElement | null = null;
   #label: SVGTextElement | null = null;
   #labelBg: SVGRectElement | null = null;
   // The background's box relative to the label's anchor point, measured once
@@ -123,6 +165,8 @@ export class Connection {
   #labelBox: { x: number; y: number; width: number; height: number } | null =
     null;
   #anchors: [SVGCircleElement, SVGCircleElement] | null = null;
+  // The waypoints, with selectors resolved to elements
+  #via: (Element | ArcPointInterface)[] = [];
 
   private constructor(params: ArcConnectionParamsType) {
     const {
@@ -201,8 +245,14 @@ export class Connection {
       throw new TypeError('arclace: setOptions() cannot change the id');
     }
 
+    // Looked up first, so a selector that fails leaves the options as they were
+    if (options.via) resolveWaypoints(options.via, 'options.via');
+
     this.#options = { ...this.#options, ...options };
     this.#applyOptions();
+
+    if (options.via) this.#owner._observe(this);
+
     this.#owner.update();
 
     return this;
@@ -223,7 +273,47 @@ export class Connection {
   }
 
   /**
-   * Draws the connection between two attachment points.
+   * The elements this connection depends on: its ends and the elements it
+   * passes through.
+   *
+   * @internal
+   */
+  _elements(): Element[] {
+    return [
+      this.startElement,
+      this.endElement,
+      ...this.#via.filter((waypoint) => waypoint instanceof Element)
+    ];
+  }
+
+  /**
+   * Measures the points the line passes through, or returns `null` when one
+   * of the elements is not rendered.
+   *
+   * @internal
+   */
+  _waypoints(origin: ArcOriginType): ArcPointInterface[] | null {
+    // Orthogonal lines don't pass through waypoints
+    if (this.options.type === 'orthogonal') return [];
+
+    const points: ArcPointInterface[] = [];
+
+    for (const waypoint of this.#via) {
+      if (!(waypoint instanceof Element)) {
+        points.push({ x: waypoint.x, y: waypoint.y });
+      } else if (isRendered(waypoint)) {
+        points.push(center(getLocalRect(waypoint, origin)));
+      } else {
+        return null;
+      }
+    }
+
+    return points;
+  }
+
+  /**
+   * Draws the connection between two attachment points, through the
+   * waypoints.
    *
    * @internal
    */
@@ -231,7 +321,8 @@ export class Connection {
     start: ArcPointInterface,
     startSide: ArcSideType,
     end: ArcPointInterface,
-    endSide: ArcSideType
+    endSide: ArcSideType,
+    via: ArcPointInterface[] = []
   ): void {
     const { arrow, strokeWidth } = this.options;
     const arrowLength = ARROW_SIZE * strokeWidth;
@@ -239,17 +330,23 @@ export class Connection {
     // elements
     const pathStart =
       arrow === 'start' || arrow === 'both'
-        ? this.#pullBack(start, startSide, end, arrowLength)
+        ? this.#pullBack(start, startSide, via[0] ?? end, arrowLength)
         : start;
     const pathEnd =
       arrow === 'end' || arrow === 'both'
-        ? this.#pullBack(end, endSide, start, arrowLength)
+        ? this.#pullBack(
+            end,
+            endSide,
+            via[via.length - 1] ?? start,
+            arrowLength
+          )
         : end;
     const { d, labelPoint } = this.#buildPath(
       pathStart,
       startSide,
       pathEnd,
-      endSide
+      endSide,
+      via
     );
 
     this.#geometry = Object.freeze({
@@ -267,6 +364,15 @@ export class Connection {
       'data-end-side': endSide
     });
     this.path.setAttribute('d', d);
+
+    if (this.#gradient) {
+      setAttributes(this.#gradient, {
+        x1: start.x,
+        y1: start.y,
+        x2: end.x,
+        y2: end.y
+      });
+    }
 
     if (this.#label) this.#placeLabel(labelPoint);
 
@@ -300,11 +406,23 @@ export class Connection {
     start: ArcPointInterface,
     startSide: ArcSideType,
     end: ArcPointInterface,
-    endSide: ArcSideType
+    endSide: ArcSideType,
+    via: ArcPointInterface[]
   ): ArcPathResultType {
-    const { type, curvature, radius, offset } = this.options;
+    const {
+      type,
+      curvature,
+      startCurvature = curvature,
+      endCurvature = curvature,
+      radius,
+      offset
+    } = this.options;
 
-    if (type === 'straight') return straightPath(start, end);
+    if (type === 'straight') {
+      return via.length > 0
+        ? polylinePath([start, ...via, end])
+        : straightPath(start, end);
+    }
 
     if (type === 'orthogonal') {
       return orthogonalPath(start, startSide, end, endSide, {
@@ -313,7 +431,26 @@ export class Connection {
       });
     }
 
-    return bezierPath(start, startSide, end, endSide, curvature);
+    if (via.length > 0) {
+      return bezierPathVia(
+        start,
+        startSide,
+        end,
+        endSide,
+        via,
+        startCurvature,
+        endCurvature
+      );
+    }
+
+    return bezierPath(
+      start,
+      startSide,
+      end,
+      endSide,
+      startCurvature,
+      endCurvature
+    );
   }
 
   #pullBack(
@@ -343,17 +480,32 @@ export class Connection {
       arrow,
       label,
       color,
+      gradient,
       strokeWidth,
       dashed,
+      dashArray,
       animated,
+      glow,
       anchors,
+      via,
       className
     } = this.options;
+    const numbers = dashArray ? dashNumbers(dashArray) : undefined;
+    const dash = numbers?.join(' ');
+    // SVG repeats a pattern with an odd count of numbers to make it even
+    const period =
+      numbers &&
+      numbers.reduce((sum, number) => sum + number, 0) *
+        (numbers.length % 2 ? 2 : 1);
     const classes = ['arc-connection', `arc-${type}`];
+
+    this.#via = resolveWaypoints(via ?? [], 'options.via');
 
     if (dashed || animated) classes.push('arc-dashed');
 
     if (animated) classes.push('arc-animated');
+
+    if (glow) classes.push('arc-glow');
 
     if (className) classes.push(...className.split(/\s+/).filter(Boolean));
 
@@ -366,51 +518,129 @@ export class Connection {
 
     setAttributes(this.path, {
       'stroke-width': strokeWidth,
-      'stroke-dasharray': dashed || animated ? '6 6' : null
+      'stroke-dasharray': dashed || animated ? (dash ?? '6 6') : null
     });
 
-    this.#applyArrow(arrow);
+    // Inline so they win over the page's CSS. The period is how far the
+    // animation moves the dashes, so they loop without a jump.
+    if (dash) {
+      this.element.style.setProperty('--arc-dash', dash);
+      this.element.style.setProperty('--arc-dash-period', String(period));
+    } else {
+      this.element.style.removeProperty('--arc-dash');
+      this.element.style.removeProperty('--arc-dash-period');
+    }
+
+    if (typeof glow === 'number' && glow > 0) {
+      this.element.style.setProperty('--arc-glow', `${glow}px`);
+    } else {
+      this.element.style.removeProperty('--arc-glow');
+    }
+
+    this.#applyGradient(gradient);
+    this.#applyArrow(arrow, gradient);
     this.#applyLabel(label);
-    this.#applyAnchors(anchors, strokeWidth);
+    this.#applyAnchors(anchors, strokeWidth, gradient);
   }
 
-  #applyArrow(arrow: ArcResolvedConnectionOptionsType['arrow']): void {
+  #applyGradient(gradient: string[] | undefined): void {
+    if (!gradient) {
+      this.#gradient?.remove();
+      this.#gradient = null;
+      this.path.setAttribute('stroke', 'currentColor');
+
+      return;
+    }
+
+    if (!this.#gradient) {
+      // In user space, because objectBoundingBox units span the path's
+      // bounding box, which has no height or width on a horizontal or
+      // vertical line. _draw sets the ends.
+      this.#gradient = createSVGElement('linearGradient', {
+        id: `arc-gradient-${uniqueID()}`,
+        class: 'arc-gradient',
+        gradientUnits: 'userSpaceOnUse'
+      });
+      this.element.insertBefore(this.#gradient, this.path);
+    }
+
+    this.#gradient.replaceChildren(
+      ...gradient.map((color, index) =>
+        createSVGElement('stop', {
+          offset: index / (gradient.length - 1),
+          'stop-color': color
+        })
+      )
+    );
+    this.path.setAttribute('stroke', `url(#${this.#gradient.id})`);
+  }
+
+  #createMarker(): SVGMarkerElement {
+    // The marker lives inside the connection's group so it inherits the
+    // group's color
+    const marker = createSVGElement('marker', {
+      id: `arc-arrow-${uniqueID()}`,
+      class: 'arc-marker',
+      viewBox: '0 0 10 10',
+      refX: 0,
+      refY: 5,
+      markerWidth: ARROW_SIZE,
+      markerHeight: ARROW_SIZE,
+      markerUnits: 'strokeWidth',
+      orient: 'auto-start-reverse'
+    });
+
+    marker.appendChild(
+      createSVGElement('path', {
+        d: 'M 0 0 L 10 5 L 0 10 z',
+        fill: 'currentColor'
+      })
+    );
+    this.element.insertBefore(marker, this.path);
+
+    return marker;
+  }
+
+  #applyArrow(
+    arrow: ArcResolvedConnectionOptionsType['arrow'],
+    gradient: string[] | undefined
+  ): void {
     if (arrow === 'none') {
       this.#marker?.remove();
+      this.#endMarker?.remove();
       this.#marker = null;
+      this.#endMarker = null;
       setAttributes(this.path, { 'marker-start': null, 'marker-end': null });
 
       return;
     }
 
-    if (!this.#marker) {
-      // The marker lives inside the connection's group so it inherits the
-      // group's color
-      this.#marker = createSVGElement('marker', {
-        id: `arc-arrow-${uniqueID()}`,
-        class: 'arc-marker',
-        viewBox: '0 0 10 10',
-        refX: 0,
-        refY: 5,
-        markerWidth: ARROW_SIZE,
-        markerHeight: ARROW_SIZE,
-        markerUnits: 'strokeWidth',
-        orient: 'auto-start-reverse'
-      });
-      this.#marker.appendChild(
-        createSVGElement('path', {
-          d: 'M 0 0 L 10 5 L 0 10 z',
-          fill: 'currentColor'
-        })
-      );
-      this.element.insertBefore(this.#marker, this.path);
+    this.#marker ??= this.#createMarker();
+
+    // One marker can't take two colors, so a gradient line with arrows at
+    // both ends gets a marker for each
+    if (gradient && arrow === 'both') {
+      this.#endMarker ??= this.#createMarker();
+      this.#endMarker.style.color = gradient[gradient.length - 1];
+    } else {
+      this.#endMarker?.remove();
+      this.#endMarker = null;
     }
 
-    const url = `url(#${this.#marker.id})`;
+    // Each arrow takes the gradient's color at its end
+    this.#marker.style.color = gradient
+      ? gradient[arrow === 'end' ? gradient.length - 1 : 0]
+      : '';
+
+    const url = (marker: SVGMarkerElement): string => `url(#${marker.id})`;
 
     setAttributes(this.path, {
-      'marker-start': arrow === 'start' || arrow === 'both' ? url : null,
-      'marker-end': arrow === 'end' || arrow === 'both' ? url : null
+      'marker-start':
+        arrow === 'start' || arrow === 'both' ? url(this.#marker) : null,
+      'marker-end':
+        arrow === 'end' || arrow === 'both'
+          ? url(this.#endMarker ?? this.#marker)
+          : null
     });
   }
 
@@ -483,7 +713,11 @@ export class Connection {
     if (this.#geometry) this.#placeLabel(this.#geometry.labelPoint);
   }
 
-  #applyAnchors(anchors: boolean, strokeWidth: number): void {
+  #applyAnchors(
+    anchors: boolean,
+    strokeWidth: number,
+    gradient: string[] | undefined
+  ): void {
     if (!anchors) {
       this.#anchors?.forEach((anchor) => anchor.remove());
       this.#anchors = null;
@@ -499,8 +733,12 @@ export class Connection {
       this.element.append(...this.#anchors);
     }
 
-    this.#anchors.forEach((anchor) =>
-      setAttributes(anchor, { r: strokeWidth + 2, fill: 'currentColor' })
-    );
+    this.#anchors.forEach((anchor, index) => {
+      setAttributes(anchor, { r: strokeWidth + 2, fill: 'currentColor' });
+      // Each anchor takes the gradient's color at its end
+      anchor.style.color = gradient
+        ? gradient[index === 0 ? 0 : gradient.length - 1]
+        : '';
+    });
   }
 }

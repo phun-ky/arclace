@@ -33,6 +33,13 @@ export interface ArcPointInterface {
   y: number;
 }
 
+/**
+ * A point a line passes through: an element (or a selector for one), passed
+ * through at its center, or a point in the overlay's coordinates, the same
+ * as {@link ArcGeometryType}.
+ */
+export type ArcWaypointType = ArcElementTargetType | ArcPointInterface;
+
 export interface ArcRectInterface {
   left: number;
   top: number;
@@ -83,6 +90,13 @@ export type ArcConnectionOptionsType = {
   color?: string;
 
   /**
+   * Two or more CSS colors the line fades through from start to end, evenly
+   * spaced. Overrides `color` for the line; the arrow and anchor at each end
+   * take that end's color.
+   */
+  gradient?: string[];
+
+  /**
    * Line width in pixels. Defaults to `2`.
    */
   strokeWidth?: number;
@@ -93,10 +107,24 @@ export type ArcConnectionOptionsType = {
   dashed?: boolean;
 
   /**
+   * The dash pattern of `dashed` and `animated` lines, in pixels: dash and
+   * gap lengths, as numbers or a string such as `'4 2'`. Without it, lines
+   * use `--arc-dash` when the stylesheet is loaded, or `'6 6'`.
+   */
+  dashArray?: string | number[];
+
+  /**
    * Animate the dashes from start to end. Implies `dashed`. Requires the
    * stylesheet. Defaults to `false`.
    */
   animated?: boolean;
+
+  /**
+   * A soft glow around the line, in its color: `true` for the stylesheet's
+   * `--arc-glow` or 4px, or a blur radius in pixels. Requires the
+   * stylesheet. Defaults to `false`.
+   */
+  glow?: boolean | number;
 
   /**
    * Draw a dot where the line touches each element. Defaults to `false`.
@@ -132,6 +160,27 @@ export type ArcConnectionOptionsType = {
    * elements. Defaults to `1`.
    */
   curvature?: number;
+
+  /**
+   * `bezier` only: `curvature` at the start of the line, so the two ends can
+   * bulge differently and lean the curve. Defaults to `curvature`.
+   */
+  startCurvature?: number;
+
+  /**
+   * `bezier` only: `curvature` at the end of the line. Defaults to
+   * `curvature`.
+   */
+  endCurvature?: number;
+
+  /**
+   * Elements or points the line passes through on its way from start to
+   * end, in order, as one path, so dashes stay in step. `bezier` and
+   * `straight` only; `orthogonal` lines ignore it. Selectors are looked up
+   * when the option is set. The line is hidden while one of the elements is
+   * not rendered.
+   */
+  via?: ArcWaypointType[];
 
   /**
    * `orthogonal` only: corner radius in pixels. Use `0` for sharp corners.
@@ -185,6 +234,13 @@ export type ArcOptionsType = {
    * Extra class names added to the SVG overlay.
    */
   className?: string;
+
+  /**
+   * The overlay's `z-index`. Without it, the overlay is painted below
+   * positioned elements that come after it in the container; a `zIndex`
+   * above theirs paints the lines on top.
+   */
+  zIndex?: number;
 };
 
 /**
