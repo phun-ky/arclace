@@ -153,11 +153,12 @@ The package draws SVG lines between DOM elements, with no runtime dependencies:
 - **`src/style.css`** is the optional stylesheet, shipped as
   `@phun-ky/arclace/style.css`.
 - **The build:** `vite.config.js` builds `dist/arclace.js` (ES module) and
-  `dist/arclace.umd.cjs` (UMD, for script tags and CDNs) with source maps, and
-  copies the stylesheet; `tsc -p tsconfig.build.json` writes the declarations to
-  `dts/`, and `rollup.config.js` bundles them into `dist/arclace.d.ts`.
-  `package.json` points `exports`, `main`, `module`, `types`, `unpkg` and
-  `jsdelivr` at those files.
+  `dist/arclace.umd.cjs` (UMD) with source maps, copies the UMD build to
+  `dist/arclace.umd.js` for script tags and CDNs (which serve `.cjs` with a type
+  browsers refuse), and copies the stylesheet; `tsc -p tsconfig.build.json`
+  writes the declarations to `dts/`, and `rollup.config.js` bundles them into
+  `dist/arclace.d.ts`. `package.json` points `exports`, `main`, `module`,
+  `types`, `unpkg` and `jsdelivr` at those files.
 - **`scripts/check-pack.mjs`** packs the package, installs it in an empty
   project and loads it from every entry point. It then runs
   **`scripts/check-examples.mjs`**, which runs every code example in the README

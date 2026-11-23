@@ -21,11 +21,20 @@ export default defineConfig({
       // being imported by the library code
       name: 'arc-copy-styles',
       apply: 'build',
-      writeBundle() {
+      writeBundle(_options, bundle) {
         copyFileSync(
           resolve(root, 'src/style.css'),
           resolve(root, 'dist/style.css')
         );
+
+        // CDNs serve .cjs with a type browsers refuse under nosniff, so the
+        // UMD build is also shipped as .js; it keeps using the .cjs map
+        if ('arclace.umd.cjs' in bundle) {
+          copyFileSync(
+            resolve(root, 'dist/arclace.umd.cjs'),
+            resolve(root, 'dist/arclace.umd.js')
+          );
+        }
       }
     }
   ]

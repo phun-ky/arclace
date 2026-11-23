@@ -83,11 +83,27 @@ const arclace = createConnections(
 ```html
 <link
   rel="stylesheet"
-  href="https://unpkg.com/@phun-ky/arclace/dist/style.css"
+  href="https://unpkg.com/@phun-ky/arclace@1/dist/style.css"
 />
-<script src="https://unpkg.com/@phun-ky/arclace"></script>
+<script src="https://unpkg.com/@phun-ky/arclace@1/dist/arclace.umd.js"></script>
 <script>
   const arclace = new Arclace.Arclace();
+
+  arclace.connect('#a', '#b');
+</script>
+```
+
+Or as an ES module, without a global:
+
+```html
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/@phun-ky/arclace@1/dist/style.css"
+/>
+<script type="module">
+  import { Arclace } from 'https://unpkg.com/@phun-ky/arclace@1/dist/arclace.js';
+
+  const arclace = new Arclace();
 
   arclace.connect('#a', '#b');
 </script>
