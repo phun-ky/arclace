@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.2.0](https://github.com/phun-ky/arclace/compare/1.1.0...1.2.0) (2026-11-23)
+
+### Feature
+
+* 🎸 fade lines through a gradient ([f2013b3](https://github.com/phun-ky/arclace/commit/f2013b33b2d7c1ed07610610daad4b9380ae7f6b))
+* 🎸 lean bezier curves with startCurvature and endCurvature ([aea2cba](https://github.com/phun-ky/arclace/commit/aea2cbaa418d6e1dbf80e785a96808e3f30ec1dd))
+* 🎸 loop the dash animation by the pattern's own length ([79dd8fd](https://github.com/phun-ky/arclace/commit/79dd8fd01cc6daca64b35d74defa9f234442badf))
+* 🎸 make lines glow with glow or --arc-glow ([7b39fc3](https://github.com/phun-ky/arclace/commit/7b39fc3feab71f1ae4fa804fa802f3c7ab0c094f))
+* 🎸 run lines through waypoints with via ([4091216](https://github.com/phun-ky/arclace/commit/40912167a03e6006f128da06e764bf46e93b4bff))
+* 🎸 set the dash pattern with dashArray or --arc-dash ([e10f880](https://github.com/phun-ky/arclace/commit/e10f8802f455212d90b24c83097a4c37ab7de335))
+* 🎸 stack the overlay with a zIndex option ([8ac48de](https://github.com/phun-ky/arclace/commit/8ac48de3088083305e8dc11180569639eb8e228e))
+
+### Bug
+
+* 🐛 serve the UMD build to CDNs as .js ([c8a44a6](https://github.com/phun-ky/arclace/commit/c8a44a66f28696b4779c1db95a043ed4ac38844c))
+
 ## [1.1.0](https://github.com/phun-ky/arclace/compare/1.0.0...1.1.0) (2026-11-23)
 
 ### Tasks
