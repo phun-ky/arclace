@@ -83,6 +83,13 @@ export type ArcConnectionOptionsType = {
   color?: string;
 
   /**
+   * Two or more CSS colors the line fades through from start to end, evenly
+   * spaced. Overrides `color` for the line; the arrow and anchor at each end
+   * take that end's color.
+   */
+  gradient?: string[];
+
+  /**
    * Line width in pixels. Defaults to `2`.
    */
   strokeWidth?: number;

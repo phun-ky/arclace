@@ -158,6 +158,93 @@ describe('Arclace', () => {
     assert.equal(connection.path.getAttribute('marker-end'), null);
   });
 
+  it('draws a gradient between the ends, with arrows and anchors to match', () => {
+    const { a, b } = setup();
+    const arclace = new Arclace({ autoUpdate: false });
+    const connection = arclace.connect(a, b, {
+      type: 'straight',
+      gradient: ['red', 'green', 'blue'],
+      arrow: 'both',
+      anchors: true
+    });
+    const gradient = connection.element.querySelector('linearGradient')!;
+    const ends = () =>
+      ['x1', 'y1', 'x2', 'y2'].map((name) => gradient.getAttribute(name));
+    const markers = () => [...connection.element.querySelectorAll('marker')];
+    const anchors = [
+      ...connection.element.querySelectorAll<SVGElement>('.arc-anchor')
+    ];
+
+    assert.equal(gradient.getAttribute('gradientUnits'), 'userSpaceOnUse');
+    assert.equal(
+      connection.path.getAttribute('stroke'),
+      `url(#${gradient.id})`
+    );
+    assert.deepEqual(
+      [...gradient.querySelectorAll('stop')].map((stop) => [
+        stop.getAttribute('offset'),
+        stop.getAttribute('stop-color')
+      ]),
+      [
+        ['0', 'red'],
+        ['0.5', 'green'],
+        ['1', 'blue']
+      ]
+    );
+    // A horizontal line, from the element edges rather than the arrow tips
+    assert.deepEqual(ends(), ['100', '25', '300', '25']);
+
+    const [startMarker, endMarker] = markers();
+
+    assert.equal(
+      connection.path.getAttribute('marker-start'),
+      `url(#${startMarker.id})`
+    );
+    assert.equal(
+      connection.path.getAttribute('marker-end'),
+      `url(#${endMarker.id})`
+    );
+    assert.equal(startMarker.style.color, 'red');
+    assert.equal(endMarker.style.color, 'blue');
+    assert.equal(anchors[0].style.color, 'red');
+    assert.equal(anchors[1].style.color, 'blue');
+
+    // The ends follow the elements on every redraw
+    place(b, { left: 300, top: 200, width: 100, height: 50 });
+    arclace.update();
+    assert.deepEqual(ends(), ['100', '25', '300', '225']);
+
+    // A single arrow is one marker, in its own end's color
+    connection.setOptions({ arrow: 'end' });
+    assert.equal(markers().length, 1);
+    assert.equal(markers()[0].style.color, 'blue');
+    assert.equal(
+      connection.path.getAttribute('marker-end'),
+      `url(#${markers()[0].id})`
+    );
+
+    connection.setOptions({ arrow: 'start' });
+    assert.equal(markers()[0].style.color, 'red');
+
+    connection.setOptions({ gradient: undefined });
+    assert.equal(connection.element.querySelector('linearGradient'), null);
+    assert.equal(connection.path.getAttribute('stroke'), 'currentColor');
+    assert.equal(markers()[0].style.color, '');
+    assert.equal(anchors[0].style.color, '');
+  });
+
+  it('removes gradients with their connections', () => {
+    const { a, b } = setup();
+    const arclace = new Arclace({ autoUpdate: false });
+
+    arclace.connect(a, b, { gradient: ['red', 'blue'] }).remove();
+    assert.equal(arclace.svg.querySelector('linearGradient'), null);
+
+    arclace.connect(a, b, { gradient: ['red', 'blue'], arrow: 'both' });
+    arclace.destroy();
+    assert.equal(document.querySelector('linearGradient, marker'), null);
+  });
+
   it('adds and removes labels, anchors and styles', () => {
     const { a, b } = setup();
     const arclace = new Arclace({ autoUpdate: false });

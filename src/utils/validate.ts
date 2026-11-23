@@ -163,6 +163,30 @@ export const assertPoint = (
   return value as ArcPointInterface;
 };
 
+/**
+ * Throws a `TypeError` unless `value` is an array of non-empty strings, and a
+ * `RangeError` when it has fewer than two.
+ */
+export const assertColors = (value: unknown, name: string): string[] => {
+  if (!Array.isArray(value)) {
+    throw new TypeError(
+      `arclace: ${name} must be an array of colors, not ${show(value)}`
+    );
+  }
+
+  value.forEach((color, index) =>
+    assertString(color, `${name}[${index}]`, true)
+  );
+
+  if (value.length < 2) {
+    throw new RangeError(
+      `arclace: ${name} must have 2 colors or more, not ${value.length}`
+    );
+  }
+
+  return value;
+};
+
 // How each connection option is checked. Keys that aren't listed are ignored.
 const CONNECTION_OPTION_CHECKS: Readonly<
   Record<
@@ -177,6 +201,7 @@ const CONNECTION_OPTION_CHECKS: Readonly<
   arrow: (value, name) => assertOneOf(value, ARROWS, name),
   label: assertString,
   color: assertString,
+  gradient: assertColors,
   className: assertString,
   strokeWidth: (value, name) => assertNumber(value, name, 0),
   dashed: assertBoolean,

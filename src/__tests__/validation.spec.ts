@@ -54,6 +54,8 @@ describe('connection options', () => {
     ['a label object', { label: {} }, 'TypeError'],
     ['a className number', { className: 42 }, 'TypeError'],
     ['a color number', { color: 42 }, 'TypeError'],
+    ['a gradient string', { gradient: 'red' }, 'TypeError'],
+    ['a gradient of one color', { gradient: ['red'] }, 'RangeError'],
     ['an id number', { id: 42 }, 'TypeError'],
     ['an empty id', { id: '' }, 'TypeError']
   ];
@@ -133,6 +135,14 @@ describe('connection options', () => {
       name: 'TypeError',
       message: 'arclace: options.label must be a string, not a function'
     });
+    assert.throws(
+      () => arclace.connect(a, b, loose({ gradient: ['red', 42] })),
+      {
+        name: 'TypeError',
+        message:
+          'arclace: options.gradient[1] must be a non-empty string, not 42'
+      }
+    );
   });
 
   it('checks setOptions and keeps the old options when it throws', () => {

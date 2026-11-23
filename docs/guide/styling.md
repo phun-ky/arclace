@@ -11,6 +11,8 @@ Each connection is rendered as:
 >
   <marker class="arc-marker">…</marker>
   <!-- arrow -->
+  <linearGradient class="arc-gradient">…</linearGradient>
+  <!-- gradient -->
   <path class="arc-path" />
   <rect class="arc-label-bg" />
   <!-- label -->
@@ -37,6 +39,10 @@ colors all of them:
   stroke-width: 3;
 }
 ```
+
+A `gradient` line is stroked with its own `<linearGradient>`, which runs from
+the line's start to its end and follows them on every redraw. The arrow and
+anchor at each end take the color at that end; labels keep `currentColor`.
 
 `style.css` is optional. It adds a background behind labels, hollow anchors and
 the `animated` dash animation (turned off with `prefers-reduced-motion`), and
@@ -109,6 +115,21 @@ arclace.connect('#theme', '#button', {
 ```
 
 For a single connection, the `color` option does the same without CSS.
+
+### Gradient line
+
+Fade the line from one color to another with `gradient`. The arrow takes the
+color at its end:
+
+<StyleDemo variant="gradient" :options="{ gradient: ['#0054f0', '#c2410c'], anchors: true }" />
+
+```ts
+arclace.connect('#theme', '#button', {
+  arrow: 'end',
+  anchors: true,
+  gradient: ['#0054f0', '#c2410c']
+});
+```
 
 ### Dotted line
 

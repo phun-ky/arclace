@@ -18,13 +18,19 @@ import { createSVGElement, setAttributes } from './utils/svg';
 import { validateConnectionOptions } from './utils/validate';
 
 /**
- * Connection options with every default filled in. `label`, `color` and
- * `className` have no default.
+ * Connection options with every default filled in. `label`, `color`,
+ * `gradient` and `className` have no default.
  */
 export type ArcResolvedConnectionOptionsType = Required<
-  Omit<ArcConnectionOptionsType, 'id' | 'label' | 'color' | 'className'>
+  Omit<
+    ArcConnectionOptionsType,
+    'id' | 'label' | 'color' | 'gradient' | 'className'
+  >
 > &
-  Pick<ArcConnectionOptionsType, 'label' | 'color' | 'className'> & {
+  Pick<
+    ArcConnectionOptionsType,
+    'label' | 'color' | 'gradient' | 'className'
+  > & {
     id: string;
   };
 
@@ -34,7 +40,10 @@ export type ArcResolvedConnectionOptionsType = Required<
  */
 export const DEFAULT_CONNECTION_OPTIONS: Readonly<
   Required<
-    Omit<ArcConnectionOptionsType, 'id' | 'label' | 'color' | 'className'>
+    Omit<
+      ArcConnectionOptionsType,
+      'id' | 'label' | 'color' | 'gradient' | 'className'
+    >
   >
 > = Object.freeze({
   type: 'bezier',
@@ -84,6 +93,7 @@ type ArcConnectionParamsType = {
  * ```html
  * <g class="arc-connection arc-bezier">
  *   <marker class="arc-marker">…</marker>  <!-- when `arrow` is set -->
+ *   <linearGradient class="arc-gradient">…</linearGradient>  <!-- when `gradient` is set -->
  *   <path class="arc-path" />
  *   <rect class="arc-label-bg" />          <!-- when `label` is set -->
  *   <text class="arc-label">…</text>
@@ -116,6 +126,9 @@ export class Connection {
   #options: ArcConnectionOptionsType;
   #defaults: ArcConnectionOptionsType;
   #marker: SVGMarkerElement | null = null;
+  // A second arrow, only for a gradient line with arrows at both ends
+  #endMarker: SVGMarkerElement | null = null;
+  #gradient: SVGLinearGradientElement | null = null;
   #label: SVGTextElement | null = null;
   #labelBg: SVGRectElement | null = null;
   // The background's box relative to the label's anchor point, measured once
@@ -268,6 +281,15 @@ export class Connection {
     });
     this.path.setAttribute('d', d);
 
+    if (this.#gradient) {
+      setAttributes(this.#gradient, {
+        x1: start.x,
+        y1: start.y,
+        x2: end.x,
+        y2: end.y
+      });
+    }
+
     if (this.#label) this.#placeLabel(labelPoint);
 
     if (this.#anchors) {
@@ -343,6 +365,7 @@ export class Connection {
       arrow,
       label,
       color,
+      gradient,
       strokeWidth,
       dashed,
       animated,
@@ -369,48 +392,110 @@ export class Connection {
       'stroke-dasharray': dashed || animated ? '6 6' : null
     });
 
-    this.#applyArrow(arrow);
+    this.#applyGradient(gradient);
+    this.#applyArrow(arrow, gradient);
     this.#applyLabel(label);
-    this.#applyAnchors(anchors, strokeWidth);
+    this.#applyAnchors(anchors, strokeWidth, gradient);
   }
 
-  #applyArrow(arrow: ArcResolvedConnectionOptionsType['arrow']): void {
+  #applyGradient(gradient: string[] | undefined): void {
+    if (!gradient) {
+      this.#gradient?.remove();
+      this.#gradient = null;
+      this.path.setAttribute('stroke', 'currentColor');
+
+      return;
+    }
+
+    if (!this.#gradient) {
+      // In user space, because objectBoundingBox units span the path's
+      // bounding box, which has no height or width on a horizontal or
+      // vertical line. _draw sets the ends.
+      this.#gradient = createSVGElement('linearGradient', {
+        id: `arc-gradient-${uniqueID()}`,
+        class: 'arc-gradient',
+        gradientUnits: 'userSpaceOnUse'
+      });
+      this.element.insertBefore(this.#gradient, this.path);
+    }
+
+    this.#gradient.replaceChildren(
+      ...gradient.map((color, index) =>
+        createSVGElement('stop', {
+          offset: index / (gradient.length - 1),
+          'stop-color': color
+        })
+      )
+    );
+    this.path.setAttribute('stroke', `url(#${this.#gradient.id})`);
+  }
+
+  #createMarker(): SVGMarkerElement {
+    // The marker lives inside the connection's group so it inherits the
+    // group's color
+    const marker = createSVGElement('marker', {
+      id: `arc-arrow-${uniqueID()}`,
+      class: 'arc-marker',
+      viewBox: '0 0 10 10',
+      refX: 0,
+      refY: 5,
+      markerWidth: ARROW_SIZE,
+      markerHeight: ARROW_SIZE,
+      markerUnits: 'strokeWidth',
+      orient: 'auto-start-reverse'
+    });
+
+    marker.appendChild(
+      createSVGElement('path', {
+        d: 'M 0 0 L 10 5 L 0 10 z',
+        fill: 'currentColor'
+      })
+    );
+    this.element.insertBefore(marker, this.path);
+
+    return marker;
+  }
+
+  #applyArrow(
+    arrow: ArcResolvedConnectionOptionsType['arrow'],
+    gradient: string[] | undefined
+  ): void {
     if (arrow === 'none') {
       this.#marker?.remove();
+      this.#endMarker?.remove();
       this.#marker = null;
+      this.#endMarker = null;
       setAttributes(this.path, { 'marker-start': null, 'marker-end': null });
 
       return;
     }
 
-    if (!this.#marker) {
-      // The marker lives inside the connection's group so it inherits the
-      // group's color
-      this.#marker = createSVGElement('marker', {
-        id: `arc-arrow-${uniqueID()}`,
-        class: 'arc-marker',
-        viewBox: '0 0 10 10',
-        refX: 0,
-        refY: 5,
-        markerWidth: ARROW_SIZE,
-        markerHeight: ARROW_SIZE,
-        markerUnits: 'strokeWidth',
-        orient: 'auto-start-reverse'
-      });
-      this.#marker.appendChild(
-        createSVGElement('path', {
-          d: 'M 0 0 L 10 5 L 0 10 z',
-          fill: 'currentColor'
-        })
-      );
-      this.element.insertBefore(this.#marker, this.path);
+    this.#marker ??= this.#createMarker();
+
+    // One marker can't take two colors, so a gradient line with arrows at
+    // both ends gets a marker for each
+    if (gradient && arrow === 'both') {
+      this.#endMarker ??= this.#createMarker();
+      this.#endMarker.style.color = gradient[gradient.length - 1];
+    } else {
+      this.#endMarker?.remove();
+      this.#endMarker = null;
     }
 
-    const url = `url(#${this.#marker.id})`;
+    // Each arrow takes the gradient's color at its end
+    this.#marker.style.color = gradient
+      ? gradient[arrow === 'end' ? gradient.length - 1 : 0]
+      : '';
+
+    const url = (marker: SVGMarkerElement): string => `url(#${marker.id})`;
 
     setAttributes(this.path, {
-      'marker-start': arrow === 'start' || arrow === 'both' ? url : null,
-      'marker-end': arrow === 'end' || arrow === 'both' ? url : null
+      'marker-start':
+        arrow === 'start' || arrow === 'both' ? url(this.#marker) : null,
+      'marker-end':
+        arrow === 'end' || arrow === 'both'
+          ? url(this.#endMarker ?? this.#marker)
+          : null
     });
   }
 
@@ -483,7 +568,11 @@ export class Connection {
     if (this.#geometry) this.#placeLabel(this.#geometry.labelPoint);
   }
 
-  #applyAnchors(anchors: boolean, strokeWidth: number): void {
+  #applyAnchors(
+    anchors: boolean,
+    strokeWidth: number,
+    gradient: string[] | undefined
+  ): void {
     if (!anchors) {
       this.#anchors?.forEach((anchor) => anchor.remove());
       this.#anchors = null;
@@ -499,8 +588,12 @@ export class Connection {
       this.element.append(...this.#anchors);
     }
 
-    this.#anchors.forEach((anchor) =>
-      setAttributes(anchor, { r: strokeWidth + 2, fill: 'currentColor' })
-    );
+    this.#anchors.forEach((anchor, index) => {
+      setAttributes(anchor, { r: strokeWidth + 2, fill: 'currentColor' });
+      // Each anchor takes the gradient's color at its end
+      anchor.style.color = gradient
+        ? gradient[index === 0 ? 0 : gradient.length - 1]
+        : '';
+    });
   }
 }
