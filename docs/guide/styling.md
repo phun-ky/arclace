@@ -68,7 +68,16 @@ toggling a class yourself, call `connection.setOptions({})` to measure again.
 
 ## Examples
 
-The demos below use the stylesheet and one connection:
+The demos below use the stylesheet and this markup, with one connection between
+Theme and Button:
+
+```html
+<div id="diagram">
+  <div id="theme">Theme</div>
+  <div id="button">Button</div>
+  <div id="card">Card</div>
+</div>
+```
 
 ```ts
 import { Arclace } from '@phun-ky/arclace';
@@ -226,6 +235,8 @@ From script, set the properties on `connection.element`, then call
 `setOptions({})` so a new padding or font is measured:
 
 ```ts
+const connection = arclace.connect('#theme', '#card', { label: 'surface' });
+
 connection.element.style.setProperty('--arc-label-padding', '6px 12px');
 connection.setOptions({});
 ```
