@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.0](https://github.com/phun-ky/arclace/compare/1.2.0...1.3.0) (2026-11-23)
+
+### Feature
+
+* 🎸 route orthogonal lines through waypoints ([4159508](https://github.com/phun-ky/arclace/commit/41595086c85fbdbf22efd6f3271746d8290f114b))
+
 ## [1.2.0](https://github.com/phun-ky/arclace/compare/1.1.0...1.2.0) (2026-11-23)
 
 ### Feature
