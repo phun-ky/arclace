@@ -276,6 +276,35 @@ describe('Arclace', () => {
     assert.equal(connection.element.querySelector('.arc-label-bg'), null);
   });
 
+  it('fits the label background to the text when nothing sets padding', (t) => {
+    // jsdom has no SVG layout: a 40 x 10 text box centred on its point
+    const proto = SVGElement.prototype as unknown as Record<string, unknown>;
+
+    proto.getBBox = function (this: SVGElement) {
+      const x = Number(this.getAttribute('x'));
+      const y = Number(this.getAttribute('y'));
+
+      return { x: x - 20, y: y - 5, width: 40, height: 10 };
+    };
+    t.after(() => delete proto.getBBox);
+
+    const { a, b } = setup();
+    const arclace = new Arclace({ autoUpdate: false });
+    const connection = arclace.connect(a, b, {
+      type: 'straight',
+      label: 'hello'
+    });
+    const bg = connection.element.querySelector('.arc-label-bg')!;
+    const label = connection.element.querySelector('.arc-label')!;
+
+    assert.equal(bg.getAttribute('width'), '40');
+    assert.equal(bg.getAttribute('height'), '10');
+    assert.equal(
+      Number(bg.getAttribute('x')) + 20,
+      Number(label.getAttribute('x'))
+    );
+  });
+
   it('hides connections to elements that are not rendered', () => {
     const { a, b } = setup();
     const arclace = new Arclace({ autoUpdate: false });
