@@ -65,7 +65,7 @@ and shown again when it comes back.
 | `curvature`      | `number`                                           | `1`         | `bezier`: how far the curve bulges out. Negative bulges the other way.                      |
 | `startCurvature` | `number`                                           | `curvature` | `bezier`: `curvature` at the start. Different values at each end lean the curve.            |
 | `endCurvature`   | `number`                                           | `curvature` | `bezier`: `curvature` at the end.                                                           |
-| `via`            | `(Element \| string \| { x, y })[]`                |             | `bezier` and `straight`: elements, selectors or points to pass through, in order.           |
+| `via`            | `(Element \| string \| { x, y })[]`                |             | Elements, selectors or points to pass through, in order.                                    |
 | `radius`         | `number`                                           | `8`         | `orthogonal`: corner radius, `0` or more. `0` for sharp corners.                            |
 | `offset`         | `number`                                           | `20`        | `orthogonal`: how far the line goes straight out of an element before turning, `0` or more. |
 
@@ -87,8 +87,12 @@ An element (or selector) is passed through at its center; a point is in the
 overlay's coordinates, the same as `geometry`. Each end faces its nearest
 waypoint, the curvature options shape the curve at the two ends, and the line is
 hidden while an element it passes through is hidden. `find()` and `disconnect()`
-only match the elements a line starts and ends at. `orthogonal` lines ignore
-`via`.
+only match the elements a line starts and ends at.
+
+An `orthogonal` line runs to each waypoint along the main direction between
+them, straight or in one Z, and turns at a waypoint when the legs on either side
+of it run different ways. Only its ends step `offset` out of their elements, so
+it never doubles back at a waypoint.
 
 The path builders `bezierPath`, `straightPath` and `orthogonalPath` are also
 exported if you want to draw lines between points yourself.

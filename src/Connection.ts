@@ -14,6 +14,7 @@ import {
   bezierPathVia,
   type ArcPathResultType,
   orthogonalPath,
+  orthogonalPathVia,
   polylinePath,
   straightPath
 } from './utils/paths';
@@ -293,9 +294,6 @@ export class Connection {
    * @internal
    */
   _waypoints(origin: ArcOriginType): ArcPointInterface[] | null {
-    // Orthogonal lines don't pass through waypoints
-    if (this.options.type === 'orthogonal') return [];
-
     const points: ArcPointInterface[] = [];
 
     for (const waypoint of this.#via) {
@@ -425,10 +423,12 @@ export class Connection {
     }
 
     if (type === 'orthogonal') {
-      return orthogonalPath(start, startSide, end, endSide, {
-        radius,
-        offset
-      });
+      return via.length > 0
+        ? orthogonalPathVia(start, startSide, end, endSide, via, {
+            radius,
+            offset
+          })
+        : orthogonalPath(start, startSide, end, endSide, { radius, offset });
     }
 
     if (via.length > 0) {

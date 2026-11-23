@@ -5,6 +5,7 @@ import {
   bezierPath,
   bezierPathVia,
   orthogonalPath,
+  orthogonalPathVia,
   polylineMidpoint,
   polylinePath,
   roundedPolyline,
@@ -94,6 +95,100 @@ describe('bezierPathVia', () => {
   });
 });
 
+describe('orthogonalPathVia', () => {
+  const route = (
+    end: { x: number; y: number },
+    endSide: 'left' | 'top',
+    via: { x: number; y: number }[]
+  ) =>
+    orthogonalPathVia({ x: 0, y: 0 }, 'right', end, endSide, via, {
+      radius: 0,
+      offset: 20
+    }).d;
+
+  it('runs straight through a waypoint between two Zs', () => {
+    assert.equal(
+      route({ x: 200, y: 100 }, 'left', [{ x: 100, y: 50 }]),
+      'M 0 0 L 50 0 L 50 50 L 150 50 L 150 100 L 200 100'
+    );
+  });
+
+  it('routes leftwards and upwards the same way', () => {
+    const options = { radius: 0, offset: 20 };
+
+    assert.equal(
+      orthogonalPathVia(
+        { x: 0, y: 0 },
+        'left',
+        { x: -200, y: -100 },
+        'right',
+        [{ x: -100, y: -50 }],
+        options
+      ).d,
+      'M 0 0 L -50 0 L -50 -50 L -150 -50 L -150 -100 L -200 -100'
+    );
+    assert.equal(
+      orthogonalPathVia(
+        { x: 0, y: 0 },
+        'top',
+        { x: 100, y: -200 },
+        'bottom',
+        [{ x: 50, y: -100 }],
+        options
+      ).d,
+      'M 0 0 L 0 -50 L 50 -50 L 50 -150 L 100 -150 L 100 -200'
+    );
+  });
+
+  it('turns at a waypoint when the legs run different ways', () => {
+    assert.equal(
+      route({ x: 100, y: 200 }, 'top', [{ x: 100, y: 0 }]),
+      'M 0 0 L 100 0 L 100 200'
+    );
+  });
+
+  it('runs between waypoints without stepping out of them', () => {
+    // The middle leg is 10px across: a stub out of either waypoint would
+    // make it double back
+    assert.equal(
+      route({ x: 300, y: 0 }, 'left', [
+        { x: 100, y: 50 },
+        { x: 110, y: 60 }
+      ]),
+      'M 0 0 L 50 0 L 50 50 L 105 50 L 105 60 L 205 60 L 205 0 L 300 0'
+    );
+  });
+
+  it('copes with waypoints on top of each other and of the ends', () => {
+    const { d } = orthogonalPathVia(
+      { x: 0, y: 0 },
+      'right',
+      { x: 100, y: 0 },
+      'left',
+      [
+        { x: 0, y: 0 },
+        { x: 50, y: 0 },
+        { x: 50, y: 0 }
+      ],
+      { radius: 8, offset: 20 }
+    );
+
+    assert.doesNotMatch(d, /NaN/);
+    assert.match(d, /^M 0 0 .* 100 0$/);
+  });
+
+  it('never steps back past a waypoint that is close', () => {
+    const xs = route({ x: 60, y: 10 }, 'left', [{ x: 30, y: 5 }])
+      .match(/-?[\d.]+ -?[\d.]+/g)!
+      .map((pair) => Number(pair.split(' ')[0]));
+
+    assert.deepEqual(
+      xs,
+      [...xs].sort((p, q) => p - q)
+    );
+  });
+});
+
 describe('bezierPath', () => {
   it('bulges each end by its own curvature', () => {
     const start = { x: 0, y: 0 };
@@ -145,6 +240,51 @@ describe('bezierPath', () => {
 });
 
 describe('routeOrthogonal', () => {
+  it('steps endOffset out of the end from a vertical side too', () => {
+    // The horizontal case below, with x and y swapped
+    const start = { x: 0, y: 0 };
+    const end = { x: 50, y: -50 };
+
+    assert.deepEqual(routeOrthogonal(start, 'bottom', end, 'top'), [
+      start,
+      { x: 0, y: 20 },
+      { x: 25, y: 20 },
+      { x: 25, y: -70 },
+      { x: 50, y: -70 },
+      end
+    ]);
+    assert.deepEqual(routeOrthogonal(start, 'bottom', end, 'top', 20, 0), [
+      start,
+      { x: 0, y: 20 },
+      { x: 25, y: 20 },
+      { x: 25, y: -50 },
+      end,
+      end
+    ]);
+  });
+
+  it('steps endOffset out of the end, offset by default', () => {
+    const start = { x: 0, y: 0 };
+    const end = { x: -50, y: 50 };
+
+    assert.deepEqual(routeOrthogonal(start, 'right', end, 'left'), [
+      start,
+      { x: 20, y: 0 },
+      { x: 20, y: 25 },
+      { x: -70, y: 25 },
+      { x: -70, y: 50 },
+      end
+    ]);
+    assert.deepEqual(routeOrthogonal(start, 'right', end, 'left', 20, 0), [
+      start,
+      { x: 20, y: 0 },
+      { x: 20, y: 25 },
+      { x: -50, y: 25 },
+      end,
+      end
+    ]);
+  });
+
   it('turns halfway between facing sides', () => {
     assert.deepEqual(
       routeOrthogonal({ x: 0, y: 0 }, 'right', { x: 200, y: 100 }, 'left'),

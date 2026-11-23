@@ -175,9 +175,10 @@ export type ArcConnectionOptionsType = {
 
   /**
    * Elements or points the line passes through on its way from start to
-   * end, in order, as one path, so dashes stay in step. `bezier` and
-   * `straight` only; `orthogonal` lines ignore it. Selectors are looked up
-   * when the option is set. The line is hidden while one of the elements is
+   * end, in order, as one path, so dashes stay in step. An `orthogonal`
+   * line runs straight through a waypoint, or turns at it when the legs on
+   * either side run different ways. Selectors are looked up when the option
+   * is set. The line is hidden while one of the elements is
    * not rendered.
    */
   via?: ArcWaypointType[];
