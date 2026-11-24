@@ -2,7 +2,7 @@
 
 # Class: Connection
 
-Defined in: [src/Connection.ts:138](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L138)
+Defined in: [src/Connection.ts:139](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L139)
 
 A line between two elements. Created with [Arclace.connect](Arclace.md#connect) or
 [Arclace.connectAll](Arclace.md#connectall), not with `new`.
@@ -30,7 +30,7 @@ The line, arrows and anchors use `currentColor`, so setting `color` on
 
 > `readonly` **element**: `SVGGElement`
 
-Defined in: [src/Connection.ts:146](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L146)
+Defined in: [src/Connection.ts:147](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L147)
 
 The `<g>` element holding everything this connection draws.
 
@@ -40,7 +40,7 @@ The `<g>` element holding everything this connection draws.
 
 > `readonly` **endElement**: `Element`
 
-Defined in: [src/Connection.ts:141](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L141)
+Defined in: [src/Connection.ts:142](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L142)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [src/Connection.ts:141](https://github.com/phun-ky/arclace/blob/main
 
 > `readonly` **id**: `string`
 
-Defined in: [src/Connection.ts:139](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L139)
+Defined in: [src/Connection.ts:140](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L140)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [src/Connection.ts:139](https://github.com/phun-ky/arclace/blob/main
 
 > `readonly` **path**: `SVGPathElement`
 
-Defined in: [src/Connection.ts:151](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L151)
+Defined in: [src/Connection.ts:152](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L152)
 
 The `<path>` element of the line.
 
@@ -66,7 +66,7 @@ The `<path>` element of the line.
 
 > `readonly` **startElement**: `Element`
 
-Defined in: [src/Connection.ts:140](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L140)
+Defined in: [src/Connection.ts:141](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L141)
 
 ## Accessors
 
@@ -76,7 +76,7 @@ Defined in: [src/Connection.ts:140](https://github.com/phun-ky/arclace/blob/main
 
 > **get** **geometry**(): `Readonly`\<[`ArcGeometryType`](../type-aliases/ArcGeometryType.md)\> \| `null`
 
-Defined in: [src/Connection.ts:211](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L211)
+Defined in: [src/Connection.ts:212](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L212)
 
 The geometry from the last update, or `null` when the connection is
 hidden because one of its elements is not rendered.
@@ -93,7 +93,7 @@ hidden because one of its elements is not rendered.
 
 > **get** **options**(): `Readonly`\<[`ArcResolvedConnectionOptionsType`](../type-aliases/ArcResolvedConnectionOptionsType.md)\>
 
-Defined in: [src/Connection.ts:218](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L218)
+Defined in: [src/Connection.ts:219](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L219)
 
 The connection's options merged with the instance defaults.
 
@@ -107,7 +107,7 @@ The connection's options merged with the instance defaults.
 
 > **remove**(): `void`
 
-Defined in: [src/Connection.ts:272](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L272)
+Defined in: [src/Connection.ts:273](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L273)
 
 Removes this connection.
 
@@ -121,7 +121,7 @@ Removes this connection.
 
 > **setOptions**(`options`): `this`
 
-Defined in: [src/Connection.ts:238](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L238)
+Defined in: [src/Connection.ts:239](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L239)
 
 Changes options and redraws.
 
@@ -159,7 +159,7 @@ When the connection has been removed.
 
 > **update**(): `void`
 
-Defined in: [src/Connection.ts:265](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L265)
+Defined in: [src/Connection.ts:266](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L266)
 
 Redraws every connection of the owning instance.
 

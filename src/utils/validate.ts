@@ -318,6 +318,7 @@ const CONNECTION_OPTION_CHECKS: Readonly<
   gradient: assertColors,
   className: assertString,
   strokeWidth: (value, name) => assertNumber(value, name, 0),
+  cssStrokeWidth: assertBoolean,
   dashed: assertBoolean,
   dashArray: assertDashArray,
   animated: assertBoolean,

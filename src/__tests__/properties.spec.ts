@@ -149,6 +149,7 @@ describe('properties', () => {
       'label',
       'color',
       'strokeWidth',
+      'cssStrokeWidth',
       'dashed',
       'animated',
       'anchors',

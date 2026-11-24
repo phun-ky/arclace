@@ -102,6 +102,14 @@ export type ArcConnectionOptionsType = {
   strokeWidth?: number;
 
   /**
+   * Size arrows and anchors from the line's width as CSS computes it, so a
+   * `stroke-width` in your stylesheet scales them too. The width is read on
+   * every redraw; values other than pixels fall back to `strokeWidth`.
+   * Defaults to `false`.
+   */
+  cssStrokeWidth?: boolean;
+
+  /**
    * Draw a dashed line. Defaults to `false`.
    */
   dashed?: boolean;

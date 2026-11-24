@@ -40,6 +40,15 @@ colors all of them:
 }
 ```
 
+A `stroke-width` in CSS wins over `strokeWidth`. Arrow heads grow with it, but
+the line is shortened for the arrow, and anchors are sized, from `strokeWidth`.
+Set `cssStrokeWidth: true` to size them from the CSS width instead, read on each
+redraw:
+
+```ts
+const arclace = new Arclace({ defaults: { cssStrokeWidth: true } });
+```
+
 A `gradient` line is stroked with its own `<linearGradient>`, which runs from
 the line's start to its end and follows them on every redraw. The arrow and
 anchor at each end take the color at that end; labels keep `currentColor`.

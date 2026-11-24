@@ -5,6 +5,12 @@
 Drag the boxes, zoom, and change the options. The lines follow the boxes through
 `autoUpdate`, and the zoom is a CSS transform on the container.
 
+**Options** sets connection options. **Styling** sets CSS on the container:
+`--arc-color`, `--arc-label-size` and a `stroke-width` on `.arc-path`. Turn on
+**Arrows follow CSS width** (`cssStrokeWidth`) to size arrows and anchors from
+that CSS width instead of the **Width** option. Open **Code for these settings**
+to copy what you set.
+
 <Playground />
 
 The playground connects the boxes once and changes the options of every

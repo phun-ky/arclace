@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import {
   Arclace,
+  DEFAULT_CONNECTION_OPTIONS,
   type ArcConnectionOptionsType,
   type ArcPathType,
   type ArcArrowType
 } from '@phun-ky/arclace';
 import '@phun-ky/arclace/style.css';
-import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 
 // The world is laid out at this size, and zoomed out to fit narrower pages
 const WORLD_WIDTH = 900;
@@ -53,11 +54,36 @@ const edges: [string, string, string, ArcConnectionOptionsType?][] = [
   ['theme', 'docs', 'examples', { startSide: 'bottom', endSide: 'top' }]
 ];
 
+// Colors that read in both color schemes
+const COLORS = {
+  theme: '',
+  brand: 'var(--vp-c-brand-1)',
+  green: 'var(--vp-c-success-1)',
+  orange: 'var(--vp-c-warning-1)',
+  red: 'var(--vp-c-danger-1)'
+};
+const GRADIENT = ['#3b82f6', '#ec4899'];
+
+// Options
 const type = ref<ArcPathType>('bezier');
 const arrow = ref<ArcArrowType>('end');
+const strokeWidth = ref(2);
+const curvature = ref(1);
+const radius = ref(8);
+const offset = ref(20);
+const gap = ref(0);
+const glow = ref(0);
 const labels = ref(true);
 const anchors = ref(false);
+const dashed = ref(false);
 const animated = ref(false);
+const gradient = ref(false);
+const spread = ref(true);
+const cssStrokeWidth = ref(false);
+// Styling, set as CSS on the container
+const color = ref<keyof typeof COLORS>('theme');
+const cssWidth = ref(0);
+const labelSize = ref(12);
 const zoom = ref(1);
 // The zoom that fits the page; the canvas shrinks with it, down to half height
 const fitted = ref(1);
@@ -74,15 +100,58 @@ const fit = (): void => {
   zoom.value = fitted.value;
 };
 
+// The options every connection shares
+const options = computed<ArcConnectionOptionsType>(() => ({
+  type: type.value,
+  arrow: arrow.value,
+  strokeWidth: strokeWidth.value,
+  curvature: curvature.value,
+  radius: radius.value,
+  offset: offset.value,
+  gap: gap.value,
+  glow: glow.value || false,
+  anchors: anchors.value,
+  dashed: dashed.value,
+  animated: animated.value,
+  gradient: gradient.value ? GRADIENT : undefined,
+  spread: spread.value,
+  cssStrokeWidth: cssStrokeWidth.value
+}));
+
+const styles = computed(() => ({
+  '--arc-color': COLORS[color.value] || undefined,
+  '--arc-label-size': `${labelSize.value}px`,
+  '--demo-stroke': `${cssWidth.value}px`
+}));
+
+// What the controls amount to, as code to copy
+const code = computed(() => {
+  const defaults = Object.fromEntries(
+    Object.entries(options.value).filter(
+      ([key, value]) =>
+        value !== undefined &&
+        value !== DEFAULT_CONNECTION_OPTIONS[key as keyof typeof options.value]
+    )
+  );
+  const vars = [
+    color.value !== 'theme' && `  --arc-color: ${COLORS[color.value]};`,
+    labelSize.value !== 12 && `  --arc-label-size: ${labelSize.value}px;`
+  ].filter(Boolean);
+  const rules = [
+    vars.length && `.world {\n${vars.join('\n')}\n}`,
+    cssWidth.value && `.arc-path {\n  stroke-width: ${cssWidth.value}px;\n}`
+  ].filter(Boolean);
+  const js = `const defaults = ${JSON.stringify(defaults, null, 2)};\n\nnew Arclace({ container: world, defaults });`;
+
+  return rules.length ? `${js}\n\n/* CSS */\n${rules.join('\n\n')}` : js;
+});
+
 const apply = (): void => {
   arclace?.connections.forEach((connection, i) =>
     connection.setOptions({
-      type: type.value,
-      arrow: arrow.value,
-      anchors: anchors.value,
-      animated: animated.value,
+      ...options.value,
       label: labels.value ? edges[i][2] : undefined,
-      dashed: edges[i][3]?.dashed
+      dashed: dashed.value || edges[i][3]?.dashed
     })
   );
 };
@@ -140,12 +209,14 @@ onUnmounted(() => {
   arclace?.destroy();
 });
 
-watch([type, arrow, labels, anchors, animated], apply);
+// After the DOM update, so label backgrounds are measured at the new size
+watch([options, labels, labelSize, cssWidth], apply, { flush: 'post' });
 </script>
 
 <template>
   <div class="playground">
-    <div class="controls">
+    <fieldset class="controls">
+      <legend>Options</legend>
       <label>
         Type
         <select v-model="type">
@@ -163,9 +234,81 @@ watch([type, arrow, labels, anchors, animated], apply);
           <option value="both">both</option>
         </select>
       </label>
+      <label>
+        Width
+        <input
+          v-model.number="strokeWidth"
+          type="range"
+          min="0"
+          max="8"
+          step="0.5"
+        />
+        <output>{{ strokeWidth }}</output>
+      </label>
+      <label v-if="type === 'bezier'">
+        Curvature
+        <input
+          v-model.number="curvature"
+          type="range"
+          min="-1"
+          max="3"
+          step="0.1"
+        />
+        <output>{{ curvature }}</output>
+      </label>
+      <template v-if="type === 'orthogonal'">
+        <label>
+          Radius
+          <input v-model.number="radius" type="range" min="0" max="30" />
+          <output>{{ radius }}</output>
+        </label>
+        <label>
+          Offset
+          <input v-model.number="offset" type="range" min="0" max="60" />
+          <output>{{ offset }}</output>
+        </label>
+      </template>
+      <label>
+        Gap
+        <input v-model.number="gap" type="range" min="0" max="20" />
+        <output>{{ gap }}</output>
+      </label>
+      <label>
+        Glow
+        <input v-model.number="glow" type="range" min="0" max="12" />
+        <output>{{ glow || 'off' }}</output>
+      </label>
       <label><input v-model="labels" type="checkbox" /> Labels</label>
       <label><input v-model="anchors" type="checkbox" /> Anchors</label>
+      <label><input v-model="dashed" type="checkbox" /> Dashed</label>
       <label><input v-model="animated" type="checkbox" /> Animated</label>
+      <label><input v-model="gradient" type="checkbox" /> Gradient</label>
+      <label><input v-model="spread" type="checkbox" /> Spread</label>
+    </fieldset>
+    <fieldset class="controls">
+      <legend>Styling</legend>
+      <label>
+        Color
+        <select v-model="color">
+          <option v-for="(_, name) in COLORS" :key="name" :value="name">
+            {{ name }}
+          </option>
+        </select>
+      </label>
+      <label>
+        CSS stroke-width
+        <input v-model.number="cssWidth" type="range" min="0" max="10" />
+        <output>{{ cssWidth ? `${cssWidth}px` : 'unset' }}</output>
+      </label>
+      <label>
+        <input v-model="cssStrokeWidth" type="checkbox" /> Arrows follow CSS
+        width
+      </label>
+      <label>
+        Label size
+        <input v-model.number="labelSize" type="range" min="10" max="18" />
+        <output>{{ labelSize }}px</output>
+      </label>
       <label>
         Zoom
         <input
@@ -176,7 +319,7 @@ watch([type, arrow, labels, anchors, animated], apply);
           step="0.05"
         />
       </label>
-    </div>
+    </fieldset>
     <div
       ref="canvas"
       class="canvas arc-canvas"
@@ -187,7 +330,9 @@ watch([type, arrow, labels, anchors, animated], apply);
       <div
         ref="world"
         class="world"
+        :class="{ 'css-stroke': cssWidth > 0 }"
         :style="{
+          ...styles,
           width: `${WORLD_WIDTH}px`,
           height: `${WORLD_HEIGHT}px`,
           transform: `translate(-50%, -50%) scale(${zoom})`
@@ -206,6 +351,10 @@ watch([type, arrow, labels, anchors, animated], apply);
         </div>
       </div>
     </div>
+    <details class="code">
+      <summary>Code for these settings</summary>
+      <pre><code>{{ code }}</code></pre>
+    </details>
   </div>
 </template>
 
@@ -221,9 +370,44 @@ watch([type, arrow, labels, anchors, animated], apply);
   display: flex;
   flex-wrap: wrap;
   gap: 8px 20px;
+  margin: 0;
   padding: 12px 16px;
+  border: 0;
   border-bottom: 1px solid var(--vp-c-divider);
   font-size: 14px;
+}
+
+.controls legend {
+  float: left;
+  width: 100%;
+  font-weight: 600;
+}
+
+.controls output {
+  min-width: 2.5em;
+  color: var(--vp-c-text-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.controls input[type='range'] {
+  width: 96px;
+}
+
+.code {
+  border-top: 1px solid var(--vp-c-divider);
+  font-size: 14px;
+}
+
+.code summary {
+  padding: 12px 16px;
+  cursor: pointer;
+}
+
+.code pre {
+  margin: 0;
+  padding: 0 16px 16px;
+  overflow-x: auto;
+  font-size: 13px;
 }
 
 .controls label {
@@ -294,6 +478,10 @@ watch([type, arrow, labels, anchors, animated], apply);
 .node.accent small {
   /* 4.5:1 or more on the brand blue in both color schemes */
   color: #f2f6ff;
+}
+
+.world.css-stroke :deep(.arc-path) {
+  stroke-width: var(--demo-stroke);
 }
 
 .world :deep(.arc-connection.highlight) {

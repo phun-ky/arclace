@@ -184,6 +184,7 @@ and shown again when it comes back.
 | `color`          | `string`                                           |             | Line color. Without it, lines use `--arc-color` or the container's text color.              |
 | `gradient`       | `string[]`                                         |             | 2 or more colors the line fades through, start to end. Overrides `color`.                   |
 | `strokeWidth`    | `number`                                           | `2`         | Line width in pixels, `0` or more. Arrows and anchors scale with it.                        |
+| `cssStrokeWidth` | `boolean`                                          | `false`     | Size arrows and anchors from the CSS `stroke-width` instead of `strokeWidth`.               |
 | `dashed`         | `boolean`                                          | `false`     | Dashed line.                                                                                |
 | `dashArray`      | `string \| number[]`                               |             | Dash pattern in pixels, such as `'4 2'`. Without it, `--arc-dash` or `6 6`.                 |
 | `animated`       | `boolean`                                          | `false`     | Dashes flowing from start to end. Needs `style.css`.                                        |
@@ -287,6 +288,15 @@ colors all of them:
 .arc-path {
   stroke-width: 3;
 }
+```
+
+A `stroke-width` in CSS wins over `strokeWidth`. Arrow heads grow with it, but
+the line is shortened for the arrow, and anchors are sized, from `strokeWidth`.
+Set `cssStrokeWidth: true` to size them from the CSS width instead, read on each
+redraw:
+
+```ts
+const arclace = new Arclace({ defaults: { cssStrokeWidth: true } });
 ```
 
 A `gradient` line is stroked with its own `<linearGradient>`, which runs from
