@@ -80,6 +80,7 @@ export const DEFAULT_CONNECTION_OPTIONS: Readonly<
   endSide: 'auto',
   arrow: 'none',
   strokeWidth: 2,
+  cssStrokeWidth: false,
   dashed: false,
   animated: false,
   glow: false,
@@ -322,7 +323,8 @@ export class Connection {
     endSide: ArcSideType,
     via: ArcPointInterface[] = []
   ): void {
-    const { arrow, strokeWidth } = this.options;
+    const { arrow } = this.options;
+    const strokeWidth = this.#strokeWidth();
     const arrowLength = ARROW_SIZE * strokeWidth;
     // Shorten the line so arrow tips, not the line's end caps, touch the
     // elements
@@ -375,9 +377,25 @@ export class Connection {
     if (this.#label) this.#placeLabel(labelPoint);
 
     if (this.#anchors) {
-      setAttributes(this.#anchors[0], { cx: start.x, cy: start.y });
-      setAttributes(this.#anchors[1], { cx: end.x, cy: end.y });
+      const r = strokeWidth + 2;
+
+      setAttributes(this.#anchors[0], { cx: start.x, cy: start.y, r });
+      setAttributes(this.#anchors[1], { cx: end.x, cy: end.y, r });
     }
+  }
+
+  /**
+   * The line's width: from CSS with `cssStrokeWidth`, else the option.
+   */
+  #strokeWidth(): number {
+    const { strokeWidth, cssStrokeWidth } = this.options;
+
+    if (!cssStrokeWidth) return strokeWidth;
+
+    const value = getComputedStyle(this.path).strokeWidth;
+
+    // A percentage is of the viewport's diagonal, so it uses the option
+    return value.endsWith('px') ? parseFloat(value) : strokeWidth;
   }
 
   /**
@@ -540,7 +558,7 @@ export class Connection {
     this.#applyGradient(gradient);
     this.#applyArrow(arrow, gradient);
     this.#applyLabel(label);
-    this.#applyAnchors(anchors, strokeWidth, gradient);
+    this.#applyAnchors(anchors, gradient);
   }
 
   #applyGradient(gradient: string[] | undefined): void {
@@ -713,11 +731,7 @@ export class Connection {
     if (this.#geometry) this.#placeLabel(this.#geometry.labelPoint);
   }
 
-  #applyAnchors(
-    anchors: boolean,
-    strokeWidth: number,
-    gradient: string[] | undefined
-  ): void {
+  #applyAnchors(anchors: boolean, gradient: string[] | undefined): void {
     if (!anchors) {
       this.#anchors?.forEach((anchor) => anchor.remove());
       this.#anchors = null;
@@ -734,7 +748,8 @@ export class Connection {
     }
 
     this.#anchors.forEach((anchor, index) => {
-      setAttributes(anchor, { r: strokeWidth + 2, fill: 'currentColor' });
+      // _draw sets the radius, which can come from CSS
+      anchor.setAttribute('fill', 'currentColor');
       // Each anchor takes the gradient's color at its end
       anchor.style.color = gradient
         ? gradient[index === 0 ? 0 : gradient.length - 1]

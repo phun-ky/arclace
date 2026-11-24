@@ -191,6 +191,38 @@ describe('Arclace', () => {
     assert.equal(connection.path.getAttribute('marker-end'), null);
   });
 
+  it('sizes arrows and anchors from the CSS stroke width with cssStrokeWidth', () => {
+    const { a, b } = setup();
+    const style = document.createElement('style');
+
+    style.textContent = '.arc-path { stroke-width: 6px; }';
+    document.head.appendChild(style);
+
+    const arclace = new Arclace({ autoUpdate: false });
+    const connection = arclace.connect(a, b, {
+      type: 'straight',
+      arrow: 'end',
+      anchors: true
+    });
+    const anchor = () =>
+      connection.element.querySelector('.arc-anchor')!.getAttribute('r');
+
+    // Off: the option's width, 2
+    assert.equal(connection.path.getAttribute('d'), 'M 100 25 L 292 25');
+    assert.equal(anchor(), '4');
+
+    connection.setOptions({ cssStrokeWidth: true });
+    assert.equal(connection.path.getAttribute('d'), 'M 100 25 L 276 25');
+    assert.equal(anchor(), '8');
+
+    // Not a length, so back to the option
+    style.textContent = '.arc-path { stroke-width: 5%; }';
+    connection.update();
+    assert.equal(connection.path.getAttribute('d'), 'M 100 25 L 292 25');
+
+    style.remove();
+  });
+
   it('draws a gradient between the ends, with arrows and anchors to match', () => {
     const { a, b } = setup();
     const arclace = new Arclace({ autoUpdate: false });

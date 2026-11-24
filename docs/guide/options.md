@@ -53,6 +53,7 @@ and shown again when it comes back.
 | `color`          | `string`                                           |             | Line color. Without it, lines use `--arc-color` or the container's text color.              |
 | `gradient`       | `string[]`                                         |             | 2 or more colors the line fades through, start to end. Overrides `color`.                   |
 | `strokeWidth`    | `number`                                           | `2`         | Line width in pixels, `0` or more. Arrows and anchors scale with it.                        |
+| `cssStrokeWidth` | `boolean`                                          | `false`     | Size arrows and anchors from the CSS `stroke-width` instead of `strokeWidth`.               |
 | `dashed`         | `boolean`                                          | `false`     | Dashed line.                                                                                |
 | `dashArray`      | `string \| number[]`                               |             | Dash pattern in pixels, such as `'4 2'`. Without it, `--arc-dash` or `6 6`.                 |
 | `animated`       | `boolean`                                          | `false`     | Dashes flowing from start to end. Needs `style.css`.                                        |

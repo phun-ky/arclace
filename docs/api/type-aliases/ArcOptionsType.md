@@ -4,7 +4,7 @@
 
 > **ArcOptionsType** = `object`
 
-Defined in: [src/types.ts:211](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L211)
+Defined in: [src/types.ts:219](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L219)
 
 Options for a [Arclace](../classes/Arclace.md) instance.
 
@@ -14,7 +14,7 @@ Options for a [Arclace](../classes/Arclace.md) instance.
 
 > `optional` **autoUpdate?**: `boolean` \| `"frame"`
 
-Defined in: [src/types.ts:227](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L227)
+Defined in: [src/types.ts:235](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L235)
 
 Keep lines in sync with the page.
 
@@ -30,7 +30,7 @@ Keep lines in sync with the page.
 
 > `optional` **className?**: `string`
 
-Defined in: [src/types.ts:237](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L237)
+Defined in: [src/types.ts:245](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L245)
 
 Extra class names added to the SVG overlay.
 
@@ -40,7 +40,7 @@ Extra class names added to the SVG overlay.
 
 > `optional` **container?**: [`ArcElementTargetType`](ArcElementTargetType.md)
 
-Defined in: [src/types.ts:216](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L216)
+Defined in: [src/types.ts:224](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L224)
 
 The element the SVG overlay is added to. All connected elements should
 be inside it. Defaults to `document.body`.
@@ -51,7 +51,7 @@ be inside it. Defaults to `document.body`.
 
 > `optional` **defaults?**: [`ArcConnectionOptionsType`](ArcConnectionOptionsType.md)
 
-Defined in: [src/types.ts:232](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L232)
+Defined in: [src/types.ts:240](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L240)
 
 Default options for every connection made by this instance.
 
@@ -61,7 +61,7 @@ Default options for every connection made by this instance.
 
 > `optional` **zIndex?**: `number`
 
-Defined in: [src/types.ts:244](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L244)
+Defined in: [src/types.ts:252](https://github.com/phun-ky/arclace/blob/main/src/types.ts#L252)
 
 The overlay's `z-index`. Without it, the overlay is painted below
 positioned elements that come after it in the container; a `zIndex`

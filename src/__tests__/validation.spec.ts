@@ -41,6 +41,7 @@ describe('connection options', () => {
     ['a negative strokeWidth', { strokeWidth: -2 }, 'RangeError'],
     ['a NaN strokeWidth', { strokeWidth: NaN }, 'TypeError'],
     ['a strokeWidth string', { strokeWidth: '3' }, 'TypeError'],
+    ['a cssStrokeWidth string', { cssStrokeWidth: 'yes' }, 'TypeError'],
     ['an infinite curvature', { curvature: Infinity }, 'TypeError'],
     ['a startCurvature string', { startCurvature: '1' }, 'TypeError'],
     ['an infinite endCurvature', { endCurvature: Infinity }, 'TypeError'],
