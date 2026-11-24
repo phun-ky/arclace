@@ -236,7 +236,9 @@ message that names the option:
 - **`TypeError`:** a value of the wrong type, for example `strokeWidth: '3'`,
   `label: 0`, or a target that is neither an element nor a selector.
 - **`RangeError`:** a value out of range, for example `type: 'wavy'`,
-  `startSide: 'middle'` or `radius: -5`.
+  `startSide: 'middle'` or `radius: -5`. Numeric connection options, and the `x`
+  and `y` of `via` points, must be between -1000000000 and 1000000000, so the
+  path data never has `Infinity` or `NaN` in it.
 - **`ArclaceError`:** Arclace can't do what was asked: a selector matches
   nothing or is invalid (with the browser's error as `cause`), an id is taken,
   or the connection or the instance has been removed. It is exported, for

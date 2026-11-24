@@ -178,6 +178,34 @@ describe('connection options', () => {
     });
   });
 
+  it('rejects numbers so large that the path would overflow', () => {
+    const { a, b, arclace } = setup();
+
+    // Used to draw "M -Infinity 25 C Infinity NaN, ..."
+    assert.throws(() => arclace.connect(a, b, { gap: -Number.MAX_VALUE }), {
+      name: 'RangeError',
+      message: `arclace: options.gap must be between -1000000000 and 1000000000, not ${-Number.MAX_VALUE}`
+    });
+
+    for (const key of ['spacing', 'curvature', 'radius', 'offset']) {
+      assert.throws(
+        () => arclace.connect(a, b, { [key]: 1e300 }),
+        RangeError,
+        key
+      );
+    }
+
+    assert.throws(
+      () => arclace.connect(a, b, { via: [{ x: 0, y: 2e9 }] }),
+      RangeError
+    );
+    // The largest allowed values still draw finite paths
+    assert.match(
+      arclace.connect(a, b, { gap: -1e9, curvature: 1e9 }).geometry!.d,
+      /^[MLCQ0-9 ,.e+-]+$/
+    );
+  });
+
   it('checks setOptions and keeps the old options when it throws', () => {
     const { a, b, arclace } = setup();
     const connection = arclace.connect(a, b);
@@ -238,6 +266,13 @@ describe('instance options', () => {
       assert.equal(document.querySelector('.arc-svg'), null);
     });
   }
+
+  it('allows any whole zIndex, such as 2147483647', () => {
+    const arclace = new Arclace({ autoUpdate: false, zIndex: 2147483647 });
+
+    assert.equal(arclace.svg.style.zIndex, '2147483647');
+    arclace.destroy();
+  });
 
   it('names the defaults in the message', () => {
     assert.throws(() => new Arclace({ defaults: loose({ arrow: 'yes' }) }), {
@@ -468,5 +503,27 @@ describe('path builders', () => {
       () => orthogonalPath(p, 'right', q, 'left', { offset: Infinity }),
       TypeError
     );
+    assert.throws(
+      () => orthogonalPath(p, 'right', q, 'left', { offset: Number.MAX_VALUE }),
+      RangeError
+    );
+    assert.throws(
+      () => bezierPath(p, 'right', q, 'left', Number.MAX_VALUE),
+      RangeError
+    );
+    assert.throws(() => straightPath({ x: -1e300, y: 0 }, q), RangeError);
+
+    // At the limits the paths stay finite
+    const far = { x: -1e15, y: -1e15 };
+    const farEnd = { x: 1e15, y: 1e15 };
+
+    for (const { d, labelPoint } of [
+      straightPath(far, farEnd),
+      bezierPath(far, 'left', farEnd, 'right', 1e9, -1e9),
+      orthogonalPath(far, 'top', farEnd, 'bottom', { radius: 1e9, offset: 1e9 })
+    ]) {
+      assert.match(d, /^[MLCQ0-9 ,.e+-]+$/);
+      assert.ok(Number.isFinite(labelPoint.x) && Number.isFinite(labelPoint.y));
+    }
   });
 });

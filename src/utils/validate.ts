@@ -93,13 +93,28 @@ export const assertOneOf = <T extends string>(
 };
 
 /**
+ * The largest option or `via` coordinate Arclace accepts, either way. Far
+ * beyond any layout (browsers stop at about 3.3e7 px), and small enough that
+ * the path math can't overflow to `Infinity` or `NaN`.
+ */
+export const MAX_NUMBER = 1e9;
+
+/**
+ * The largest coordinate the path functions accept. Larger than
+ * `MAX_NUMBER`, so the points Arclace works out (an element's edge moved by
+ * `gap`, `offset` or spreading) always pass, and still far from overflowing.
+ */
+export const MAX_COORDINATE = 1e15;
+
+/**
  * Throws a `TypeError` unless `value` is a finite number, and a `RangeError`
- * when it is below `min`.
+ * when it is below `min`, or further than `max` from 0.
  */
 export const assertNumber = (
   value: unknown,
   name: string,
-  min?: number
+  min?: number,
+  max = MAX_NUMBER
 ): number => {
   if (typeof value !== 'number' || !Number.isFinite(value)) {
     throw new TypeError(
@@ -110,6 +125,12 @@ export const assertNumber = (
   if (min !== undefined && value < min) {
     throw new RangeError(
       `arclace: ${name} must be ${min} or more, not ${show(value)}`
+    );
+  }
+
+  if (Math.abs(value) > max) {
+    throw new RangeError(
+      `arclace: ${name} must be between -${max} and ${max}, not ${show(value)}`
     );
   }
 
@@ -148,18 +169,20 @@ export const assertString = (
 };
 
 /**
- * Throws a `TypeError` unless `value` is a point with finite `x` and `y`.
+ * Throws a `TypeError` unless `value` is a point with finite `x` and `y`, and
+ * a `RangeError` when either is further than `max` from 0.
  */
 export const assertPoint = (
   value: unknown,
-  name: string
+  name: string,
+  max = MAX_COORDINATE
 ): ArcPointInterface => {
   assertObject(value, name);
 
   const { x, y } = value as Record<string, unknown>;
 
-  assertNumber(x, `${name}.x`);
-  assertNumber(y, `${name}.y`);
+  assertNumber(x, `${name}.x`, undefined, max);
+  assertNumber(y, `${name}.y`, undefined, max);
 
   return value as ArcPointInterface;
 };
@@ -266,7 +289,8 @@ export const assertWaypoints = (
 
     if (typeof waypoint === 'string') assertString(waypoint, item, true);
     else if (typeof waypoint === 'object' && waypoint !== null) {
-      if (!(waypoint instanceof Element)) assertPoint(waypoint, item);
+      if (!(waypoint instanceof Element))
+        assertPoint(waypoint, item, MAX_NUMBER);
     } else {
       throw new TypeError(
         `arclace: ${item} must be an element, a selector or a point, not ${show(waypoint)}`
@@ -360,7 +384,10 @@ export const validateOptions = (options: unknown): ArcOptionsType => {
 
   if (
     zIndex !== undefined &&
-    !Number.isInteger(assertNumber(zIndex, 'options.zIndex'))
+    // z-index isn't geometry, and 2147483647 is a common value, so no MAX_NUMBER
+    !Number.isInteger(
+      assertNumber(zIndex, 'options.zIndex', undefined, Infinity)
+    )
   ) {
     throw new RangeError(
       `arclace: options.zIndex must be a whole number, not ${show(zIndex)}`
