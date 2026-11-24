@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.3.1](https://github.com/phun-ky/arclace/compare/1.3.0...1.3.1) (2026-11-24)
+
+### Documentation
+
+* ✏️ README: add the Sponsor me section ([98dc8e4](https://github.com/phun-ky/arclace/commit/98dc8e4ba2ab53c447bbc3aa90e3b8630639654e))
+* ✏️ README: drop the Ukraine note ([b97a498](https://github.com/phun-ky/arclace/commit/b97a4980dbffe0af0222e7328b2a02651247ec5f))
+
+### Bug
+
+* 🐛 reject numbers so large that path data overflows to Infinity or NaN ([5e3caa1](https://github.com/phun-ky/arclace/commit/5e3caa11f54c3129d5d276c908a9c875bd2e2486))
+
 ## [1.3.0](https://github.com/phun-ky/arclace/compare/1.2.0...1.3.0) (2026-11-23)
 
 ### Feature
