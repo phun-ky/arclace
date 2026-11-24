@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.4.0](https://github.com/phun-ky/arclace/compare/1.3.1...1.4.0) (2026-11-24)
+
+### Documentation
+
+* ✏️ playground: test more options and styling, and copy the code ([b687db4](https://github.com/phun-ky/arclace/commit/b687db4344ff4b7ee9686bfe0af2d178e277f138))
+
+### Feature
+
+* ✨ add cssStrokeWidth to size arrows and anchors from the CSS stroke width ([30a720e](https://github.com/phun-ky/arclace/commit/30a720eff5fe12281882bd19b4b31dda0b6af8a4))
+
 ## [1.3.1](https://github.com/phun-ky/arclace/compare/1.3.0...1.3.1) (2026-11-24)
 
 ### Documentation
