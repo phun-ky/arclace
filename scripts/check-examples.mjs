@@ -534,7 +534,8 @@ window.__ran = true;
   } finally {
     await chrome?.close();
     server.close();
-    rmSync(profile, { recursive: true, force: true });
+    // Chrome's helper processes can still write to the profile just after it exits
+    rmSync(profile, { recursive: true, force: true, maxRetries: 5 });
   }
 
   return { problems, blocks: runs.size, checks };
