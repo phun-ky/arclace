@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.4.1](https://github.com/phun-ky/arclace/compare/1.4.0...1.4.1) (2026-11-27)
+
+### Tasks
+
+* 🤖 bump the minor-and-patch group with 2 updates ([c0a6a7b](https://github.com/phun-ky/arclace/commit/c0a6a7bfd2d8f404e469748e207c1787f64220ec))
+
+### Documentation
+
+* ✏️ regenerate the API docs ([26258ca](https://github.com/phun-ky/arclace/commit/26258ca039ebf62c2dd580aba839a71b0443567c))
+
+### Bug
+
+* 🐛 retry removing the Chrome profile after the examples run ([12c24f8](https://github.com/phun-ky/arclace/commit/12c24f8643aedd83c87eae8ed22c63c541d2f9df)), references [#102](https://github.com/phun-ky/arclace/issues/102)
+* 🐛 unobserve dropped waypoints and re-measure labels on redraw ([b6e1820](https://github.com/phun-ky/arclace/commit/b6e1820c5f82ece97725e4854e6cc5646d965741))
+
 ## [1.4.0](https://github.com/phun-ky/arclace/compare/1.3.1...1.4.0) (2026-11-24)
 
 ### Documentation
