@@ -76,7 +76,7 @@ Defined in: [src/Connection.ts:141](https://github.com/phun-ky/arclace/blob/main
 
 > **get** **geometry**(): `Readonly`\<[`ArcGeometryType`](../type-aliases/ArcGeometryType.md)\> \| `null`
 
-Defined in: [src/Connection.ts:212](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L212)
+Defined in: [src/Connection.ts:208](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L208)
 
 The geometry from the last update, or `null` when the connection is
 hidden because one of its elements is not rendered.
@@ -93,7 +93,7 @@ hidden because one of its elements is not rendered.
 
 > **get** **options**(): `Readonly`\<[`ArcResolvedConnectionOptionsType`](../type-aliases/ArcResolvedConnectionOptionsType.md)\>
 
-Defined in: [src/Connection.ts:219](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L219)
+Defined in: [src/Connection.ts:215](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L215)
 
 The connection's options merged with the instance defaults.
 
@@ -107,7 +107,7 @@ The connection's options merged with the instance defaults.
 
 > **remove**(): `void`
 
-Defined in: [src/Connection.ts:273](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L273)
+Defined in: [src/Connection.ts:271](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L271)
 
 Removes this connection.
 
@@ -121,7 +121,7 @@ Removes this connection.
 
 > **setOptions**(`options`): `this`
 
-Defined in: [src/Connection.ts:239](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L239)
+Defined in: [src/Connection.ts:235](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L235)
 
 Changes options and redraws.
 
@@ -159,7 +159,7 @@ When the connection has been removed.
 
 > **update**(): `void`
 
-Defined in: [src/Connection.ts:266](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L266)
+Defined in: [src/Connection.ts:264](https://github.com/phun-ky/arclace/blob/main/src/Connection.ts#L264)
 
 Redraws every connection of the owning instance.
 

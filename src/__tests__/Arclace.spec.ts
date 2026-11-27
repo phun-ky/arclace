@@ -538,6 +538,16 @@ describe('Arclace', () => {
       Number(bg.getAttribute('x')) + 20,
       Number(label.getAttribute('x'))
     );
+
+    // Padding added by CSS alone shows on the next redraw
+    const style = document.createElement('style');
+
+    style.textContent = '.arc-label-bg { padding: 2px; }';
+    document.head.append(style);
+    t.after(() => style.remove());
+    arclace.update();
+    assert.equal(bg.getAttribute('width'), '44');
+    assert.equal(bg.getAttribute('height'), '14');
   });
 
   it('hides connections to elements that are not rendered', () => {
@@ -932,6 +942,13 @@ describe('waypoints', () => {
 
     connection.setOptions({ via: [dot, c] });
     assert.ok(observed.has(c));
+
+    // A dropped waypoint stops being observed
+    connection.setOptions({ via: [c] });
+    assert.ok(!observed.has(dot));
+
+    connection.setOptions({ via: undefined });
+    assert.deepEqual(observed, new Set([document.body, a, b]));
 
     connection.remove();
     assert.deepEqual(observed, new Set([document.body]));

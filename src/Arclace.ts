@@ -514,14 +514,14 @@ export class Arclace {
   }
 
   /**
-   * Watches the size of every element a connection depends on.
+   * Watches the size of every element a connection depends on, and stops
+   * watching `previous` elements that no connection uses any more.
    *
    * @internal
    */
-  _observe(connection: Connection): void {
-    // shortcut: waypoint elements a setOptions() call drops stay observed
-    // until the connection is removed, which only costs an extra redraw
+  _observe(connection: Connection, previous: Element[] = []): void {
     for (const el of connection._elements()) this.#resizeObserver?.observe(el);
+    for (const el of previous) this.#unobserve(el);
   }
 
   #unobserve(el: Element): void {

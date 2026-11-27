@@ -162,10 +162,6 @@ export class Connection {
   #gradient: SVGLinearGradientElement | null = null;
   #label: SVGTextElement | null = null;
   #labelBg: SVGRectElement | null = null;
-  // The background's box relative to the label's anchor point, measured once
-  // per label
-  #labelBox: { x: number; y: number; width: number; height: number } | null =
-    null;
   #anchors: [SVGCircleElement, SVGCircleElement] | null = null;
   // The waypoints, with selectors resolved to elements
   #via: (Element | ArcPointInterface)[] = [];
@@ -250,10 +246,12 @@ export class Connection {
     // Looked up first, so a selector that fails leaves the options as they were
     if (options.via) resolveWaypoints(options.via, 'options.via');
 
+    const previous = this._elements();
+
     this.#options = { ...this.#options, ...options };
     this.#applyOptions();
 
-    if (options.via) this.#owner._observe(this);
+    if ('via' in options) this.#owner._observe(this, previous);
 
     this.#owner.update();
 
@@ -665,42 +663,31 @@ export class Connection {
   #placeLabel(point: ArcPointInterface): void {
     setAttributes(this.#label!, { ...point });
 
-    // shortcut: measured once per label change, so a font or padding change
-    // from CSS alone needs a setOptions() call to resize the background
     // getBBox is missing where there is no layout, such as jsdom
-    if (!this.#labelBox?.width && typeof this.#label!.getBBox === 'function') {
-      const { x, y, width, height } = this.#label!.getBBox();
-      // CSS padding doesn't apply to SVG, but its computed value is in px,
-      // so the stylesheet sets it on the background and it is read here
-      const style = getComputedStyle(this.#labelBg!);
-      const [top, right, bottom, left] = [
-        style.paddingTop,
-        style.paddingRight,
-        style.paddingBottom,
-        style.paddingLeft
-      ].map((value) => parseFloat(value) || 0);
+    if (typeof this.#label!.getBBox !== 'function') return;
 
-      this.#labelBox = {
-        x: x - point.x - left,
-        y: y - point.y - top,
-        width: width + left + right,
-        height: height + top + bottom
-      };
-    }
-
-    if (!this.#labelBox) return;
+    // Measured on every redraw, so font or padding changes from CSS alone
+    // resize the background
+    const { x, y, width, height } = this.#label!.getBBox();
+    // CSS padding doesn't apply to SVG, but its computed value is in px,
+    // so the stylesheet sets it on the background and it is read here
+    const style = getComputedStyle(this.#labelBg!);
+    const [top, right, bottom, left] = [
+      style.paddingTop,
+      style.paddingRight,
+      style.paddingBottom,
+      style.paddingLeft
+    ].map((value) => parseFloat(value) || 0);
 
     setAttributes(this.#labelBg!, {
-      x: point.x + this.#labelBox.x,
-      y: point.y + this.#labelBox.y,
-      width: this.#labelBox.width,
-      height: this.#labelBox.height
+      x: x - left,
+      y: y - top,
+      width: width + left + right,
+      height: height + top + bottom
     });
   }
 
   #applyLabel(label: string | undefined): void {
-    this.#labelBox = null;
-
     if (!label) {
       this.#label?.remove();
       this.#labelBg?.remove();
